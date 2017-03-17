@@ -12,4 +12,3 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - unixodbc-dev
-      - libmyodbc
