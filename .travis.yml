@@ -1,2 +1,15 @@
 language: r
 cache: packages
+dist: trusty
+env:
+  - MAKEFLAGS = -j2 ODBCSYSINI=${TRAVIS_BUILD_DIR}/travis/odbc INCLUDE_DIR=/usr/include LIB_DIR=/usr/lib/x86_64-linux-gnu/
+
+warnings_are_errors: false
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - unixodbc-dev
+      - libmyodbc
