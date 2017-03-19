@@ -22,14 +22,19 @@ setOldClass("src_impala")
 #' @importFrom methods setOldClass
 setOldClass("tbl_impala")
 
-#' Do cool stuff
-#'
+# environment for global variables
+pkg_env <- new.env()
+
 #' @export
 #' @importFrom DBI dbConnect
+#' @importFrom DBI dbExecute
 #' @importFrom DBI dbGetInfo
+#' @importFrom DBI dbSendQuery
 #' @importFrom dplyr src_sql
+#' @importFrom methods callNextMethod
 #' @importFrom methods getClass
 #' @importFrom methods setClass
+#' @importFrom utils getFromNamespace
 src_impala <- function(drv, ..., auto_disconnect = FALSE) {
   if (!requireNamespace("assertthat", quietly = TRUE)) {
     stop("assertthat is required to use src_impala", call. = FALSE)
@@ -90,7 +95,30 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
   }
   info$package <- attr(attr(getClass(class(con)[1]), "className"), "package")
 
-  setClass("impala_connection", contains = class(con), where = parent.frame())
+  setClass("impala_connection", contains = class(con), where = topenv(parent.frame()))
+
+  setMethod("dbSendQuery", c("impala_connection", "character"), function(conn, statement, ...) {
+    result <- callNextMethod(conn, statement, ...)
+    if(isTRUE(pkg_env$order_by_in_subquery)) {
+      warning("Results may not be in sorted order! Move arrange() after all other verbs for results in sorted order.")
+      pkg_env$order_by_in_subquery <- FALSE
+    }
+    result
+  }, where = topenv(parent.frame()))
+
+  setMethod("dbExecute", c("impala_connection", "character"), function(conn, statement, ...) {
+    if(inherits(conn, "JDBCConnection")) {
+      result <- getFromNamespace("dbSendUpdate", "RJDBC")(conn, statement)
+    } else {
+      result <- callNextMethod(conn, statement, ...)
+    }
+    if(isTRUE(pkg_env$order_by_in_subquery)) {
+      warning("Results may not be in sorted order! Impala cannot store data in sorted order.")
+      pkg_env$order_by_in_subquery <- FALSE
+    }
+    result
+  }, where = topenv(parent.frame()))
+
   con <- structure(con, class = c("impala_connection", class(con)))
 
   src_sql("impala", con = con, disco = disco, info = info)
@@ -269,8 +297,14 @@ sql_subquery.impala_connection <- function(con, from, name = getFromNamespace("u
     setNames(from, name)
   } else {
     from <- sql(sub(";$", "", from))
-    if(grepl("\\sORDER BY\\s", from) && !grepl("\\sLIMIT\\s", from)) {
-      from <- sql(paste(from, "LIMIT 9223372036854775807"))
+    if(grepl("\\sORDER BY\\s", from) &&
+       grepl("\\sORDER BY\\s", gsub("OVER\\s?\\([^)]*?\\sORDER BY\\s", "", from))) {
+      # TBD: improve this method of confirming that the ORDER BY is not in an OVER() expression
+      pkg_env$order_by_in_subquery <- TRUE
+      if(!grepl("\\sLIMIT\\s", from)) {
+        from <- sql(paste(from, "LIMIT 9223372036854775807"))
+        # TBD: consider whether to do this, or just issue the warning and not try to sort
+      }
     }
     build_sql("(", from, ") ", ident(name %||% getFromNamespace("random_table_name", "dplyr")()), con = con)
   }
@@ -283,22 +317,25 @@ sql_subquery.impala_connection <- function(con, from, name = getFromNamespace("u
 #' @importFrom dplyr copy_to
 copy_to.src_impala <- function(dest, df, name = deparse(substitute(df)), overwrite = FALSE,
                                types = NULL, temporary = TRUE, unique_indexes = NULL, indexes = NULL,
-                               analyze = TRUE, external = FALSE, force = FALSE, ...) {
+                               analyze = TRUE, external = FALSE, force = FALSE, field_terminator = NULL,
+                               line_terminator = NULL, file_format = NULL, ...) {
 
   # don't try to insert large data frames with INSERT ... VALUES()
   if(prod(dim(df)) > 1e3L) {
     stop("Data frame ", name, " is too large. copy_to currently only supports very small data frames.")
   }
 
-  # TBD: add params to control external, row format, stored as, location, etc.
-  # (or take them in the ... and pass them to db_create_table())
+  # TBD: add params to control location and other CREATE TABLE options
 
   assert_that(
     is.data.frame(df),
     is.string(name),
     is.flag(overwrite),
     is.flag(temporary),
-    is.flag(analyze)
+    is.flag(analyze),
+    is_string_or_null(file_format),
+    is_nchar_one_string_or_null(field_terminator),
+    is_nchar_one_string_or_null(line_terminator)
   )
   if(temporary) {
     stop("Impala does not support temporary tables. Set temporary = FALSE in copy_to().")
@@ -309,7 +346,9 @@ copy_to.src_impala <- function(dest, df, name = deparse(substitute(df)), overwri
     types <- types %||% db_data_type(con, df)
     names(types) <- names(df) # TBD: convert illegal names to legal names?
     tryCatch({
-      db_create_table(con, name, types, temporary = FALSE, external = external, force = force, ...)
+      db_create_table(con, name, types, temporary = FALSE, external = external, force = force,
+                      field_terminator = field_terminator, line_terminator = field_terminator,
+                      file_format = file_format, ...)
       db_insert_into(con, name, df, overwrite)
       if (analyze) {
         db_analyze(con, name)
@@ -337,10 +376,10 @@ copy_to.src_impala <- function(dest, df, name = deparse(substitute(df)), overwri
 #' @importFrom dplyr tbl
 #' @importFrom utils getFromNamespace
 compute.tbl_impala <- function(x, name, temporary = TRUE, external = FALSE,
-                               overwrite = FALSE, force = FALSE, analyze = FALSE, ...) {
+                               overwrite = FALSE, force = FALSE, analyze = FALSE, field_terminator = NULL,
+                               line_terminator = NULL, file_format = NULL, ...) {
 
-  # TBD: add params to control external, row format, stored as, location, etc.
-  # (or take them in the ... and pass them to db_create_table())
+  # TBD: add params to control location and other CREATE TABLE options
 
   assert_that(
     is.string(name),
@@ -348,7 +387,10 @@ compute.tbl_impala <- function(x, name, temporary = TRUE, external = FALSE,
     is.flag(external),
     is.flag(overwrite),
     is.flag(force),
-    is.flag(analyze)
+    is.flag(analyze),
+    is_string_or_null(file_format),
+    is_nchar_one_string_or_null(field_terminator),
+    is_nchar_one_string_or_null(line_terminator)
   )
   if(temporary) {
     stop("Impala does not support temporary tables. Set temporary = FALSE in compute().")
@@ -360,7 +402,8 @@ compute.tbl_impala <- function(x, name, temporary = TRUE, external = FALSE,
     #x_aliased <- select(x, !!! symbols(vars))
     x_aliased <- select_(x, .dots = vars)
     db_save_query(con, sql_render(x_aliased, con), name = name, temporary = FALSE, external = external,
-                  overwrite = overwrite, force = force, analyze = analyze, ...)
+                  overwrite = overwrite, force = force, analyze = analyze, field_terminator = field_terminator,
+                  line_terminator = field_terminator, file_format = file_format,...)
   }, finally = {
     con_release(x$src, con)
   })
@@ -378,17 +421,20 @@ compute.tbl_impala <- function(x, name, temporary = TRUE, external = FALSE,
 #' @importFrom dplyr db_save_query
 #' @importFrom dplyr ident
 db_save_query.impala_connection <- function(con, sql, name, temporary = TRUE, external = FALSE,
-                                           force = FALSE, analyze = FALSE, ...) {
+                                           force = FALSE, analyze = FALSE, field_terminator = NULL,
+                                           line_terminator = NULL, file_format = NULL, ...) {
 
-  # TBD: add params to control external, row format, stored as, location, etc.
-  # (or take them in the ... and pass them to db_create_table())
+  # TBD: add params to control location and other CREATE TABLE options
 
   assert_that(
     is.string(name),
     is.flag(temporary),
     is.flag(external),
     is.flag(force),
-    is.flag(analyze)
+    is.flag(analyze),
+    is_string_or_null(file_format),
+    is_nchar_one_string_or_null(field_terminator),
+    is_nchar_one_string_or_null(line_terminator)
   )
   if(temporary) {
     stop("Impala does not support temporary tables. Set temporary = FALSE in db_save_query().")
@@ -401,18 +447,21 @@ db_save_query.impala_connection <- function(con, sql, name, temporary = TRUE, ex
 
   tt_sql <- build_sql(
     "CREATE ", if (external) sql("EXTERNAL "),
-    "TABLE ", ident(name), " ",
-    if (force) sql("IF NOT EXISTS "),
+    "TABLE ", if (force) sql("IF NOT EXISTS "),
+    ident(table), " ",
+    if(!is.null(field_terminator) || !is.null(line_terminator)) sql("ROW FORMAT DELIMITED "),
+    if(!is.null(field_terminator)) sql(paste0("FIELDS TERMINATED BY \"", field_terminator, "\" ")),
+    if(!is.null(line_terminator)) sql(paste0("LINES TERMINATED BY \"", line_terminator, "\" ")),
+    if(!is.null(file_format)) sql(paste0("STORED AS ", file_format, " ")),
     "AS ", sql,
     con = con
   )
   if (analyze) {
     db_analyze(con, name)
   }
-  execute_ddl_dml(con, tt_sql)
+  dbExecute(con, tt_sql)
   name
 }
-
 
 #' @export
 #' @importFrom dplyr db_begin
@@ -430,7 +479,7 @@ db_commit.impala_connection <- function(con, ...) {
 #' @importFrom dplyr db_analyze
 db_analyze.impala_connection <- function(con, table, ...) {
   sql <- build_sql("COMPUTE STATS", ident(table), con = con)
-  execute_ddl_dml(con, sql)
+  dbExecute(con, sql)
 }
 
 #' @export
@@ -440,7 +489,7 @@ db_drop_table.impala_connection <- function(con, table, force = FALSE, purge = F
     "DROP TABLE ", if (force) sql("IF EXISTS "), ident(table), if (purge) sql(" PURGE"),
     con = con
   )
-  execute_ddl_dml(con, sql)
+  dbExecute(con, sql)
 }
 
 #' @export
@@ -472,7 +521,7 @@ db_insert_into.impala_connection <- function(con, table, values, overwrite = FAL
     sql(values),
     con = con
   )
-  execute_ddl_dml(con, sql)
+  dbExecute(con, sql)
 }
 
 #' @export
@@ -503,13 +552,18 @@ db_data_type.impala_connection <- function(con, fields, ...) {
 #' @importFrom dplyr ident
 #' @importFrom dplyr sql_vector
 db_create_table.impala_connection <- function (con, table, types, temporary = FALSE,
-                                              external = FALSE, force = FALSE, ...) {
-  # TBD: add params to control external, row format, stored as, location, etc.
+                                              external = FALSE, force = FALSE, field_terminator = NULL,
+                                              line_terminator = NULL, file_format = NULL, ...) {
+
+  # TBD: add params to control location and other CREATE TABLE options
 
   assert_that(
     is.string(table),
     is.character(types),
-    is.flag(temporary)
+    is.flag(temporary),
+    is_string_or_null(file_format),
+    is_nchar_one_string_or_null(field_terminator),
+    is_nchar_one_string_or_null(line_terminator)
    )
   if(temporary) {
     stop("Impala does not support temporary tables. Set temporary = FALSE in db_create_table().")
@@ -524,12 +578,16 @@ db_create_table.impala_connection <- function (con, table, types, temporary = FA
   sql <- build_sql(
     "CREATE ",
     if (external) sql("EXTERNAL "),
-    "TABLE ", ident(table), " ",
-    if (force) sql("IF NOT EXISTS "),
+    "TABLE ", if (force) sql("IF NOT EXISTS "),
+    ident(table), " ",
+    if(!is.null(field_terminator) || !is.null(line_terminator)) sql("ROW FORMAT DELIMITED "),
+    if(!is.null(field_terminator)) sql(paste0("FIELDS TERMINATED BY \"", field_terminator, "\" ")),
+    if(!is.null(line_terminator)) sql(paste0("LINES TERMINATED BY \"", line_terminator, "\" ")),
+    if(!is.null(file_format)) sql(paste0("STORED AS ", file_format, " ")),
     fields,
     con = con
   )
-  execute_ddl_dml(con, sql)
+  dbExecute(con, sql)
 }
 
 con_acquire <- function (src) {
@@ -544,7 +602,7 @@ con_acquire <- function (src) {
 # @importFrom dplyr con_acquire
 # con_acquire.src_impala <- ...
 
-con_release.src_impala <- function(src, con) {
+con_release <- function(src, con) {
   # do nothing
 }
 # TBD: after new release of dplyr, change this to:
@@ -552,29 +610,23 @@ con_release.src_impala <- function(src, con) {
 # @importFrom dplyr con_release
 # con_release.src_impala <- ...
 
-
 #' @export
 #' @importFrom DBI dbGetQuery
 setMethod("dbGetQuery", c("src_impala", "character"), function(conn, statement, ...) {
-  dbGetQuery(con_acquire(conn), statement)
+  dbGetQuery(con_acquire(conn), statement, ...)
+})
+
+#' @export
+#' @importFrom DBI dbExecute
+setMethod("dbExecute", c("src_impala", "character"), function(conn, statement, ...) {
+  dbExecute(con_acquire(conn), statement, ...)
 })
 
 #' @export
 #' @importFrom DBI dbDisconnect
 setMethod("dbDisconnect", "src_impala", function(conn, ...) {
-  dbDisconnect(con_acquire(conn))
+  dbDisconnect(con_acquire(conn), ...)
 })
-
-# Executes a DDL or DML statement
-#' @importFrom DBI dbExecute
-#' @importFrom utils getFromNamespace
-execute_ddl_dml <- function(con, statement) {
-  if(inherits(con, "JDBCConnection")) {
-    getFromNamespace("dbSendUpdate", "RJDBC")(con, statement)
-  } else {
-    dbExecute(con, statement)
-  }
-}
 
 # Escape quotes with a backslash instead of doubling
 sql_quote <- function(x, quote) {
@@ -612,3 +664,22 @@ db_disconnector <- function(con, quiet = FALSE) {
 }
 
 `%||%` <- function(x, y) if(is.null(x)) y else x
+
+#' @importFrom assertthat is.string
+is_string_or_null <- function(x) {
+  is.null(x) || is.string(x)
+}
+
+assertthat::on_failure(is_string_or_null) <- function(call, env) {
+  paste0(deparse(call$x), " is not a string")
+}
+
+#' @importFrom assertthat is.string
+is_nchar_one_string_or_null  <- function(x) {
+  is.null(x) || (is.string(x) && nchar(x) == 1)
+}
+
+assertthat::on_failure(is_nchar_one_string_or_null) <- function(call, env) {
+  paste0(deparse(call$x), " is not a string with one character")
+}
+
