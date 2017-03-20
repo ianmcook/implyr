@@ -11,6 +11,8 @@
 \item{src}{an object with class with class \code{src_impala}}
 
 \item{from}{a table name}
+
+\item{...}{not used}
 }
 \value{
 An object with class \code{tbl_impala}, \code{tbl_sql}, \code{tbl_lazy}, \code{tbl}

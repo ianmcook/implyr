@@ -222,6 +222,7 @@ src_desc.src_impala <- function(x) {
 #' @name tbl
 #' @param src an object with class with class \code{src_impala}
 #' @param from a table name
+#' @param ... not used
 #' @return An object with class \code{tbl_impala}, \code{tbl_sql}, \code{tbl_lazy}, \code{tbl}
 #' @examples
 #' \dontrun{
