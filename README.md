@@ -171,24 +171,36 @@ The examples here assume that data has already been loaded into the Impala table
 
 ``` r
 delay <- flights_tbl %>% 
+  select(tailnum, distance, arr_delay) %>%
   group_by(tailnum) %>%
   summarise(count = n(), dist = mean(distance), delay = mean(arr_delay)) %>%
   filter(count > 20, dist < 2000, !is.na(delay)) %>%
   arrange(delay, dist, count) %>%
   collect()
+```
 
+implyr supports the dplyr verbs `filter()`, `arrange()`, `select()`, `rename()`, `distinct()`, `mutate()`, `transmute()`, and `summarise()`. It supports grouped operations with the `group_by()` function.
+
+When using implyr, you must specify table names and column names using lowercase characters. To ensure that results are in sorted order, you must apply `arrange()` last, after all other dplyr verbs.
+
+Impala does not perform implicit casting; for example, it does not automatically convert numbers to strings when they are used in a string context. Impala requires that you explicitly cast columns to the required types. implyr provides familiar R-style type conversion functions to enable casting to all the scalar [Impala data types](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_datatypes.html). For example, `as.character()` casts a column or column expression to the Impala `STRING` type.
+
+``` r
 flights_tbl %>% 
   transmute(flight_code = paste0(carrier, as.character(flight))) %>% 
   distinct(flight_code)
 ```
 
-implyr supports the dplyr verbs `filter()`, `arrange()`, `select()`, `rename()`, `distinct()`, `mutate()`, `transmute()`, and `summarise()`. It supports grouped operations with the `group_by()` function. You must specify table names and column names using lowercase characters. To ensure that results are in sorted order, you must apply `arrange()` last, after all other dplyr verbs. See [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/introduction.html) for more examples.
+See [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/introduction.html) for more examples of dplyr grammar.
 
-Like other SQL backends for dplyr, implyr delays work until a result needs to be computed, then computes the result as a single query operation.
+Like other SQL backends to dplyr, implyr delays work until a result needs to be computed, then computes the result as a single query operation.
 
--   Use `collect()` to execute the query and return the result to R. Only use `collect()` when the result will be small enough to fit in memory in your R session.
--   Use `compute(temporary = FALSE)` to execute the query and store the result in an Impala table. Impala does not support temporary tables so `temporary = FALSE` is required.
+-   Use `collect()` to execute the query and return the result to R as a data frame `tbl`.
+-   Use `as.data.frame()` to execute the query and return the result to R as an ordinary data frame.
+-   Use `compute(temporary = FALSE)` to execute the query and store the result in an Impala table. Impala does not support temporary tables, so `temporary = FALSE` is required.
 -   Use `collapse()` to generate the query for later execution.
+
+If you print or store a result without using one of these functions, then implyr returns a lazy `tbl`. Only use `collect()` or `as.data.frame()` when the result will be small enough to fit in memory in your R session.
 
 See the [dplyr Databases vignette](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html) for more information.
 
@@ -212,6 +224,8 @@ inner_join(flights_tbl, airlines_tbl, by = "carrier")
 southwest_airlines <- airlines_tbl %>% filter(name == "Southwest Airlines Co.")
 southwest_flights <- semi_join(flights_tbl, southwest_airlines, by = "carrier")
 ```
+
+You can also use dplyr join functions to bring together values from `ARRAY` and `MAP` columns with scalar values from the same rows. See [Impala Complex Types](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_complex_types.html) for more details about `ARRAY` and `MAP` columns.
 
 Read the Warnings and Current Limitations section below to understand the ways that working with Impala as a remote dplyr data source is different from working with local data or other remote dplyr data sources.
 
@@ -341,13 +355,13 @@ Impala's data storage and processing does not preserve row order. Impala uses pa
 
 -   Rows are not necessarily returned in the same order that they were in when added to Impala. To return rows in a specific order, you must use `arrange()`.
 -   If row ordering is applied in an intermediate phase of query processing, Impala may not return the final result in sorted order. To ensure that results are in sorted order, apply `arrange()` last, after all other dplyr verbs. implyr will issue a warning if you apply `arrange()` in an earlier step.
--   When using the dplyr verb `compute()` to store results in an Impala table, Impala may not preserve row order. implyr will issue a warning if you use `arrange()` before `compute()`.
+-   When using `compute()` to store results in an Impala table, Impala may not preserve row order. implyr will issue a warning if you use `arrange()` before `compute()`.
 
 See the [Impala ORDER BY documentation](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_order_by.html) for more information.
 
 #### Temporary Tables
 
-Impala does not support temporary tables. When using the dplyr verb `compute()` to store results in an Impala table, you must set `temporary = FALSE`. implyr will return an error if you use `compute()` but do not set `temporary = FALSE`.
+Impala does not support temporary tables. When using `compute()` to store results in an Impala table, you must set `temporary = FALSE`. implyr will throw an error if you use `compute()` but do not set `temporary = FALSE`.
 
 #### Missing Values
 
@@ -360,6 +374,8 @@ Impala requires table names and column names to be all lowercase. Currently, imp
 #### dplyr Support
 
 implyr does not support all dplyr verbs and functions. Some verbs including `slice()`, `sample_n()`, and `sample_frac()` are not supported. Some functions including `intersect()` and `setdiff()` are not supported.
+
+If you apply an R function to a lazy `tbl` and the function is not implemented as a remote method, then implyr will compute the result of the prior steps and return that result to R as a `tbl` or data frame. It will then compute the function and any later steps locally in R. An example of this is the function `lm`. Only use this technique when the intermediate result will be small enough to fit in memory in your R session.
 
 The `median()` function returns a value that is approximately (not necessarily exactly) the median. See [APPX\_MEDIAN Function](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_appx_median.html).
 
