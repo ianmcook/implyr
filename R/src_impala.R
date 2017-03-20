@@ -45,7 +45,7 @@ pkg_env <- new.env()
 #'   \code{\link[RJDBC]{dbConnect,JDBCDriver-method}}
 #' @param auto_disconnect whether to automatically close the connection to
 #'   Impala when the object returned by this function is deleted
-#' @return An S3 object with class \code{src_impala}, \code{src_sql}, \code{src}
+#' @return an object with class \code{src_impala}, \code{src_sql}, \code{src}
 #' @examples
 #' # Using ODBC connectivity:
 #'

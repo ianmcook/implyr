@@ -20,7 +20,7 @@ method \code{\link[DBI]{dbConnect}}. See
 Impala when the object returned by this function is deleted}
 }
 \value{
-An S3 object with class \code{src_impala}, \code{src_sql}, \code{src}
+an object with class \code{src_impala}, \code{src_sql}, \code{src}
 }
 \description{
 \code{src_impala} creates a SQL backend to dplyr for
