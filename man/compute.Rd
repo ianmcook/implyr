@@ -45,6 +45,10 @@ data. Defaults to the ASCII control-A (hex 01) character}
 \item{...}{other arguments passed on to methods}
 
 \item{n}{the number of rows to return}
+
+\item{warn_incomplete}{whether to issue a warning if not all rows retrieved}
+
+\item{vars}{not used}
 }
 \description{
 \describe{ \item{\code{compute()}}{Executes the query and stores

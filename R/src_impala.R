@@ -519,6 +519,8 @@ compute.tbl_impala <- function(x, name, temporary = TRUE, external = FALSE,
 
 #' @name collect
 #' @rdname compute
+#' @param n the number of rows to return
+#' @param warn_incomplete whether to issue a warning if not all rows retrieved
 #' @export
 #' @importFrom dplyr collect
 collect.tbl_impala <- function(x, ..., n = Inf, warn_incomplete = TRUE) {
@@ -527,7 +529,7 @@ collect.tbl_impala <- function(x, ..., n = Inf, warn_incomplete = TRUE) {
 
 #' @name collapse
 #' @rdname compute
-#' @param n the number of rows to return
+#' @param vars not used
 #' @export
 #' @importFrom dplyr collapse
 collapse.tbl_impala <- function(x, vars = NULL, ...) {
