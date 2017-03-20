@@ -25,6 +25,68 @@ setOldClass("tbl_impala")
 # environment for global variables
 pkg_env <- new.env()
 
+#' Connect to Impala and create a remote dplyr data source
+#'
+#' @description
+#' \code{src_impala} creates a SQL backend to dplyr for
+#' \href{https://impala.incubator.apache.org/}{Apache Impala (incubating)},
+#' the massively parallel processing query engine for Apache Hadoop.
+#'
+#' \code{src_impala} can work with any DBI-compatible interface that provides
+#' connectivity to Impala. Currently, two packages that can provide this
+#' connectivity are odbc and RJDBC.
+#'
+#' @param drv an object that inherits from \code{\link[DBI]{DBIDriver-class}}.
+#'   For example, an object returned by \code{\link[odbc]{odbc}} or
+#'   \code{\link[RJDBC]{JDBC}}.
+#' @param ... arguments passed to the underlying Impala database connection
+#'   method \code{\link[DBI]{dbConnect}}. See
+#'   \code{\link[odbc]{dbConnect,OdbcDriver-method}} or
+#'   \code{\link[RJDBC]{dbConnect,JDBCDriver-method}}.
+#' @param auto_disconnect whether to automatically close the connection to
+#'   Impala when the object returned by this function is deleted.
+#' @return An S3 object with class \code{src_impala}, \code{src_sql}, \code{src}.
+#' @examples
+#' # Using ODBC connectivity:
+#'
+#' library(odbc)
+#' drv <- odbc::odbc()
+#' impala <- src_impala(
+#'   drv = drv,
+#'   driver = "Cloudera ODBC Driver for Impala",
+#'   host = "host",
+#'   port = 21050,
+#'   database = "default",
+#'   uid = "username",
+#'   pwd = "password"
+#' )
+#'
+#' # Using JDBC connectivity:
+#'
+#' library(RJDBC)
+#' Sys.setenv(JAVA_HOME = "/path/to/java/home/")
+#' impala_classpath <- list.files(
+#'   path = "/path/to/jdbc/driver",
+#'   pattern = "\\.jar$",
+#'   full.names = TRUE
+#' )
+#' .jinit(classpath = impala_classpath)
+#' drv <- JDBC(
+#'   driverClass = "com.cloudera.impala.jdbc41.Driver",
+#'   classPath = impala_classpath,
+#'   identifier.quote = "`"
+#' )
+#' impala <- src_impala(
+#'   drv,
+#'   "jdbc:impala://host:21050",
+#'   "username",
+#'   "password"
+#' )
+#' @seealso
+#'   \href{https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf}{Impala
+#'   ODBC driver installation guide},
+#'   \href{https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf}{Impala
+#'   JDBC driver installation guide}
 #' @export
 #' @importFrom DBI dbConnect
 #' @importFrom DBI dbExecute
