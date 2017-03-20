@@ -181,7 +181,7 @@ delay <- flights_tbl %>%
   select(tailnum, distance, arr_delay) %>%
   group_by(tailnum) %>%
   summarise(count = n(), dist = mean(distance), delay = mean(arr_delay)) %>%
-  filter(count > 20, dist < 2000, !is.na(delay)) %>%
+  filter(count > 20L, dist < 2000L, !is.na(delay)) %>%
   arrange(delay, dist, count) %>%
   collect()
 ```
@@ -197,6 +197,8 @@ flights_tbl %>%
   transmute(flight_code = paste0(carrier, as.character(flight))) %>% 
   distinct(flight_code)
 ```
+
+In addition, you should specify integer values as R `integer` objects instead of `numeric` objects; for example, `1L` or `as.integer(1)` instead of `1`.
 
 See [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/introduction.html) for more examples of dplyr grammar.
 
