@@ -98,6 +98,7 @@ pkg_env <- new.env()
 #' @importFrom methods callNextMethod
 #' @importFrom methods getClass
 #' @importFrom methods setClass
+#' @importFrom methods setMethod
 #' @importFrom utils getFromNamespace
 src_impala <- function(drv, ..., auto_disconnect = FALSE) {
   if (!requireNamespace("assertthat", quietly = TRUE)) {
@@ -676,18 +677,21 @@ con_release <- function(src, con) {
 
 #' @export
 #' @importFrom DBI dbGetQuery
+#' @importFrom methods setMethod
 setMethod("dbGetQuery", c("src_impala", "character"), function(conn, statement, ...) {
   dbGetQuery(con_acquire(conn), statement, ...)
 })
 
 #' @export
 #' @importFrom DBI dbExecute
+#' @importFrom methods setMethod
 setMethod("dbExecute", c("src_impala", "character"), function(conn, statement, ...) {
   dbExecute(con_acquire(conn), statement, ...)
 })
 
 #' @export
 #' @importFrom DBI dbDisconnect
+#' @importFrom methods setMethod
 setMethod("dbDisconnect", "src_impala", function(conn, ...) {
   dbDisconnect(con_acquire(conn), ...)
 })
