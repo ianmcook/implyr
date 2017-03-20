@@ -34,6 +34,7 @@ connectivity are odbc and RJDBC.
 \examples{
 # Using ODBC connectivity:
 
+\dontrun{
 library(odbc)
 drv <- odbc::odbc()
 impala <- src_impala(
@@ -44,10 +45,11 @@ impala <- src_impala(
   database = "default",
   uid = "username",
   pwd = "password"
-)
+)}
 
 # Using JDBC connectivity:
 
+\dontrun{
 library(RJDBC)
 Sys.setenv(JAVA_HOME = "/path/to/java/home/")
 impala_classpath <- list.files(
@@ -66,12 +68,12 @@ impala <- src_impala(
   "jdbc:impala://host:21050",
   "username",
   "password"
-)
+)}
 }
 \seealso{
-\href{https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf}{Impala
-  ODBC driver installation guide},
-  \href{https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf}{Impala
-  JDBC driver installation guide}
+\href{https://www.cloudera.com/downloads/connectors/impala/odbc.html}{Impala
+ODBC driver},
+\href{https://www.cloudera.com/downloads/connectors/impala/jdbc.html}{Impala
+JDBC driver}
 }
 
