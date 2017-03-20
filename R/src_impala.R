@@ -163,7 +163,7 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
   setClass("impala_connection", contains = class(con), where = topenv(parent.frame()))
 
   setMethod("dbSendQuery", c("impala_connection", "character"), function(conn, statement, ...) {
-    result <- callNextMethod(conn, statement, ...)
+    result <- methods::callNextMethod(conn, statement, ...)
     if(isTRUE(pkg_env$order_by_in_subquery)) {
       warning("Results may not be in sorted order! Move arrange() after all other verbs for results in sorted order.")
       pkg_env$order_by_in_subquery <- FALSE
@@ -173,9 +173,9 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
 
   setMethod("dbExecute", c("impala_connection", "character"), function(conn, statement, ...) {
     if(inherits(conn, "JDBCConnection")) {
-      result <- getFromNamespace("dbSendUpdate", "RJDBC")(conn, statement)
+      result <- utils::getFromNamespace("dbSendUpdate", "RJDBC")(conn, statement)
     } else {
-      result <- callNextMethod(conn, statement, ...)
+      result <- methods::callNextMethod(conn, statement, ...)
     }
     if(isTRUE(pkg_env$order_by_in_subquery)) {
       warning("Results may not be in sorted order! Impala cannot store data in sorted order.")
