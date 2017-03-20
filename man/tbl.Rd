@@ -22,4 +22,3 @@ Create a lazy \code{tbl} from an Impala table
 \dontrun{
 flights_tbl <- tbl(impala, "flights")}
 }
-

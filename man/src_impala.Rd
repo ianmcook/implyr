@@ -76,4 +76,3 @@ ODBC driver},
 \href{https://www.cloudera.com/downloads/connectors/impala/jdbc.html}{Impala
 JDBC driver}
 }
-
