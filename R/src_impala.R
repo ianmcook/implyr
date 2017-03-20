@@ -441,6 +441,30 @@ copy_to.src_impala <- function(dest, df, name = deparse(substitute(df)), overwri
   invisible(tbl(dest, name))
 }
 
+#' Force execution of an Impala query
+#'
+#' @name compute
+#' @description \describe{ \item{\code{compute()}}{Executes the query and stores
+#' the result in a new Impala table} \item{\code{collect()}}{Executes the query
+#' and returns the result to R as a data frame \code{tbl}}
+#' \item{\code{collapse()}}{Generates the query for later execution} }
+#'
+#' @param x an object with class \code{tbl_impala}
+#' @param name the name for the new Impala table
+#' @param temporary must be set to \code{FALSE}
+#' @param external whether the new table will be externally managed
+#' @param overwrite whether to overwrite existing table data (currently ignored)
+#' @param force whether to silently fail if the table already exists
+#' @param analyze whether to run \code{COMPUTE STATS} after adding data to the
+#'   new table
+#' @param field_terminator the deliminter to use between fields in text file
+#'   data. Defaults to the ASCII control-A (hex 01) character
+#' @param line_terminator the line terminator. Defaults to \code{"\n"}
+#' @param file_format the storage format to use. Options are \code{"TEXTFILE"}
+#'   (default) and \code{"PARQUET"}
+#' @param ... other arguments passed on to methods
+#' @note Impala does not support temporary tables. When using \code{compute()}
+#'   to store results in an Impala table, you must set \code{temporary = FALSE}.
 #' @export
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
@@ -491,6 +515,23 @@ compute.tbl_impala <- function(x, name, temporary = TRUE, external = FALSE,
   #  group_by(!!! symbols(op_grps(x))) %>%
   #  getFromNamespace("add_op_order", "dplyr")(op_sort(x))
   tbl(x$src, name) %>% group_by_(.dots = groups(x))
+}
+
+#' @name collect
+#' @rdname compute
+#' @export
+#' @importFrom dplyr collect
+collect.tbl_impala <- function(x, ..., n = Inf, warn_incomplete = TRUE) {
+  NextMethod("collapse")
+}
+
+#' @name collapse
+#' @rdname compute
+#' @param n the number of rows to return
+#' @export
+#' @importFrom dplyr collapse
+collapse.tbl_impala <- function(x, vars = NULL, ...) {
+  NextMethod("collapse")
 }
 
 #' @export
