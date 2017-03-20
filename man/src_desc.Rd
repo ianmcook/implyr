@@ -11,7 +11,7 @@
 \item{x}{an object with class class \code{src_impala}}
 }
 \value{
-a string containing information about the connection to Impala
+A string containing information about the connection to Impala
 }
 \description{
 Describe the Impala data source

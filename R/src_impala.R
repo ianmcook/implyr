@@ -45,7 +45,7 @@ pkg_env <- new.env()
 #'   \code{\link[RJDBC]{dbConnect,JDBCDriver-method}}
 #' @param auto_disconnect whether to automatically close the connection to
 #'   Impala when the object returned by this function is deleted
-#' @return an object with class \code{src_impala}, \code{src_sql}, \code{src}
+#' @return An object with class \code{src_impala}, \code{src_sql}, \code{src}
 #' @examples
 #' # Using ODBC connectivity:
 #'
@@ -193,7 +193,7 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
 #'
 #' @name src_desc
 #' @param x an object with class class \code{src_impala}
-#' @return a string containing information about the connection to Impala
+#' @return A string containing information about the connection to Impala
 #' @export
 #' @importFrom dplyr src_desc
 src_desc.src_impala <- function(x) {
