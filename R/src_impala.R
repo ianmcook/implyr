@@ -217,6 +217,15 @@ src_desc.src_impala <- function(x) {
   paste0(info$version, " through ", info$package, " [", info$user, info$url, "/", info$dbname, "]")
 }
 
+#' Create a lazy \code{tbl} from an Impala table
+#'
+#' @name tbl
+#' @param src an object with class with class \code{src_impala}
+#' @param from a table name
+#' @return An object with class \code{tbl_impala}, \code{tbl_sql}, \code{tbl_lazy}, \code{tbl}
+#' @examples
+#' \dontrun{
+#' flights_tbl <- tbl(impala, "flights")}
 #' @export
 #' @importFrom dplyr tbl
 #' @importFrom dplyr tbl_sql
