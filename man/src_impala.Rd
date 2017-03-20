@@ -9,18 +9,18 @@ src_impala(drv, ..., auto_disconnect = FALSE)
 \arguments{
 \item{drv}{an object that inherits from \code{\link[DBI]{DBIDriver-class}}.
 For example, an object returned by \code{\link[odbc]{odbc}} or
-\code{\link[RJDBC]{JDBC}}.}
+\code{\link[RJDBC]{JDBC}}}
 
 \item{...}{arguments passed to the underlying Impala database connection
 method \code{\link[DBI]{dbConnect}}. See
 \code{\link[odbc]{dbConnect,OdbcDriver-method}} or
-\code{\link[RJDBC]{dbConnect,JDBCDriver-method}}.}
+\code{\link[RJDBC]{dbConnect,JDBCDriver-method}}}
 
 \item{auto_disconnect}{whether to automatically close the connection to
-Impala when the object returned by this function is deleted.}
+Impala when the object returned by this function is deleted}
 }
 \value{
-An S3 object with class \code{src_impala}, \code{src_sql}, \code{src}.
+An S3 object with class \code{src_impala}, \code{src_sql}, \code{src}
 }
 \description{
 \code{src_impala} creates a SQL backend to dplyr for

@@ -38,14 +38,14 @@ pkg_env <- new.env()
 #'
 #' @param drv an object that inherits from \code{\link[DBI]{DBIDriver-class}}.
 #'   For example, an object returned by \code{\link[odbc]{odbc}} or
-#'   \code{\link[RJDBC]{JDBC}}.
+#'   \code{\link[RJDBC]{JDBC}}
 #' @param ... arguments passed to the underlying Impala database connection
 #'   method \code{\link[DBI]{dbConnect}}. See
 #'   \code{\link[odbc]{dbConnect,OdbcDriver-method}} or
-#'   \code{\link[RJDBC]{dbConnect,JDBCDriver-method}}.
+#'   \code{\link[RJDBC]{dbConnect,JDBCDriver-method}}
 #' @param auto_disconnect whether to automatically close the connection to
-#'   Impala when the object returned by this function is deleted.
-#' @return An S3 object with class \code{src_impala}, \code{src_sql}, \code{src}.
+#'   Impala when the object returned by this function is deleted
+#' @return An S3 object with class \code{src_impala}, \code{src_sql}, \code{src}
 #' @examples
 #' # Using ODBC connectivity:
 #'
