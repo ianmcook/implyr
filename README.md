@@ -328,7 +328,7 @@ system("hdfs dfs -put flights /user/hive/warehouse/flights/000000_0")
 Another option is to use the R package [rwebhdfs](https://github.com/saurfang/rwebhdfs) to load the local file into HDFS using the WebHDFS REST API:
 
 ``` r
-devtools::install_github("saurfang/rwebhdfs#4")
+devtools::install_github("saurfang/rwebhdfs")
 library(rwebhdfs)
 hdfs <- webhdfs("host", 50070, "username")
 write_file(hdfs, "/user/hive/warehouse/flights/000000_0", "flights")
