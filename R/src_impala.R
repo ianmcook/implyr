@@ -189,6 +189,11 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
   src_sql("impala", con = con, disco = disco, info = info)
 }
 
+#' Describe the Impala data source
+#'
+#' @name src_desc
+#' @param x an object with class class \code{src_impala}
+#' @return a string containing information about the connection to Impala
 #' @export
 #' @importFrom dplyr src_desc
 src_desc.src_impala <- function(x) {
