@@ -362,7 +362,6 @@ setdiff.tbl_impala <- function(x, y, copy = FALSE, ...) {
   stop("Impala does not support setdiff operations.")
 }
 
-
 #' @export
 #' @importFrom dplyr build_sql
 #' @importFrom dplyr ident
@@ -764,4 +763,3 @@ is_nchar_one_string_or_null  <- function(x) {
 assertthat::on_failure(is_nchar_one_string_or_null) <- function(call, env) {
   paste0(deparse(call$x), " is not a string with one character")
 }
-
