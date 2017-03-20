@@ -643,7 +643,7 @@ getNamedArgs_JDBCDriver <-
     list(url = url, user = user, ...)
   }
 
-# Gets the dots after am OdbcDriver as a named list, omitting pwd
+# Gets the dots after an OdbcDriver as a named list, omitting pwd
 getNamedArgs_OdbcDriver <-
   function(dsn = NULL, ..., timezone = "UTC", driver = NULL, server = NULL,
            database = NULL, uid = NULL, pwd = NULL, .connection_string = NULL) {
