@@ -176,10 +176,22 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
   info$package <-
     attr(attr(getClass(class(con)[1]), "className"), "package")
 
+  if (isClass("impala_connection", where = topenv(parent.frame()))) {
+    removeClass("impala_connection", where = topenv(parent.frame()))
+    # TBD: issue warning?
+  }
   setClass("impala_connection",
            contains = class(con),
            where = topenv(parent.frame()))
 
+  if(existsMethod("dbSendQuery",
+                  c("impala_connection", "character"),
+                  where = topenv(parent.frame()))) {
+    removeMethod("dbSendQuery",
+                 c("impala_connection", "character"),
+                 where = topenv(parent.frame()))
+    # TBD: issue warning?
+  }
   setMethod("dbSendQuery", c("impala_connection", "character"), function(conn, statement, ...) {
     result <- methods::callNextMethod(conn, statement, ...)
     if (isTRUE(pkg_env$order_by_in_subquery)) {
@@ -191,6 +203,14 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
     result
   }, where = topenv(parent.frame()))
 
+  if (existsMethod("dbExecute",
+                   c("impala_connection", "character"),
+                   where = topenv(parent.frame()))) {
+    removeMethod("dbExecute",
+                 c("impala_connection", "character"),
+                 where = topenv(parent.frame()))
+    # TBD: issue warning?
+  }
   setMethod("dbExecute", c("impala_connection", "character"), function(conn, statement, ...) {
     if (inherits(conn, "JDBCConnection")) {
       result <-
