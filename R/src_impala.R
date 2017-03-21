@@ -115,7 +115,8 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
     return(con)
   }
   if (!inherits(drv, "DBIDriver")) {
-    stop("drv must be a DBI-compatible driver object or an existing src_impala object")
+    stop("drv must be a DBI-compatible driver object or an existing src_impala object",
+         call. = FALSE)
   }
 
   con <- dbConnect(drv, ...)
@@ -417,13 +418,13 @@ sql_translate_env.impala_connection <- function(con) {
 #' @export
 #' @importFrom dplyr intersect
 intersect.tbl_impala <- function(x, y, copy = FALSE, ...) {
-  stop("Impala does not support intersect operations.")
+  stop("Impala does not support intersect operations.", call. = FALSE)
 }
 
 #' @export
 #' @importFrom dplyr setdiff
 setdiff.tbl_impala <- function(x, y, copy = FALSE, ...) {
-  stop("Impala does not support setdiff operations.")
+  stop("Impala does not support setdiff operations.", call. = FALSE)
 }
 
 #' @export
@@ -488,7 +489,8 @@ copy_to.src_impala <-
       stop(
         "Data frame ",
         name,
-        " is too large. copy_to currently only supports very small data frames."
+        " is too large. copy_to currently only supports very small data frames.",
+        call. = FALSE
       )
     }
 
@@ -505,7 +507,10 @@ copy_to.src_impala <-
       is_nchar_one_string_or_null(line_terminator)
     )
     if (temporary) {
-      stop("Impala does not support temporary tables. Set temporary = FALSE in copy_to().")
+      stop(
+        "Impala does not support temporary tables. Set temporary = FALSE in copy_to().",
+        call. = FALSE
+      )
     }
     class(df) <- "data.frame"
     con <- con_acquire(dest)
@@ -602,7 +607,10 @@ compute.tbl_impala <-
       is_nchar_one_string_or_null(line_terminator)
     )
     if (temporary) {
-      stop("Impala does not support temporary tables. Set temporary = FALSE in compute().")
+      stop(
+        "Impala does not support temporary tables. Set temporary = FALSE in compute().",
+        call. = FALSE
+      )
     }
 
     con <- con_acquire(x$src)
@@ -688,7 +696,10 @@ db_save_query.impala_connection <-
       is_nchar_one_string_or_null(line_terminator)
     )
     if (temporary) {
-      stop("Impala does not support temporary tables. Set temporary = FALSE in db_save_query().")
+      stop(
+        "Impala does not support temporary tables. Set temporary = FALSE in db_save_query().",
+        call. = FALSE
+      )
     }
 
     # too dangerous
@@ -858,7 +869,8 @@ db_create_table.impala_connection <-
     )
     if (temporary) {
       stop(
-        "Impala does not support temporary tables. Set temporary = FALSE in db_create_table()."
+        "Impala does not support temporary tables. Set temporary = FALSE in db_create_table().",
+        call. = FALSE
       )
     }
     field_names <-
