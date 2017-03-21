@@ -236,7 +236,7 @@ Using SQL
 
 In addition to using dplyr grammar, you can also issue SQL queries to Impala.
 
-To execute a query that returns no result set, use the `dbExecute` function:
+To execute a statement that returns no result set, use the `dbExecute` function:
 
 ``` r
 dbExecute(impala, "REFRESH flights")
@@ -247,7 +247,7 @@ To execute a query and return the result to R as a data frame, use the `dbGetQue
 ``` r
 flights_by_carrier_df <- dbGetQuery(
   impala,
-  "SELECT carrier, COUNT(*) FROM FLIGHTS GROUP BY carrier"
+  "SELECT carrier, COUNT(*) FROM flights GROUP BY carrier"
 )
 ```
 
@@ -256,7 +256,7 @@ Only use `dbGetQuery` when the query result will be small enough to fit in memor
 You can also execute SQL and return the result as a lazy `tbl`:
 
 ``` r
-flights_tbl <- tbl(impala, sql("SELECT * FROM FLIGHTS"))
+flights_tbl <- tbl(impala, sql("SELECT * FROM flights"))
 ```
 
 Disconnecting
