@@ -96,6 +96,10 @@ pkg_env <- new.env()
 #' @importFrom DBI dbSendQuery
 #' @importFrom dplyr src_sql
 #' @importFrom methods callNextMethod
+#' @importFrom methods existsMethod
+#' @importFrom methods isClass
+#' @importFrom methods removeClass
+#' @importFrom methods removeMethod
 #' @importFrom methods getClass
 #' @importFrom methods setClass
 #' @importFrom methods setMethod
