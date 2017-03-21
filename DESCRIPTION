@@ -21,7 +21,8 @@ Imports:
     utils
 Suggests:
     RJDBC,
-    odbc
+    odbc,
+    nycflights13
 SystemRequirements: Impala driver to support a 'DBI'-compatible R interface
 NeedsCompilation: no
 License: Apache License 2.0 | file LICENSE
