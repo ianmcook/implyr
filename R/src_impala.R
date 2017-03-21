@@ -451,6 +451,9 @@ sql_subquery.impala_connection <-
         if (!grepl("\\sLIMIT\\s", from)) {
           from <- sql(paste(from, "LIMIT 9223372036854775807"))
           # TBD: consider whether to do this, or just issue the warning and not try to sort
+          # TBD: consider whether to enable this as an option,
+          #  possibly using the pkgconfig package to set and get the option,
+          #  since it seems pkgconfig will be used in the new release of dplyr
         }
       }
       build_sql("(", from, ") ", ident(
