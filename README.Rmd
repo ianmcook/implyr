@@ -352,6 +352,8 @@ The RJDBC package is not fully DBI-compatible. implyr works around these incompa
 
 RJDBC has a crude type handling system: columns and column expressions with numeric types are returned to R as `numeric` coulmns, and all other types are returned as `character` columns. This has undesirable effects; for example, Boolean types are returned as `character` columns with values `"0"` for `FALSE` and or `"1"` for `TRUE`.
 
+When using the function `copy_to` with RJDBC, data types may be modified in unexpected ways. For example, inserted `character` values may be right-padded with whitespace.
+
 If possible, connect to Impala using the odbc package instead of the RJDBC package.
 
 #### Row Order
