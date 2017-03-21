@@ -1002,6 +1002,25 @@ con_release <- function(src, con) {
 # @importFrom dplyr con_release
 # con_release.src_impala <- ...
 
+#' Send SQL query to Impala and retrieve results
+#'
+#' @description Returns the result of an Impala SQL query as a data frame.
+#'
+#' @param conn object with class class \code{src_impala}
+#' @param statement a character string containing SQL
+#' @param ... other arguments passed on to methods
+#' @return A \code{data.frame} with as many rows as records were fetched and as
+#'   many columns as fields in the result set, even if the result is a single
+#'   value or has one or zero rows
+#' @examples
+#' \dontrun{
+#' flights_by_carrier_df <- dbGetQuery(
+#'   impala,
+#'   "SELECT carrier, COUNT(*) FROM flights GROUP BY carrier"
+#' )}
+#' @note This method is for \code{SELECT} queries only. Use
+#'   \code{\link[=dbExecute,src_impala,character-method]{dbExecute()}} for data
+#'   definition or data manipulation statements.
 #' @export
 #' @importFrom DBI dbGetQuery
 #' @importFrom methods setMethod
@@ -1009,6 +1028,23 @@ setMethod("dbGetQuery", c("src_impala", "character"), function(conn, statement, 
   dbGetQuery(con_acquire(conn), statement, ...)
 })
 
+#' Execute an Impala statement that returns no result
+#'
+#' @description Executes an Impala statement that returns no result.
+#'
+#' @param conn object with class class \code{src_impala}
+#' @param statement a character string containing SQL
+#' @param ... other arguments passed on to methods
+#' @return Depending on the package used to connect to Impala, either a scalar
+#'   numeric that specifies the number of rows affected by the statement, or
+#'   \code{NULL}
+#' @examples
+#' \dontrun{
+#' dbExecute(impala, "INVALIDATE METADATA")}
+#' @note This method is for statements that return no result, such as data
+#'   definition or data manipulation statements. Use
+#'   \code{\link[=dbGetQuery,src_impala,character-method]{dbGetQuery()}} for
+#'   \code{SELECT} queries.
 #' @export
 #' @importFrom DBI dbExecute
 #' @importFrom methods setMethod
@@ -1016,6 +1052,15 @@ setMethod("dbExecute", c("src_impala", "character"), function(conn, statement, .
   dbExecute(con_acquire(conn), statement, ...)
 })
 
+#' Close the connection to Impala
+#'
+#' @description Closes (disconnects) the connection to Impala.
+#'
+#' @param conn object with class class \code{src_impala}
+#' @return Returns \code{TRUE}, invisibly
+#' @examples
+#' \dontrun{
+#' dbDisconnect(impala)}
 #' @export
 #' @importFrom DBI dbDisconnect
 #' @importFrom methods setMethod
