@@ -1061,6 +1061,7 @@ setMethod("dbExecute", c("src_impala", "character"), function(conn, statement, .
 #' @description Closes (disconnects) the connection to Impala.
 #'
 #' @param conn object with class class \code{src_impala}
+#' @param ... other arguments passed on to methods
 #' @return Returns \code{TRUE}, invisibly
 #' @examples
 #' \dontrun{

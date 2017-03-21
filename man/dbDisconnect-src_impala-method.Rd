@@ -9,6 +9,8 @@
 }
 \arguments{
 \item{conn}{object with class class \code{src_impala}}
+
+\item{...}{other arguments passed on to methods}
 }
 \value{
 Returns \code{TRUE}, invisibly
