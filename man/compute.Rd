@@ -9,8 +9,9 @@
 \alias{collapse.tbl_impala}
 \title{Force execution of an Impala query}
 \usage{
-\method{compute}{tbl_impala}(x, name, temporary = TRUE, external = FALSE,
-  overwrite = FALSE, force = FALSE, analyze = FALSE,
+\method{compute}{tbl_impala}(x, name, temporary = TRUE,
+  unique_indexes = NULL, indexes = NULL, analyze = FALSE,
+  external = FALSE, overwrite = FALSE, force = FALSE,
   field_terminator = NULL, line_terminator = NULL, file_format = NULL,
   ...)
 
@@ -25,14 +26,18 @@
 
 \item{temporary}{must be set to \code{FALSE}}
 
+\item{unique_indexes}{not used}
+
+\item{indexes}{not used}
+
+\item{analyze}{whether to run \code{COMPUTE STATS} after adding data to the
+new table}
+
 \item{external}{whether the new table will be externally managed}
 
 \item{overwrite}{whether to overwrite existing table data (currently ignored)}
 
 \item{force}{whether to silently fail if the table already exists}
-
-\item{analyze}{whether to run \code{COMPUTE STATS} after adding data to the
-new table}
 
 \item{field_terminator}{the deliminter to use between fields in text file
 data. Defaults to the ASCII control-A (hex 01) character}

@@ -15,7 +15,8 @@
 \item{...}{not used}
 }
 \value{
-An object with class \code{tbl_impala}, \code{tbl_sql}, \code{tbl_lazy}, \code{tbl}
+An object with class \code{tbl_impala}, \code{tbl_sql},
+  \code{tbl_lazy}, \code{tbl}
 }
 \description{
 Create a lazy \code{tbl} from an Impala table

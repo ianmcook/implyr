@@ -257,7 +257,8 @@ src_desc.src_impala <- function(x) {
 #' @param src an object with class with class \code{src_impala}
 #' @param from a table name
 #' @param ... not used
-#' @return An object with class \code{tbl_impala}, \code{tbl_sql}, \code{tbl_lazy}, \code{tbl}
+#' @return An object with class \code{tbl_impala}, \code{tbl_sql},
+#'   \code{tbl_lazy}, \code{tbl}
 #' @examples
 #' \dontrun{
 #' flights_tbl <- tbl(impala, "flights")}
@@ -602,11 +603,13 @@ copy_to.src_impala <-
 #' @param x an object with class \code{tbl_impala}
 #' @param name the name for the new Impala table
 #' @param temporary must be set to \code{FALSE}
+#' @param unique_indexes not used
+#' @param indexes not used
+#' @param analyze whether to run \code{COMPUTE STATS} after adding data to the
+#'   new table
 #' @param external whether the new table will be externally managed
 #' @param overwrite whether to overwrite existing table data (currently ignored)
 #' @param force whether to silently fail if the table already exists
-#' @param analyze whether to run \code{COMPUTE STATS} after adding data to the
-#'   new table
 #' @param field_terminator the deliminter to use between fields in text file
 #'   data. Defaults to the ASCII control-A (hex 01) character
 #' @param line_terminator the line terminator. Defaults to \code{"\n"}
