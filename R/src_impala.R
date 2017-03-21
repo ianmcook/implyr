@@ -463,6 +463,51 @@ sql_subquery.impala_connection <-
     }
   }
 
+#' Copy a (very small) local data frame to Impala
+#'
+#' @name copy_to
+#' @description
+#' \code{copy_to} inserts the contents of a local data frame into a new Impala
+#' table. \code{copy_to} currently only supports very small data frames (1000 or
+#' fewer row/column positions). It uses the SQL \code{INSERT ... VALUES()}
+#' technique, which is not suitable for loading large amounts of data.
+#'
+#' This package does not provide tools for loading larger amounts of local data
+#' into Impala tables. This is because Impala can query data stored in several
+#' different filesystems and storage systems (HDFS, Apache Kudu, Apache HBase,
+#' and Amazon S3) and Impala does not include built-in capability for loading
+#' local data into these systems.
+#'
+#' @param dest an object with class with class \code{src_impala}
+#' @param df a (very small) local data frame
+#' @param name name for the new Impala table
+#' @param types a character vector giving variable types to use for the columns
+#' @param temporary must be set to \code{FALSE}
+#' @param unique_indexes not used
+#' @param indexes not used
+#' @param analyze whether to run \code{COMPUTE STATS} after adding data to the
+#'   new table
+#' @param external whether the new table will be externally managed
+#' @param overwrite whether to overwrite existing table data (currently ignored)
+#' @param force whether to silently continue if the table already exists
+#' @param field_terminator the deliminter to use between fields in text file
+#'   data. Defaults to the ASCII control-A (hex 01) character
+#' @param line_terminator the line terminator. Defaults to \code{"\n"}
+#' @param file_format the storage format to use. Options are \code{"TEXTFILE"}
+#'   (default) and \code{"PARQUET"}
+#' @param ... other arguments passed on to methods
+#' @return An object with class \code{tbl_impala}, \code{tbl_sql},
+#'   \code{tbl_lazy}, \code{tbl}
+#' @examples
+#' library(nycflights13)
+#' dim(airlines) # airlines data frame is very small
+#' # [1] 16  2
+#'
+#' \dontrun{
+#' copy_to(impala, airlines, temporary = FALSE)}
+#' @note Impala does not support temporary tables. When using \code{copy_to()}
+#'   to insert local data into an Impala table, you must set \code{temporary =
+#'   FALSE}.
 #' @export
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
@@ -486,6 +531,8 @@ copy_to.src_impala <-
            ...) {
     # don't try to insert large data frames with INSERT ... VALUES()
     if (prod(dim(df)) > 1e3L) {
+      # TBD: consider whether to make this limit configurable, possibly using
+      #  options with the pkgconfig package
       stop(
         "Data frame ",
         name,
