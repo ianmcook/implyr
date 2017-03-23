@@ -34,7 +34,7 @@ You must also install a package and driver to provide connectivity to Impala.
 
 3.  Download and install the latest version of the [Impala ODBC driver from Cloudera](https://www.cloudera.com/downloads/connectors/impala/odbc.html).
 
-4.  Complete the installation and configuration steps described in the [odbc package README](https://cran.r-project.org/web/packages/odbc/README.html#installation) and the [Impala ODBC driver installation guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf).
+4.  Complete the installation and configuration steps described in the [odbc package README](https://cran.r-project.org/package=odbc/README.html#installation) and the [Impala ODBC driver installation guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf).
 
 #### JDBC Connectivity
 
@@ -193,7 +193,7 @@ flights_tbl %>%
 
 In addition, you should specify integer values as R `integer` objects instead of `numeric` objects; for example, `1L` or `as.integer(1)` instead of `1`.
 
-See [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/introduction.html) for more examples of dplyr grammar.
+See [Introduction to dplyr](https://cran.r-project.org/package=dplyr/vignettes/introduction.html) for more examples of dplyr grammar.
 
 Like other SQL backends to dplyr, implyr delays work until a result needs to be computed, then computes the result as a single query operation.
 
@@ -204,9 +204,9 @@ Like other SQL backends to dplyr, implyr delays work until a result needs to be 
 
 If you print or store a result without using one of these functions, then implyr returns a lazy `tbl`. Only use `collect()` or `as.data.frame()` when the result will be small enough to fit in memory in your R session.
 
-See the [dplyr Databases vignette](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html) for more information.
+See the [dplyr Databases vignette](https://cran.r-project.org/package=dplyr/vignettes/databases.html) for more information.
 
-implyr supports window functions, which enable computation of ranks, offsets, and cumulative aggregates. See [Window functions and grouped mutate/filter](https://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html) for more information.
+implyr supports window functions, which enable computation of ranks, offsets, and cumulative aggregates. See [Window functions and grouped mutate/filter](https://cran.r-project.org/package=dplyr/vignettes/window-functions.html) for more information.
 
 ``` r
 worst_delay_each_day <- flights_tbl %>%
@@ -216,7 +216,7 @@ worst_delay_each_day <- flights_tbl %>%
   collect()
 ```
 
-implyr supports most [two-table verbs](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html), which enable joins and set operations.
+implyr supports most [two-table verbs](https://cran.r-project.org/package=dplyr/vignettes/two-table.html), which enable joins and set operations.
 
 ``` r
 airlines_tbl <- tbl(impala, "airlines")

@@ -4,10 +4,10 @@ Title: R Interface for Apache Impala
 Version: 0.0.9.9000
 Authors@R: c(
     person("Ian", "Cook", email = "ian@cloudera.com", role = c("aut", "cre")),
-    person(family = "Cloudera", role = c("cph", "fnd"))
+    person(family = "Cloudera", role = c("cph"))
     )
 Maintainer: Ian Cook <ian@cloudera.com>
-Description: SQL back-end to 'dplyr' for Apache Impala (incubating),
+Description: 'SQL' back-end to 'dplyr' for Apache Impala (incubating),
     the massively parallel processing query engine for Apache 'Hadoop'.
 URL: https://github.com/ianmcook/implyr
 BugReports: https://github.com/ianmcook/implyr/issues
