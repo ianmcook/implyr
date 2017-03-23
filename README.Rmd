@@ -227,9 +227,20 @@ implyr supports most [two-table verbs](https://cran.r-project.org/package=dplyr/
 
 ```{r, eval=FALSE}
 airlines_tbl <- tbl(impala, "airlines")
-
 inner_join(flights_tbl, airlines_tbl, by = "carrier")
+```
 
+If you're using dplyr version 0.5.0 and the join key column has the same name in both tables, then you will need to rename the key column in one of the tables to avoid a duplicate column name error ([#1](https://github.com/ianmcook/implyr/issues/1)):
+
+```{r, eval=FALSE}
+airlines_tbl <- airlines_tbl %>% rename(airlines.carrier = carrier)
+inner_join(flights_tbl, airlines_tbl, by = c("carrier" = "airlines.carrier"))
+```
+
+implyr supports filtering joins, which are not affected by this issue:
+
+```{r, eval=FALSE}
+airlines_tbl <- tbl(impala, "airlines")
 southwest_airlines <- airlines_tbl %>% filter(name == "Southwest Airlines Co.")
 southwest_flights <- semi_join(flights_tbl, southwest_airlines, by = "carrier")
 ```
