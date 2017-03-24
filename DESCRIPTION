@@ -1,7 +1,7 @@
 Package: implyr
 Type: Package
 Title: R Interface for Apache Impala
-Version: 0.0.9.9000
+Version: 0.1.0
 Authors@R: c(
     person("Ian", "Cook", email = "ian@cloudera.com", role = c("aut", "cre")),
     person(family = "Cloudera", role = c("cph"))

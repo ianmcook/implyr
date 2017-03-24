@@ -3,7 +3,7 @@
 implyr
 ======
 
-[![Build Status](https://travis-ci.org/ianmcook/implyr.svg?branch=master)](https://travis-ci.org/ianmcook/implyr)
+[![Build Status](https://travis-ci.org/ianmcook/implyr.svg?branch=master)](https://travis-ci.org/ianmcook/implyr) [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/implyr)](https://cran.r-project.org/package=implyr)
 
 **implyr** is a SQL backend to [dplyr](https://cran.r-project.org/package=dplyr) for [Apache Impala (incubating)](https://impala.apache.org), the massively parallel processing query engine for Apache Hadoop. Impala enables low-latency SQL queries on large datasets stored in HDFS, Apache HBase, Apache Kudu, and Amazon S3.
 
@@ -12,7 +12,13 @@ implyr is designed to work with any [DBI](https://cran.r-project.org/package=DBI
 Installation
 ------------
 
-**implyr** is not yet on CRAN. You can install the latest version from GitHub:
+You can install the latest release of implyr from CRAN:
+
+``` r
+install.packages("implyr")
+```
+
+Or you can install the current development version from GitHub:
 
 ``` r
 devtools::install_github("ianmcook/implyr")
