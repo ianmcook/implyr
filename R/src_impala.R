@@ -506,6 +506,7 @@ sql_subquery.impala_connection <-
 #' @param dest an object with class with class \code{src_impala}
 #' @param df a (very small) local data frame
 #' @param name name for the new Impala table
+#' @param overwrite whether to overwrite existing table data (currently ignored)
 #' @param types a character vector giving variable types to use for the columns
 #' @param temporary must be set to \code{FALSE}
 #' @param unique_indexes not used
@@ -513,7 +514,6 @@ sql_subquery.impala_connection <-
 #' @param analyze whether to run \code{COMPUTE STATS} after adding data to the
 #'   new table
 #' @param external whether the new table will be externally managed
-#' @param overwrite whether to overwrite existing table data (currently ignored)
 #' @param force whether to silently continue if the table already exists
 #' @param field_terminator the deliminter to use between fields in text file
 #'   data. Defaults to the ASCII control-A (hex 01) character
@@ -542,13 +542,13 @@ copy_to.src_impala <-
   function(dest,
            df,
            name = deparse(substitute(df)),
+           overwrite = FALSE,
            types = NULL,
            temporary = TRUE,
            unique_indexes = NULL,
            indexes = NULL,
            analyze = TRUE,
            external = FALSE,
-           overwrite = FALSE,
            force = FALSE,
            field_terminator = NULL,
            line_terminator = NULL,

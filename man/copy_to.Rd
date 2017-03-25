@@ -6,10 +6,10 @@
 \title{Copy a (very small) local data frame to Impala}
 \usage{
 \method{copy_to}{src_impala}(dest, df, name = deparse(substitute(df)),
-  types = NULL, temporary = TRUE, unique_indexes = NULL, indexes = NULL,
-  analyze = TRUE, external = FALSE, overwrite = FALSE, force = FALSE,
-  field_terminator = NULL, line_terminator = NULL, file_format = NULL,
-  ...)
+  overwrite = FALSE, types = NULL, temporary = TRUE,
+  unique_indexes = NULL, indexes = NULL, analyze = TRUE,
+  external = FALSE, force = FALSE, field_terminator = NULL,
+  line_terminator = NULL, file_format = NULL, ...)
 }
 \arguments{
 \item{dest}{an object with class with class \code{src_impala}}
@@ -17,6 +17,8 @@
 \item{df}{a (very small) local data frame}
 
 \item{name}{name for the new Impala table}
+
+\item{overwrite}{whether to overwrite existing table data (currently ignored)}
 
 \item{types}{a character vector giving variable types to use for the columns}
 
@@ -30,8 +32,6 @@
 new table}
 
 \item{external}{whether the new table will be externally managed}
-
-\item{overwrite}{whether to overwrite existing table data (currently ignored)}
 
 \item{force}{whether to silently continue if the table already exists}
 
