@@ -1075,10 +1075,22 @@ setMethod("dbDisconnect", "src_impala", function(conn, ...) {
 
 # Escape quotes with a backslash instead of doubling
 sql_quote <- function(x, quote) {
-  y <- gsub(quote, paste0("\\", quote), x, fixed = TRUE)
-  y <- paste0(quote, y, quote)
+  if (length(x) == 1) {
+    y <- tbl_quote_name(x)
+  } else {
+    y <- gsub(quote, paste0("\\", quote), x, fixed = TRUE)
+    y <- paste0(quote, y, quote)
+  }
   y[is.na(x)] <- "NULL"
   names(y) <- names(x)
+  y
+}
+
+tbl_quote_name <- function(name) {
+  y <- gsub("`", "``", name, fixed = TRUE)
+  y <- strsplit(y, "\\.")[[1]]
+  y <- paste(y, collapse = "`.`")
+  y <- paste("`", y, "`", sep = "")
   y
 }
 
