@@ -986,6 +986,18 @@ db_create_table.impala_connection <-
     dbExecute(con, sql)
   }
 
+#' Use specific database
+#'
+#' @param src An impala source.
+#' @param database The database name.
+#'
+#' @export
+tbl_change_db <- function(src, database) {
+  con <- src$con
+  sql <- build_sql("USE ", ident(database), con = con)
+  dbExecute(con, sql)
+}
+
 con_acquire <- function (src) {
   con <- src$con
   if (is.null(con)) {
