@@ -1086,14 +1086,18 @@ setMethod("dbDisconnect", "src_impala", function(conn, ...) {
 })
 
 # Escape quotes with a backslash instead of doubling
+#' @importFrom dplyr is.ident
 sql_quote <- function(x, quote) {
   y <- gsub(quote, paste0("\\", quote), x, fixed = TRUE)
-  # Add period quotation to handle database name: "db_name.foo" -> "`db_name`.`foo`"
-  y <- strsplit(y, ".", fixed = TRUE)
-  y <- sapply(y,
-              function(x){
-                paste0(x, collapse=paste0(quote, ".", quote))
-              })
+
+  if(is.ident(x)) {
+    # Add period quotation to handle database name: "db_name.foo" -> "`db_name`.`foo`"
+    y <- strsplit(y, ".", fixed = TRUE)
+    y <- sapply(y,
+                function(x){
+                  paste0(x, collapse=paste0(quote, ".", quote))
+                })
+  }
   y <- paste0(quote, y, quote)
   y[is.na(x)] <- "NULL"
   names(y) <- names(x)
