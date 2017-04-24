@@ -94,7 +94,12 @@ pkg_env <- new.env()
 #' @importFrom DBI dbExecute
 #' @importFrom DBI dbGetInfo
 #' @importFrom DBI dbSendQuery
-#' @importFrom dplyr src_sql
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") > "0.5.0") {
+#'   importFrom(dbplyr,src_sql)
+#' } else {
+#'   importFrom(dplyr,src_sql)
+#' }
 #' @importFrom methods callNextMethod
 #' @importFrom methods existsMethod
 #' @importFrom methods isClass
@@ -110,6 +115,11 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
   }
   if (!requireNamespace("dplyr", quietly = TRUE)) {
     stop("dplyr is required to use src_impala", call. = FALSE)
+  }
+  if (utils::packageVersion("dplyr") > "0.5.0") {
+    if (!requireNamespace("dbplyr", quietly = TRUE)) {
+      stop("dbplyr is required to use src_impala with dplyr > 0.5.0", call. = FALSE)
+    }
   }
   if (!requireNamespace("DBI", quietly = TRUE)) {
     stop("DBI is required to use src_impala", call. = FALSE)
@@ -239,11 +249,28 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
 
 #' Describe the Impala data source
 #'
+#' @name db_desc
+#' @param x an object with class class \code{impala_connection}
+#' @return A string containing information about the connection to Impala
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") > "0.5.0") {
+#'   S3method(db_desc,impala_connection)
+#'   importFrom(dplyr,db_desc)
+#' }
+db_desc.impala_connection <- function(x) {
+  "TBD"
+}
+
+#' Describe the Impala data source
+#'
 #' @name src_desc
 #' @param x an object with class class \code{src_impala}
 #' @return A string containing information about the connection to Impala
-#' @export
-#' @importFrom dplyr src_desc
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") == "0.5.0") {
+#'   S3method(src_desc,src_impala)
+#'   importFrom(dplyr,src_desc)
+#' }
 src_desc.src_impala <- function(x) {
   info <- x$info
   info$version <-
@@ -287,8 +314,13 @@ src_desc.src_impala <- function(x) {
 #' \dontrun{
 #' flights_tbl <- tbl(impala, "flights")}
 #' @export
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") > "0.5.0") {
+#'   importFrom(dbplyr,tbl_sql)
+#' } else {
+#'   importFrom(dplyr,tbl_sql)
+#' }
 #' @importFrom dplyr tbl
-#' @importFrom dplyr tbl_sql
 tbl.src_impala <- function(src, from, ...) {
   tbl_sql("impala", src = src, from = from, ...)
 }
@@ -306,15 +338,27 @@ sql_escape_string.impala_connection <- function(con, x) {
 }
 
 #' @export
-#' @importFrom dplyr base_agg
-#' @importFrom dplyr base_scalar
-#' @importFrom dplyr base_win
-#' @importFrom dplyr build_sql
-#' @importFrom dplyr sql
-#' @importFrom dplyr sql_prefix
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") > "0.5.0") {
+#'   importFrom(dbplyr,base_agg)
+#'   importFrom(dbplyr,base_scalar)
+#'   importFrom(dbplyr,base_win)
+#'   importFrom(dbplyr,build_sql)
+#'   importFrom(dbplyr,sql)
+#'   importFrom(dbplyr,sql_prefix)
+#'   importFrom(dbplyr,sql_translator)
+#'   importFrom(dbplyr,sql_variant)
+#' } else {
+#'   importFrom(dplyr,base_agg)
+#'   importFrom(dplyr,base_scalar)
+#'   importFrom(dplyr,base_win)
+#'   importFrom(dplyr,build_sql)
+#'   importFrom(dplyr,sql)
+#'   importFrom(dplyr,sql_prefix)
+#'   importFrom(dplyr,sql_translator)
+#'   importFrom(dplyr,sql_variant)
+#' }
 #' @importFrom dplyr sql_translate_env
-#' @importFrom dplyr sql_translator
-#' @importFrom dplyr sql_variant
 sql_translate_env.impala_connection <- function(con) {
   sql_variant(
     sql_translator(
@@ -453,10 +497,18 @@ setdiff.tbl_impala <- function(x, y, copy = FALSE, ...) {
 }
 
 #' @export
-#' @importFrom dplyr build_sql
-#' @importFrom dplyr ident
-#' @importFrom dplyr is.ident
-#' @importFrom dplyr sql
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") > "0.5.0") {
+#'   importFrom(dbplyr,build_sql)
+#'   importFrom(dbplyr,ident)
+#'   importFrom(dbplyr,is.ident)
+#'   importFrom(dbplyr,sql)
+#' } else {
+#'   importFrom(dplyr,build_sql)
+#'   importFrom(dplyr,ident)
+#'   importFrom(dplyr,is.ident)
+#'   importFrom(dplyr,sql)
+#' }
 #' @importFrom dplyr sql_subquery
 #' @importFrom stats setNames
 #' @importFrom utils getFromNamespace
@@ -646,13 +698,19 @@ copy_to.src_impala <-
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") > "0.5.0") {
+#'   importFrom(dbplyr,sql_render)
+#'   importFrom(dbplyr,op_vars)
+#' } else {
+#'   importFrom(dplyr,sql_render)
+#'   importFrom(dplyr,op_vars)
+#' }
 #' @importFrom dplyr %>%
 #' @importFrom dplyr compute
 #' @importFrom dplyr group_by_
 #' @importFrom dplyr groups
-#' @importFrom dplyr op_vars
 #' @importFrom dplyr select_
-#' @importFrom dplyr sql_render
 #' @importFrom dplyr tbl
 #' @importFrom utils getFromNamespace
 compute.tbl_impala <-
@@ -745,8 +803,13 @@ collapse.tbl_impala <- function(x, vars = NULL, ...) {
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") > "0.5.0") {
+#'   importFrom(dbplyr,ident)
+#' } else {
+#'   importFrom(dplyr,ident)
+#' }
 #' @importFrom dplyr db_save_query
-#' @importFrom dplyr ident
 db_save_query.impala_connection <-
   function(con,
            sql,
@@ -860,8 +923,13 @@ db_drop_table.impala_connection <-
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") > "0.5.0") {
+#'   importFrom(dbplyr,escape)
+#' } else {
+#'   importFrom(dplyr,escape)
+#' }
 #' @importFrom dplyr db_insert_into
-#' @importFrom dplyr escape
 db_insert_into.impala_connection <-
   function(con, table, values, overwrite = FALSE, ...) {
     assert_that(is.string(table),
@@ -919,10 +987,17 @@ db_data_type.impala_connection <- function(con, fields, ...) {
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
+#' @rawNamespace
+#' if (utils::packageVersion("dplyr") > "0.5.0") {
+#'   importFrom(dbplyr,escape)
+#'   importFrom(dbplyr,ident)
+#'   importFrom(dbplyr,sql_vector)
+#' } else {
+#'   importFrom(dplyr,escape)
+#'   importFrom(dplyr,ident)
+#'   importFrom(dplyr,sql_vector)
+#' }
 #' @importFrom dplyr db_create_table
-#' @importFrom dplyr escape
-#' @importFrom dplyr ident
-#' @importFrom dplyr sql_vector
 db_create_table.impala_connection <-
   function (con,
             table,
