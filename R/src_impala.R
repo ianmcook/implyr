@@ -14,11 +14,9 @@
 
 # register virtual classes
 
-#' @export
 #' @importFrom methods setOldClass
 setOldClass("src_impala")
 
-#' @export
 #' @importFrom methods setOldClass
 setOldClass("tbl_impala")
 
@@ -94,6 +92,7 @@ pkg_env <- new.env()
 #' @importFrom DBI dbExecute
 #' @importFrom DBI dbGetInfo
 #' @importFrom DBI dbSendQuery
+#' @importFrom dbplyr src_sql
 #' @importFrom methods callNextMethod
 #' @importFrom methods existsMethod
 #' @importFrom methods isClass
@@ -110,10 +109,8 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
   if (!requireNamespace("dplyr", quietly = TRUE)) {
     stop("dplyr is required to use src_impala", call. = FALSE)
   }
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    if (!requireNamespace("dbplyr", quietly = TRUE)) {
-      stop("dbplyr is required to use src_impala with dplyr > 0.5.0", call. = FALSE)
-    }
+  if (!requireNamespace("dbplyr", quietly = TRUE)) {
+    stop("dbplyr is required to use src_impala", call. = FALSE)
   }
   if (!requireNamespace("DBI", quietly = TRUE)) {
     stop("DBI is required to use src_impala", call. = FALSE)
@@ -247,57 +244,13 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
 #' @name db_desc
 #' @param x an object with class class \code{impala_connection}
 #' @return A string containing information about the connection to Impala
-#' @rawNamespace
-#' if (utils::packageVersion("dplyr") > "0.5.0") {
-#'   S3method(db_desc,impala_connection)
-#'   importFrom(dplyr,db_desc)
-#' }
+#' @export
+#' @importFrom dplyr db_desc
 db_desc.impala_connection <- function(x) {
   info <- attr(x, "info")
   if(is.null(info)) {
     return("???")
   }
-  info$version <-
-    sub("\\s?.?(buil|release).*$", "", info$version, ignore.case = TRUE)
-  if (!"url" %in% names(info)) {
-    if (!is.null(info$host) && !is.null(info$port)) {
-      info$url <- paste0(info$host, ":", info$port)
-    } else if (!is.null(info$host)) {
-      info$url <- info$host
-    } else if (!is.null(info$dsn)) {
-      info$url <- paste0(info$dsn)
-    }
-  } else {
-    info$url <- paste0(info$url)
-  }
-  if (!is.null(info$user) && info$user != "") {
-    info$user <- paste0(info$user, "@")
-  }
-  paste0(
-    info$version,
-    " through ",
-    info$package,
-    " [",
-    info$user,
-    info$url,
-    "/",
-    info$dbname,
-    "]"
-  )
-}
-
-#' Describe the Impala data source
-#'
-#' @name src_desc
-#' @param x an object with class class \code{src_impala}
-#' @return A string containing information about the connection to Impala
-#' @rawNamespace
-#' if (utils::packageVersion("dplyr") == "0.5.0") {
-#'   S3method(src_desc,src_impala)
-#'   importFrom(dplyr,src_desc)
-#' }
-src_desc.src_impala <- function(x) {
-  info <- x$info
   info$version <-
     sub("\\s?.?(buil|release).*$", "", info$version, ignore.case = TRUE)
   if (!"url" %in% names(info)) {
@@ -339,6 +292,7 @@ src_desc.src_impala <- function(x) {
 #' \dontrun{
 #' flights_tbl <- tbl(impala, "flights")}
 #' @export
+#' @importFrom dbplyr tbl_sql
 #' @importFrom dplyr tbl
 tbl.src_impala <- function(src, from, ...) {
   tbl_sql("impala", src = src, from = from, ...)
@@ -357,11 +311,19 @@ sql_escape_string.impala_connection <- function(con, x) {
 }
 
 #' @export
+#' @importFrom dbplyr base_agg
+#' @importFrom dbplyr base_scalar
+#' @importFrom dbplyr base_win
+#' @importFrom dbplyr build_sql
+#' @importFrom dbplyr sql
+#' @importFrom dbplyr sql_prefix
+#' @importFrom dbplyr sql_translator
+#' @importFrom dbplyr sql_variant
 #' @importFrom dplyr sql_translate_env
 sql_translate_env.impala_connection <- function(con) {
   sql_variant(
     sql_translator(
-      .parent = base_scalar(),
+      .parent = base_scalar,
 
       # type conversion functions
       as.character = function(x)
@@ -466,7 +428,7 @@ sql_translate_env.impala_connection <- function(con) {
 
     ),
     sql_translator(
-      .parent = base_agg(),
+      .parent = base_agg,
       n = function()
         sql("count(*)"),
       median = sql_prefix("appx_median"),
@@ -479,7 +441,7 @@ sql_translate_env.impala_connection <- function(con) {
         build_sql("group_concat(", x, ",'')")
       }
     ),
-    base_win()
+    base_win
   )
 }
 
@@ -496,6 +458,10 @@ setdiff.tbl_impala <- function(x, y, copy = FALSE, ...) {
 }
 
 #' @export
+#' @importFrom dbplyr build_sql
+#' @importFrom dbplyr ident
+#' @importFrom dbplyr is.ident
+#' @importFrom dbplyr sql
 #' @importFrom dplyr sql_subquery
 #' @importFrom stats setNames
 #' @importFrom utils getFromNamespace
@@ -685,6 +651,8 @@ copy_to.src_impala <-
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
+#' @importFrom dbplyr sql_render
+#' @importFrom dbplyr op_vars
 #' @importFrom dplyr %>%
 #' @importFrom dplyr compute
 #' @importFrom dplyr group_by_
@@ -782,6 +750,7 @@ collapse.tbl_impala <- function(x, vars = NULL, ...) {
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
+#' @importFrom dbplyr ident
 #' @importFrom dplyr db_save_query
 db_save_query.impala_connection <-
   function(con,
@@ -896,6 +865,7 @@ db_drop_table.impala_connection <-
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
+#' @importFrom dbplyr escape
 #' @importFrom dplyr db_insert_into
 db_insert_into.impala_connection <-
   function(con, table, values, overwrite = FALSE, ...) {
@@ -954,6 +924,9 @@ db_data_type.impala_connection <- function(con, fields, ...) {
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
+#' @importFrom dbplyr escape
+#' @importFrom dbplyr ident
+#' @importFrom dbplyr sql_vector
 #' @importFrom dplyr db_create_table
 db_create_table.impala_connection <-
   function (con,
@@ -1026,16 +999,16 @@ con_acquire <- function (src) {
   con
 }
 # TBD: after new release of dplyr, change this to:
-# @export
-# @importFrom dplyr con_acquire
+# (at)export
+# (at)importFrom dplyr con_acquire
 # con_acquire.src_impala <- ...
 
 con_release <- function(src, con) {
   # do nothing
 }
 # TBD: after new release of dplyr, change this to:
-# @export
-# @importFrom dplyr con_release
+# (at)export
+# (at)importFrom dplyr con_release
 # con_release.src_impala <- ...
 
 #' Send SQL query to Impala and retrieve results
@@ -1179,169 +1152,6 @@ is_nchar_one_string_or_null  <- function(x) {
   is.null(x) || (is.string(x) && nchar(x) == 1)
 }
 
-assertthat::on_failure(is_nchar_one_string_or_null) <-
-  function(call, env) {
-    paste0(deparse(call$x), " is not a string with one character")
-  }
-
-# dplyr 0.5.0-0.6.0 compatibility
-base_agg <- function ()
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::base_agg
-  }
-  else {
-    dplyr::base_agg
-  }
-}
-base_scalar <- function ()
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::base_scalar
-  }
-  else {
-    dplyr::base_scalar
-  }
-}
-base_win <- function ()
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::base_win
-  }
-  else {
-    dplyr::base_win
-  }
-}
-build_sql <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::build_sql(...)
-  }
-  else {
-    dplyr::build_sql(...)
-  }
-}
-sql <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::sql(...)
-  }
-  else {
-    dplyr::sql(...)
-  }
-}
-sql_prefix <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::sql_prefix(...)
-  }
-  else {
-    dplyr::sql_prefix(...)
-  }
-}
-sql_translator <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::sql_translator(...)
-  }
-  else {
-    dplyr::sql_translator(...)
-  }
-}
-sql_variant <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::sql_variant(...)
-  }
-  else {
-    dplyr::sql_variant(...)
-  }
-}
-ident <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::ident(...)
-  }
-  else {
-    dplyr::ident(...)
-  }
-}
-is.ident <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::is.ident(...)
-  }
-  else {
-    dplyr::is.ident(...)
-  }
-}
-escape <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::escape(...)
-  }
-  else {
-    dplyr::escape(...)
-  }
-}
-sql_vector <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::sql_vector(...)
-  }
-  else {
-    dplyr::sql_vector(...)
-  }
-}
-sql_render <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::sql_render(...)
-  }
-  else {
-    dplyr::sql_render(...)
-  }
-}
-op_vars <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::op_vars(...)
-  }
-  else {
-    dplyr::op_vars(...)
-  }
-}
-src_sql <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::src_sql(...)
-  }
-  else {
-    dplyr::src_sql(...)
-  }
-}
-tbl_sql <- function (...)
-{
-  if (utils::packageVersion("dplyr") > "0.5.0") {
-    dplyr::check_dbplyr()
-    dbplyr::tbl_sql(...)
-  }
-  else {
-    dplyr::tbl_sql(...)
-  }
+assertthat::on_failure(is_nchar_one_string_or_null) <- function(call, env) {
+  paste0(deparse(call$x), " is not a string with one character")
 }

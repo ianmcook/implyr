@@ -5,7 +5,7 @@
 \alias{db_desc.impala_connection}
 \title{Describe the Impala data source}
 \usage{
-db_desc.impala_connection(x)
+\method{db_desc}{impala_connection}(x)
 }
 \arguments{
 \item{x}{an object with class class \code{impala_connection}}
