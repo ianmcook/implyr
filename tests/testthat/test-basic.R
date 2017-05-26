@@ -8,7 +8,7 @@ test_that("flights and airlines tables exist", {
 test_that("flights tbl_impala has same column names as flights tbl_df", {
   check_impala()
   test_op <- function(x) {
-    x %>% head(5) %>% collect() %>% head(0) %>% colnames
+    x %>% colnames
   }
   compare(test_op(tbl(impala, "flights")), test_op(nycflights13::flights))
 })
