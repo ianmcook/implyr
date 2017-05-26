@@ -1,6 +1,19 @@
 context("basic tests")
 
-test_that("tbl_impala matches tbl_df", {
+test_that("flights and airlines tables exist", {
+  check_impala()
+  expect_true(all(c("airlines", "flights") %in% src_tbls(impala)))
+})
+
+test_that("flights tbl_impala has same column names as flights tbl_df", {
+  check_impala()
+  test_op <- function(x) {
+    x %>% head(5) %>% collect() %>% head(0) %>% colnames
+  }
+  compare(test_op(tbl(impala, "flights")), test_op(nycflights13::flights))
+})
+
+test_that("airlines tbl_impala matches airlines tbl_df", {
   check_impala()
   test_op <- function(x) {
     x %>% arrange(carrier) %>% collect()
