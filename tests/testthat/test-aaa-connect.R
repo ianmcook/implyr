@@ -1,0 +1,27 @@
+context("connect")
+
+test_that("can connect to Impala using RJDBC", {
+  check_impala()
+  run_tests <<- tryCatch({
+    jdbc_path <- tempdir()
+    jdbc_zip <- file.path(jdbc_path, basename(jdbc_url))
+    unlink(jdbc_zip)
+    download.file(jdbc_url, jdbc_zip, quiet = TRUE)
+    jdbc_jars <- tools::file_path_sans_ext(jdbc_zip)
+    unlink(jdbc_jars, recursive = TRUE)
+    dir.create(jdbc_jars)
+    unzip(jdbc_zip, exdir = jdbc_jars)
+    impala_classpath <- list.files(path = jdbc_jars, pattern = "\\.jar$", full.names = TRUE)
+    rJava::.jinit(classpath = impala_classpath)
+    drv <- RJDBC::JDBC("com.cloudera.impala.jdbc41.Driver", impala_classpath, "`")
+    jdbc_conn_str <- paste0("jdbc:impala://", jdbc_host, ":", jdbc_port)
+    impala <<- implyr::src_impala(drv, jdbc_conn_str, jdbc_user, jdbc_pass)
+    TRUE
+  }, error = function(e) {
+    FALSE
+  })
+  if(!run_tests) {
+    skip("Could not connect to Impala. Skipping tests")
+  }
+  succeed()
+})
