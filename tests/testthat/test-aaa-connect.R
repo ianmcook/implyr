@@ -4,9 +4,13 @@ test_that("can connect to Impala using RJDBC", {
   check_impala()
   run_tests <<- tryCatch({
     jdbc_path <- tempdir()
-    jdbc_zip <- file.path(jdbc_path, basename(jdbc_url))
-    unlink(jdbc_zip)
-    download.file(jdbc_url, jdbc_zip, quiet = TRUE)
+    if (file.exists(jdbc_url)) {
+      jdbc_zip <- jdbc_url
+    } else {
+      jdbc_zip <- file.path(jdbc_path, basename(jdbc_url))
+      unlink(jdbc_zip)
+      download.file(jdbc_url, jdbc_zip, quiet = TRUE)
+    }
     jdbc_jars <- tools::file_path_sans_ext(jdbc_zip)
     unlink(jdbc_jars, recursive = TRUE)
     dir.create(jdbc_jars)
@@ -20,7 +24,7 @@ test_that("can connect to Impala using RJDBC", {
   }, error = function(e) {
     FALSE
   })
-  if(!run_tests) {
+  if (!run_tests) {
     skip("Could not connect to Impala. Skipping tests")
   }
   succeed()
