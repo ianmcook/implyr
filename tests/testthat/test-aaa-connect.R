@@ -2,7 +2,7 @@ context("connect")
 
 test_that("can connect to Impala using RJDBC", {
   check_impala()
-  run_tests <<- tryCatch({
+  connected <- tryCatch({
     jdbc_path <- tempdir()
     if (file.exists(jdbc_url)) {
       jdbc_zip <- jdbc_url
@@ -24,8 +24,9 @@ test_that("can connect to Impala using RJDBC", {
   }, error = function(e) {
     FALSE
   })
-  if (!run_tests) {
-    skip("Could not connect to Impala. Skipping tests")
-  }
-  succeed()
+  run_tests <<- connected
+  expect_true(
+    connected,
+    info = "This environment is configured to run implyr tests, but the connection to Impala failed"
+  )
 })
