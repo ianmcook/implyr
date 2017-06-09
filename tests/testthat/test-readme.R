@@ -42,6 +42,7 @@ test_that("result from third example in README (with some tweaks) is consistent 
 })
 
 test_that("result from fourth example in README (with some tweaks) is consistent with result on tbl_df", {
+  check_impala()
   test_op <- function(x, y) {
     x %>% inner_join(y, by = "carrier") %>%
       arrange(year, month, day, carrier, flight) %>%
@@ -58,6 +59,7 @@ test_that("result from fourth example in README (with some tweaks) is consistent
 })
 
 test_that("result from fifth example in README (with some tweaks) is consistent with result on tbl_df", {
+  check_impala()
   test_op <- function(x, y) {
     y <- y %>% filter(name == "Southwest Airlines Co.")
     x %>%

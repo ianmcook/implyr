@@ -181,20 +181,20 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
   info$package <-
     attr(attr(getClass(class(con)[1]), "className"), "package")
 
-  if (isClass("impala_connection", where = topenv(parent.frame()))) {
-    removeClass("impala_connection", where = topenv(parent.frame()))
+  if (isClass("impala_connection", where = .GlobalEnv)) {
+    removeClass("impala_connection", where = .GlobalEnv)
     # TBD: issue warning?
   }
   setClass("impala_connection",
            contains = class(con),
-           where = topenv(parent.frame()))
+           where = .GlobalEnv)
 
   if(existsMethod("dbSendQuery",
                   c("impala_connection", "character"),
-                  where = topenv(parent.frame()))) {
+                  where = .GlobalEnv)) {
     removeMethod("dbSendQuery",
                  c("impala_connection", "character"),
-                 where = topenv(parent.frame()))
+                 where = .GlobalEnv)
     # TBD: issue warning?
   }
   setMethod("dbSendQuery", c("impala_connection", "character"), function(conn, statement, ...) {
@@ -206,14 +206,14 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
       pkg_env$order_by_in_subquery <- FALSE
     }
     result
-  }, where = topenv(parent.frame()))
+  }, where = .GlobalEnv)
 
   if (existsMethod("dbExecute",
                    c("impala_connection", "character"),
-                   where = topenv(parent.frame()))) {
+                   where = .GlobalEnv)) {
     removeMethod("dbExecute",
                  c("impala_connection", "character"),
-                 where = topenv(parent.frame()))
+                 where = .GlobalEnv)
     # TBD: issue warning?
   }
   setMethod("dbExecute", c("impala_connection", "character"), function(conn, statement, ...) {
@@ -228,7 +228,7 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
       pkg_env$order_by_in_subquery <- FALSE
     }
     result
-  }, where = topenv(parent.frame()))
+  }, where = .GlobalEnv)
 
   con <- structure(con, class = c("impala_connection", class(con)))
   attributes(con)$info <- info
