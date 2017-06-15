@@ -446,6 +446,29 @@ sql_translate_env.impala_connection <- function(con) {
 }
 
 #' @export
+#' @importFrom dbplyr sql_build
+#' @importFrom dbplyr sql_optimise
+sql_build.tbl_impala <- function(op, con = NULL, ...) {
+  qry <- dbplyr::sql_build(op$ops, con = con, ...)
+  qry <- sql_optimise(qry, con = con, ...)
+  if (has_arrange_in_subquery(qry)) {
+    pkg_env$order_by_in_subquery <- TRUE
+  }
+  qry
+}
+
+has_arrange_in_subquery <- function(x) {
+  if (!inherits(x$from, "select_query")) {
+    return(FALSE)
+  }
+  if (length(x$from$order_by) > 0) {
+    return(TRUE)
+  }
+  has_arrange_in_subquery(x$from)
+}
+
+
+#' @export
 #' @importFrom dplyr intersect
 intersect.tbl_impala <- function(x, y, copy = FALSE, ...) {
   stop("Impala does not support intersect operations.", call. = FALSE)
@@ -456,42 +479,6 @@ intersect.tbl_impala <- function(x, y, copy = FALSE, ...) {
 setdiff.tbl_impala <- function(x, y, copy = FALSE, ...) {
   stop("Impala does not support setdiff operations.", call. = FALSE)
 }
-
-#' @export
-#' @importFrom dbplyr build_sql
-#' @importFrom dbplyr ident
-#' @importFrom dbplyr is.ident
-#' @importFrom dbplyr sql
-#' @importFrom dplyr sql_subquery
-#' @importFrom stats setNames
-#' @importFrom utils getFromNamespace
-sql_subquery.impala_connection <-
-  function(con,
-           from,
-           name = getFromNamespace("unique_name", "dplyr")(),
-           ...) {
-    if (is.ident(from)) {
-      setNames(from, name)
-    } else {
-      from <- sql(sub(";$", "", from))
-      if (grepl("\\sORDER BY\\s", from) &&
-          grepl("\\sORDER BY\\s",
-                gsub("OVER\\s?\\([^)]*?\\sORDER BY\\s", "", from))) {
-        # TBD: improve this method of confirming that the ORDER BY is not in an OVER() expression
-        pkg_env$order_by_in_subquery <- TRUE
-        if (!grepl("\\sLIMIT\\s", from)) {
-          from <- sql(paste(from, "LIMIT 9223372036854775807"))
-          # TBD: consider whether to do this, or just issue the warning and not try to sort
-          # TBD: consider whether to enable this as an option,
-          #  possibly using the pkgconfig package to set and get the option,
-          #  since it seems pkgconfig will be used in the new release of dplyr
-        }
-      }
-      build_sql("(", from, ") ", ident(
-        name %||% getFromNamespace("random_table_name", "dplyr")()
-      ), con = con)
-    }
-  }
 
 #' Copy a (very small) local data frame to Impala
 #'
