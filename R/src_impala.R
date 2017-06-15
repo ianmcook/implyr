@@ -183,7 +183,6 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
 
   if (isClass("impala_connection", where = .GlobalEnv)) {
     removeClass("impala_connection", where = .GlobalEnv)
-    # TBD: issue warning?
   }
   setClass("impala_connection",
            contains = class(con),
@@ -985,18 +984,9 @@ con_acquire <- function (src) {
   }
   con
 }
-# TBD: after new release of dplyr, change this to:
-# (at)export
-# (at)importFrom dplyr con_acquire
-# con_acquire.src_impala <- ...
-
 con_release <- function(src, con) {
   # do nothing
 }
-# TBD: after new release of dplyr, change this to:
-# (at)export
-# (at)importFrom dplyr con_release
-# con_release.src_impala <- ...
 
 #' Send SQL query to Impala and retrieve results
 #'
