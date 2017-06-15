@@ -94,10 +94,8 @@ pkg_env <- new.env()
 #' @importFrom DBI dbSendQuery
 #' @importFrom dbplyr src_sql
 #' @importFrom methods callNextMethod
-#' @importFrom methods existsMethod
 #' @importFrom methods isClass
 #' @importFrom methods removeClass
-#' @importFrom methods removeMethod
 #' @importFrom methods getClass
 #' @importFrom methods setClass
 #' @importFrom methods setMethod
@@ -188,14 +186,6 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
            contains = class(con),
            where = .GlobalEnv)
 
-  if(existsMethod("dbSendQuery",
-                  c("impala_connection", "character"),
-                  where = .GlobalEnv)) {
-    removeMethod("dbSendQuery",
-                 c("impala_connection", "character"),
-                 where = .GlobalEnv)
-    # TBD: issue warning?
-  }
   setMethod("dbSendQuery", c("impala_connection", "character"), function(conn, statement, ...) {
     result <- methods::callNextMethod(conn, statement, ...)
     if (isTRUE(pkg_env$order_by_in_subquery)) {
@@ -207,14 +197,6 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
     result
   }, where = .GlobalEnv)
 
-  if (existsMethod("dbExecute",
-                   c("impala_connection", "character"),
-                   where = .GlobalEnv)) {
-    removeMethod("dbExecute",
-                 c("impala_connection", "character"),
-                 where = .GlobalEnv)
-    # TBD: issue warning?
-  }
   setMethod("dbExecute", c("impala_connection", "character"), function(conn, statement, ...) {
     if (inherits(conn, "JDBCConnection")) {
       result <-
