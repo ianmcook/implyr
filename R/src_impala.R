@@ -414,6 +414,13 @@ sql_translate_env.impala_connection <- function(con) {
     sql_translator(
       .parent = base_agg,
       median = sql_prefix("appx_median"),
+      n = function(x) {
+        if (missing(x)) {
+          sql("count(*)")
+        } else {
+          build_sql(sql("count"), list(x))
+        }
+      },
       sd =  sql_prefix("stddev"),
       var = sql_prefix("variance"),
       paste = function(x, sep = " ") {
