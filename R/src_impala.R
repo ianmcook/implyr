@@ -300,6 +300,9 @@ sql_escape_string.impala_connection <- function(con, x) {
 #' @importFrom dbplyr sql_prefix
 #' @importFrom dbplyr sql_translator
 #' @importFrom dbplyr sql_variant
+#' @importFrom dbplyr win_absent
+#' @importFrom dbplyr win_current_group
+#' @importFrom dbplyr win_over
 #' @importFrom dplyr sql_translate_env
 sql_translate_env.impala_connection <- function(con) {
   sql_variant(
@@ -420,7 +423,27 @@ sql_translate_env.impala_connection <- function(con) {
         build_sql("group_concat(", x, ",'')")
       }
     ),
-    base_win
+    sql_translator(
+      .parent = base_win,
+      median = win_absent("median"),
+      n = function(x) {
+        if (missing(x)) {
+          win_over(
+            sql("count(*)"),
+            partition = win_current_group()
+          )
+        } else {
+          win_over(
+            build_sql(sql("count"), list(x)),
+            partition = win_current_group()
+          )
+        }
+      },
+      n_distinct = win_absent("n_distinct"),
+      ndv = win_absent("ndv"),
+      sd = win_absent("sd"),
+      var = win_absent("var")
+    )
   )
 }
 
