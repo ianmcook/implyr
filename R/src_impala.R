@@ -410,8 +410,6 @@ sql_translate_env.impala_connection <- function(con) {
     ),
     sql_translator(
       .parent = base_agg,
-      n = function()
-        sql("count(*)"),
       median = sql_prefix("appx_median"),
       sd =  sql_prefix("stddev"),
       var = sql_prefix("variance"),
