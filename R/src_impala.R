@@ -41,8 +41,9 @@ pkg_env <- new.env()
 #'   method \code{\link[DBI]{dbConnect}}. See
 #'   \code{\link[odbc]{dbConnect,OdbcDriver-method}} or
 #'   \code{\link[RJDBC]{dbConnect,JDBCDriver-method}}
-#' @param auto_disconnect whether to automatically close the connection to
-#'   Impala when the object returned by this function is deleted
+#' @param auto_disconnect Should the connection to Impala be automatically
+#'   closed when the object returned by this function is deleted? Pass \code{NA}
+#'   to auto-disconnect but print a message when this happens.
 #' @return An object with class \code{src_impala}, \code{src_sql}, \code{src}
 #' @examples
 #' # Using ODBC connectivity:
@@ -99,8 +100,10 @@ pkg_env <- new.env()
 #' @importFrom methods getClass
 #' @importFrom methods setClass
 #' @importFrom methods setMethod
+#' @importFrom rlang is_false
+#' @importFrom rlang is_true
 #' @importFrom utils getFromNamespace
-src_impala <- function(drv, ..., auto_disconnect = FALSE) {
+src_impala <- function(drv, ..., auto_disconnect = TRUE) {
   if (!requireNamespace("assertthat", quietly = TRUE)) {
     stop("assertthat is required to use src_impala", call. = FALSE)
   }
@@ -124,8 +127,10 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
 
   con <- dbConnect(drv, ...)
 
-  disco <- if (isTRUE(auto_disconnect)) {
-    db_disconnector(con)
+  if (is_false(auto_disconnect)) {
+    disco <- NULL
+  } else {
+    disco <- db_disconnector(con, quiet = is_true(auto_disconnect))
   }
 
   r <- dbGetQuery(con,

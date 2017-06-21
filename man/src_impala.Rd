@@ -4,7 +4,7 @@
 \alias{src_impala}
 \title{Connect to Impala and create a remote dplyr data source}
 \usage{
-src_impala(drv, ..., auto_disconnect = FALSE)
+src_impala(drv, ..., auto_disconnect = TRUE)
 }
 \arguments{
 \item{drv}{an object that inherits from \code{\link[DBI]{DBIDriver-class}}.
@@ -16,8 +16,9 @@ method \code{\link[DBI]{dbConnect}}. See
 \code{\link[odbc]{dbConnect,OdbcDriver-method}} or
 \code{\link[RJDBC]{dbConnect,JDBCDriver-method}}}
 
-\item{auto_disconnect}{whether to automatically close the connection to
-Impala when the object returned by this function is deleted}
+\item{auto_disconnect}{Should the connection to Impala be automatically
+closed when the object returned by this function is deleted? Pass \code{NA}
+to auto-disconnect but print a message when this happens.}
 }
 \value{
 An object with class \code{src_impala}, \code{src_sql}, \code{src}
