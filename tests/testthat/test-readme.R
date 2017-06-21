@@ -1,6 +1,6 @@
 context("README examples")
 
-test_that("result from first example in README (with some tweaks) is consistent with result on tbl_df", {
+test_that("result from first dplyr example in README (with some tweaks) is consistent with result on tbl_df", {
   check_impala()
   test_op <- function(x) {
     x %>%
@@ -16,7 +16,7 @@ test_that("result from first example in README (with some tweaks) is consistent 
   compare_tbls(list(tbl(impala, "flights"), nycflights13::flights), op = test_op, convert = TRUE)
 })
 
-test_that("result from second example in README is consistent with result on tbl_df", {
+test_that("result from second dplyr example in README is consistent with result on tbl_df", {
   check_impala()
   test_op <- function(x) {
     x %>%
@@ -26,7 +26,7 @@ test_that("result from second example in README is consistent with result on tbl
   compare_tbls(list(tbl(impala, "flights"), nycflights13::flights), op = test_op)
 })
 
-test_that("result from third example in README (with some tweaks) is consistent with result on tbl_df", {
+test_that("result from third dplyr example in README (with some tweaks) is consistent with result on tbl_df", {
   check_impala()
   test_op <- function(x) {
     x %>%
@@ -41,7 +41,7 @@ test_that("result from third example in README (with some tweaks) is consistent 
   compare_tbls(list(tbl(impala, "flights"), nycflights13::flights), op = test_op, convert = TRUE)
 })
 
-test_that("result from fourth example in README (with some tweaks) is consistent with result on tbl_df", {
+test_that("result from fourth dplyr example in README (with some tweaks) is consistent with result on tbl_df", {
   check_impala()
   test_op <- function(x, y) {
     x %>% inner_join(y, by = "carrier") %>%
@@ -58,7 +58,7 @@ test_that("result from fourth example in README (with some tweaks) is consistent
   )
 })
 
-test_that("result from fifth example in README (with some tweaks) is consistent with result on tbl_df", {
+test_that("result from fifth dplyr example in README (with some tweaks) is consistent with result on tbl_df", {
   check_impala()
   test_op <- function(x, y) {
     y <- y %>% filter(name == "Southwest Airlines Co.")
