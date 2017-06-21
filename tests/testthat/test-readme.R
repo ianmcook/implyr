@@ -76,3 +76,24 @@ test_that("result from fifth example in README (with some tweaks) is consistent 
     convert = TRUE
   )
 })
+
+test_that("result from first SQL example in README succeeds", {
+  check_impala()
+  dbExecute(impala, "REFRESH flights")
+  succeed()
+})
+
+test_that("result from second SQL example in README succeeds", {
+  check_impala()
+  flights_by_carrier_df <- dbGetQuery(
+    impala,
+    "SELECT carrier, COUNT(*) FROM flights GROUP BY carrier"
+  )
+  succeed()
+})
+
+test_that("result from third SQL example in README (with some tweaks) succeeds", {
+  check_impala()
+  flights_tbl <- tbl(impala, sql("SELECT * FROM flights LIMIT 10"))
+  succeed()
+})
