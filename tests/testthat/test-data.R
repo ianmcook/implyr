@@ -42,7 +42,7 @@ test_that("batting tbl_impala has same column names as Batting tbl_df (ignoring 
     x %>% colnames() %>% tolower()
   }
   expect_true(
-    compare(test_op(tbl(impala, dbplyr::in_schema("lahman", "batting"))), test_op(Lahman::Batting))$equal
+    compare(test_op(tbl(impala, in_schema("lahman", "batting"))), test_op(Lahman::Batting))$equal
   )
 })
 
@@ -52,6 +52,6 @@ test_that("batting tbl_impala has same number of rows as Batting tbl_df", {
     x %>% summarize(n()) %>% collect() %>% as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, dbplyr::in_schema("lahman", "batting"))), test_op(Lahman::Batting))$equal
+    compare(test_op(tbl(impala, in_schema("lahman", "batting"))), test_op(Lahman::Batting))$equal
   )
 })
