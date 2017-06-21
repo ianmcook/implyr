@@ -23,6 +23,7 @@ Imports:
     DBI (>= 0.6-1),
     dbplyr (>= 0.0.0.9001),
     methods,
+    rlang (>= 0.1.0),
     utils
 Suggests:
     Lahman (>= 3.0-1),

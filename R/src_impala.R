@@ -650,14 +650,16 @@ copy_to.src_impala <-
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
-#' @importFrom dbplyr sql_render
+#' @importFrom dbplyr db_sql_render
+#' @importFrom dbplyr op_grps
 #' @importFrom dbplyr op_vars
 #' @importFrom dplyr %>%
 #' @importFrom dplyr compute
-#' @importFrom dplyr group_by_
-#' @importFrom dplyr groups
-#' @importFrom dplyr select_
+#' @importFrom dplyr group_by
+#' @importFrom dplyr select
 #' @importFrom dplyr tbl
+#' @importFrom rlang !!!
+#' @importFrom rlang syms
 #' @importFrom utils getFromNamespace
 compute.tbl_impala <-
   function(x,
@@ -693,33 +695,31 @@ compute.tbl_impala <-
       )
     }
 
-    con <- con_acquire(x$src)
-    tryCatch({
-      vars <- op_vars(x)
-      #x_aliased <- select(x, !!! symbols(vars))
-      x_aliased <- select_(x, .dots = vars)
-      db_save_query(
-        con = con,
-        sql = sql_render(x_aliased, con),
-        name = name,
-        temporary = FALSE,
-        analyze = analyze,
-        external = external,
-        overwrite = overwrite,
-        force = force,
-        field_terminator = field_terminator,
-        line_terminator = field_terminator,
-        file_format = file_format,
-        ...
-      )
-    }, finally = {
-      con_release(x$src, con)
-    })
+    vars <- op_vars(x)
+    assert_that(all(unlist(indexes) %in% vars))
+    assert_that(all(unlist(unique_indexes) %in% vars))
 
-    #tbl(x$src, name) %>%
-    #  group_by(!!! symbols(op_grps(x))) %>%
-    #  getFromNamespace("add_op_order", "dplyr")(op_sort(x))
-    tbl(x$src, name) %>% group_by_(.dots = groups(x))
+    x_aliased <- select(x, !!! syms(vars))
+    sql <- db_sql_render(x$src$con, x_aliased$ops)
+
+    # TBD: implement db_compute.impala_connection and call it here instead of db_save_query
+    name <- db_save_query(
+      con = x$src$con,
+      sql = sql,
+      name = name,
+      temporary = FALSE,
+      analyze = analyze,
+      external = external,
+      overwrite = overwrite,
+      force = force,
+      field_terminator = field_terminator,
+      line_terminator = field_terminator,
+      file_format = file_format,
+      ...
+    )
+
+    tbl(x$src, name) %>%
+      group_by(!!! syms(op_grps(x)))
   }
 
 #' @name collect
@@ -796,7 +796,7 @@ db_save_query.impala_connection <-
                         if (force) {
                           sql("IF NOT EXISTS ")
                         },
-                        ident(table),
+                        ident(name),
                         " ",
                         if (!is.null(field_terminator) ||
                             !is.null(line_terminator)) {
