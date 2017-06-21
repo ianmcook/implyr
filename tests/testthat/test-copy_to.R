@@ -1,6 +1,7 @@
 context("copy_to()")
 
 test_that("copy_to() succeeds on a very small data frame", {
+  check_impala()
   set.seed(seed = NULL)
   table_name <- paste0(sample(letters, 10, replace = TRUE), collapse = "")
   copy_to(impala, nycflights13::airlines[1:5, ], name = table_name, temporary = FALSE)

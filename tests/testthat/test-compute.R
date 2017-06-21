@@ -1,6 +1,7 @@
 context("compute()")
 
 test_that("compute(temporary = FALSE) succeeds", {
+  check_impala()
   set.seed(seed = NULL)
   table_name <- paste0(sample(letters, 10, replace = TRUE), collapse = "")
   iris_unlabeled_impala <- tbl(impala, "iris") %>% select(-species) %>% compute(table_name, temporary = FALSE)
