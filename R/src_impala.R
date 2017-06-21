@@ -265,13 +265,16 @@ db_desc.impala_connection <- function(x) {
 #'
 #' @name tbl
 #' @param src an object with class with class \code{src_impala}
-#' @param from a table name
+#' @param from a table name or identifier
 #' @param ... not used
 #' @return An object with class \code{tbl_impala}, \code{tbl_sql},
 #'   \code{tbl_lazy}, \code{tbl}
 #' @examples
 #' \dontrun{
-#' flights_tbl <- tbl(impala, "flights")}
+#' flights_tbl <- tbl(impala, "flights")
+#'
+#' flights_tbl <- tbl(impala, in_schema("nycflights13", "flights"))}
+#' @seealso \code{\link{in_schema}}
 #' @export
 #' @importFrom dbplyr tbl_sql
 #' @importFrom dplyr tbl

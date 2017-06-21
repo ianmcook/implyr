@@ -10,7 +10,7 @@
 \arguments{
 \item{src}{an object with class with class \code{src_impala}}
 
-\item{from}{a table name}
+\item{from}{a table name or identifier}
 
 \item{...}{not used}
 }
@@ -23,5 +23,10 @@ Create a lazy \code{tbl} from an Impala table
 }
 \examples{
 \dontrun{
-flights_tbl <- tbl(impala, "flights")}
+flights_tbl <- tbl(impala, "flights")
+
+flights_tbl <- tbl(impala, in_schema("nycflights13", "flights"))}
+}
+\seealso{
+\code{\link{in_schema}}
 }

@@ -173,6 +173,12 @@ For this example, start by creating a lazy `tbl` named `flights_tbl` representin
 flights_tbl <- tbl(impala, "flights")
 ```
 
+To specify the database that contains the table, use the function `in_schema()`. For example, if the Impala table named `flights` were in a database named `nycflights13`, then you would use the command:
+
+``` r
+flights_tbl <- tbl(impala, in_schema("nycflights13", "flights"))
+```
+
 The examples here assume that data has already been loaded into the Impala table named `flights`. See the Loading Local Data into Impala section below for information about ways to load data from R into Impala.
 
 <!-- if you change this example, also change the corresponding test in test-readme.R -->
