@@ -1125,6 +1125,10 @@ db_disconnector <- function(con, quiet = FALSE) {
   }
 }
 
+#' @export
+#' @importFrom dbplyr in_schema
+dbplyr::in_schema
+
 #' @importFrom assertthat is.string
 is_string_or_null <- function(x) {
   is.null(x) || is.string(x)
