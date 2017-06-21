@@ -229,7 +229,7 @@ src_impala <- function(drv, ..., auto_disconnect = FALSE) {
 #' @importFrom dplyr db_desc
 db_desc.impala_connection <- function(x) {
   info <- attr(x, "info")
-  if(is.null(info)) {
+  if (is.null(info)) {
     return("???")
   }
   info$version <-
@@ -438,15 +438,11 @@ sql_translate_env.impala_connection <- function(con) {
       median = win_absent("median"),
       n = function(x) {
         if (missing(x)) {
-          win_over(
-            sql("count(*)"),
-            partition = win_current_group()
-          )
+          win_over(sql("count(*)"),
+                   partition = win_current_group())
         } else {
-          win_over(
-            build_sql(sql("count"), list(x)),
-            partition = win_current_group()
-          )
+          win_over(build_sql(sql("count"), list(x)),
+                   partition = win_current_group())
         }
       },
       n_distinct = win_absent("n_distinct"),
@@ -1146,6 +1142,7 @@ is_nchar_one_string_or_null  <- function(x) {
   is.null(x) || (is.string(x) && nchar(x) == 1)
 }
 
-assertthat::on_failure(is_nchar_one_string_or_null) <- function(call, env) {
-  paste0(deparse(call$x), " is not a string with one character")
-}
+assertthat::on_failure(is_nchar_one_string_or_null) <-
+  function(call, env) {
+    paste0(deparse(call$x), " is not a string with one character")
+  }
