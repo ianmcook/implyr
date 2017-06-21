@@ -25,6 +25,7 @@ Imports:
     methods,
     utils
 Suggests:
+    Lahman (>= 3.0-1),
     odbc,
     RJDBC,
     nycflights13,
