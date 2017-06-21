@@ -18,7 +18,9 @@ test_that("flights tbl_impala has same number of rows as flights tbl_df", {
   test_op <- function(x) {
     x %>% summarize(n()) %>% collect() %>% as.integer()
   }
-  compare(test_op(tbl(impala, "flights")), test_op(nycflights13::flights))
+  expect_true(
+    compare(test_op(tbl(impala, "flights")), test_op(nycflights13::flights))$equal
+  )
 })
 
 test_that("airlines tbl_impala matches airlines tbl_df", {
