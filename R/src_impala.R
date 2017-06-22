@@ -22,6 +22,8 @@ setOldClass("tbl_impala")
 
 # environment for global variables
 pkg_env <- new.env()
+pkg_env$order_by_in_subquery <- FALSE
+pkg_env$order_by_in_query <- FALSE
 
 #' Connect to Impala and create a remote dplyr data source
 #'
@@ -197,8 +199,9 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
       warning(
         "Results may not be in sorted order! Move arrange() after all other verbs for results in sorted order."
       )
-      pkg_env$order_by_in_subquery <- FALSE
     }
+    pkg_env$order_by_in_subquery <- FALSE
+    pkg_env$order_by_in_query <- FALSE
     result
   }, where = .GlobalEnv)
 
@@ -209,10 +212,11 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
     } else {
       result <- methods::callNextMethod(conn, statement, ...)
     }
-    if (isTRUE(pkg_env$order_by_in_subquery)) {
+    if (isTRUE(pkg_env$order_by_in_query)) {
       warning("Results may not be in sorted order! Impala cannot store data in sorted order.")
-      pkg_env$order_by_in_subquery <- FALSE
     }
+    pkg_env$order_by_in_subquery <- FALSE
+    pkg_env$order_by_in_query <- FALSE
     result
   }, where = .GlobalEnv)
 
@@ -459,27 +463,39 @@ sql_translate_env.impala_connection <- function(con) {
 }
 
 #' @export
+#' @importFrom dbplyr db_sql_render
 #' @importFrom dbplyr sql_build
-#' @importFrom dbplyr sql_optimise
-sql_build.tbl_impala <- function(op, con = NULL, ...) {
-  qry <- dbplyr::sql_build(op$ops, con = con, ...)
-  qry <- sql_optimise(qry, con = con, ...)
-  if (has_arrange_in_subquery(qry)) {
+#' @importFrom dbplyr sql_render
+db_sql_render.impala_connection <- function(con, sql, ...) {
+  qry <- sql_build(sql, con = con, ...)
+  if (has_order_by_in_subquery(qry)) {
     pkg_env$order_by_in_subquery <- TRUE
   }
-  qry
+  if (has_order_by(qry)) {
+    pkg_env$order_by_in_query <- TRUE
+  }
+  sql_render(qry, con = con, ...)
 }
 
-has_arrange_in_subquery <- function(x) {
+has_order_by_in_subquery <- function(x) {
   if (!inherits(x$from, "select_query")) {
     return(FALSE)
   }
   if (length(x$from$order_by) > 0) {
     return(TRUE)
   }
-  has_arrange_in_subquery(x$from)
+  has_order_by_in_subquery(x$from)
 }
 
+has_order_by <- function(x) {
+  if (!inherits(x, "select_query")) {
+    return(FALSE)
+  }
+  if (length(x$order_by) > 0) {
+    return(TRUE)
+  }
+  has_order_by(x$from)
+}
 
 #' @export
 #' @importFrom dplyr intersect
@@ -651,7 +667,6 @@ copy_to.src_impala <-
 #' @importFrom assertthat assert_that
 #' @importFrom assertthat is.string
 #' @importFrom assertthat is.flag
-#' @importFrom dbplyr db_sql_render
 #' @importFrom dbplyr op_grps
 #' @importFrom dbplyr op_vars
 #' @importFrom dplyr %>%
