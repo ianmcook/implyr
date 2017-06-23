@@ -408,20 +408,27 @@ sql_translate_env.impala_connection <- function(con) {
       na_if = sql_prefix("nullif", 2),
 
       # string functions
-      paste = function(..., sep = " ") {
-        sql(paste0(
-          "concat_ws(",
-          sql_escape_string(con, sep),
-          ",",
-          paste(list(...), collapse = ","),
-          ")"
-        ))
-        # TBD: simplify this by passing con to build_sql?
+      paste = function(..., sep = " ", collapse = NULL) {
+        if (is.null(collapse)) {
+          sql(paste0(
+            "concat_ws(",
+            sql_escape_string(con, sep),
+            ",",
+            paste(list(...), collapse = ","),
+            ")"
+          ))
+          # TBD: simplify this by passing con to build_sql?
+        } else {
+          stop("paste() with collapse argument set can only be used for aggregation", call. = FALSE)
+        }
       },
-      paste0 = function(...) {
-        build_sql("concat(", sql(paste(list(...), collapse = ",")), ")")
+      paste0 = function(..., collapse = NULL) {
+        if (is.null(collapse)) {
+          build_sql("concat(", sql(paste(list(...), collapse = ",")), ")")
+        } else {
+          stop("paste0() with collapse argument set can only be used for aggregation", call. = FALSE)
+        }
       }
-
     ),
     sql_translator(
       .parent = base_agg,
@@ -467,6 +474,27 @@ sql_translate_env.impala_connection <- function(con) {
       },
       n_distinct = win_absent("n_distinct"),
       ndv = win_absent("ndv"),
+      paste = function(..., sep = " ", collapse = NULL) {
+        if (is.null(collapse)) {
+          sql(paste0(
+            "concat_ws(",
+            sql_escape_string(con, sep),
+            ",",
+            paste(list(...), collapse = ","),
+            ")"
+          ))
+          # TBD: simplify this by passing con to build_sql?
+        } else {
+          stop("paste() with collapse argument is not supported in window functions", call. = FALSE)
+        }
+      },
+      paste0 = function(...,  collapse = NULL) {
+        if (is.null(collapse)) {
+          build_sql("concat(", sql(paste(list(...), collapse = ",")), ")")
+        } else {
+          stop("paste0() with collapse argument is not supported in window functions", call. = FALSE)
+        }
+      },
       sd = win_absent("sd"),
       unique = function(x) {
         sql(paste("distinct", x))
