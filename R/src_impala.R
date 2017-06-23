@@ -435,11 +435,19 @@ sql_translate_env.impala_connection <- function(con) {
       },
       sd =  sql_prefix("stddev"),
       var = sql_prefix("variance"),
-      paste = function(x, sep = " ") {
-        sql(paste0("group_concat(", x, ",", sql_escape_string(con, sep), ")"))
+      paste = function(x, collapse = NULL) {
+        if (is.null(collapse)) {
+          stop("To use paste() as an aggregate function, set the collapse argument", call. = FALSE)
+        } else {
+          sql(paste0("group_concat(", x, ",", sql_escape_string(con, collapse), ")"))
+        }
       },
-      paste0 = function(x) {
-        build_sql("group_concat(", x, ",'')")
+      paste0 = function(x, collapse = NULL) {
+        if (is.null(collapse)) {
+          stop("To use paste0() as an aggregate function, set the collapse argument", call. = FALSE)
+        } else {
+          sql(paste0("group_concat(", x, ",", sql_escape_string(con, collapse), ")"))
+        }
       }
     ),
     sql_translator(
