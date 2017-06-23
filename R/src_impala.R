@@ -749,7 +749,7 @@ collect.tbl_impala <-
            ...,
            n = Inf,
            warn_incomplete = TRUE) {
-    NextMethod("collapse")
+    NextMethod("collect")
   }
 
 #' @name collapse
