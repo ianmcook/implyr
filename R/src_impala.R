@@ -434,6 +434,9 @@ sql_translate_env.impala_connection <- function(con) {
         }
       },
       sd =  sql_prefix("stddev"),
+      unique = function(x) {
+        sql(paste("distinct", x))
+      },
       var = sql_prefix("variance"),
       paste = function(x, collapse = NULL) {
         if (is.null(collapse)) {
@@ -465,6 +468,9 @@ sql_translate_env.impala_connection <- function(con) {
       n_distinct = win_absent("n_distinct"),
       ndv = win_absent("ndv"),
       sd = win_absent("sd"),
+      unique = function(x) {
+        sql(paste("distinct", x))
+      },
       var = win_absent("var")
     )
   )
