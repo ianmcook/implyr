@@ -110,14 +110,11 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
   if (!requireNamespace("assertthat", quietly = TRUE)) {
     stop("assertthat is required to use src_impala", call. = FALSE)
   }
-  if (!requireNamespace("dplyr", quietly = TRUE)) {
-    stop("dplyr is required to use src_impala", call. = FALSE)
-  }
   if (!requireNamespace("dbplyr", quietly = TRUE)) {
     stop("dbplyr is required to use src_impala", call. = FALSE)
   }
-  if (!requireNamespace("DBI", quietly = TRUE)) {
-    stop("DBI is required to use src_impala", call. = FALSE)
+  if (!requireNamespace("rlang", quietly = TRUE)) {
+    stop("rlang is required to use src_impala", call. = FALSE)
   }
   if (inherits(drv, "src_impala")) {
     con <- drv
@@ -1175,6 +1172,7 @@ getNamedArgs_JDBCDriver <-
   }
 
 # Gets the dots after an OdbcDriver as a named list, omitting pwd
+# TBD: recognize arguments irrespective of case
 getNamedArgs_OdbcDriver <-
   function(dsn = NULL,
            ...,
