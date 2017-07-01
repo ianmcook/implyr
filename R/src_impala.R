@@ -183,8 +183,15 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
   } else {
     info <- dbGetInfo(con)
   }
-  info$package <-
-    attr(attr(getClass(class(con)[1]), "className"), "package")
+
+  superclasses <- getAllSuperClasses(getClass(class(con)))
+  for (superclass in superclasses) {
+    superclass_package <- attr(getClass(superclass), "package")
+    if (superclass_package != ".GlobalEnv") {
+      info$package <-superclass_package
+      break
+    }
+  }
 
   if (isClass("impala_connection", where = .GlobalEnv)) {
     removeClass("impala_connection", where = .GlobalEnv)
