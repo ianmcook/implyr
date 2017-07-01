@@ -157,14 +157,14 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
               l$.connection_string,
               ignore.case = TRUE)
       }
-      if (grepl("Port=(.+?);", l$.connection_string, ignore.case = TRUE)) {
+      if (isTRUE(grepl("Port=(.+?);", l$.connection_string, ignore.case = TRUE))) {
         l$port <-
           sub(".*Port=(.+?);.*",
               "\\1",
               l$.connection_string,
               ignore.case = TRUE)
       }
-      if (grepl("UID=(.+?);", l$.connection_string, ignore.case = TRUE)) {
+      if (isTRUE(grepl("UID=(.+?);", l$.connection_string, ignore.case = TRUE))) {
         l$uid <-
           sub(".*UID=(.+?);.*",
               "\\1",
