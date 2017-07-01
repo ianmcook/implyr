@@ -97,9 +97,10 @@ pkg_env$order_by_in_query <- FALSE
 #' @importFrom DBI dbSendQuery
 #' @importFrom dbplyr src_sql
 #' @importFrom methods callNextMethod
+#' @importFrom methods getAllSuperClasses
+#' @importFrom methods getClass
 #' @importFrom methods isClass
 #' @importFrom methods removeClass
-#' @importFrom methods getClass
 #' @importFrom methods setClass
 #' @importFrom methods setMethod
 #' @importFrom rlang is_false
