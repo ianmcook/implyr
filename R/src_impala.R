@@ -205,7 +205,8 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
     result <- methods::callNextMethod(conn, statement, ...)
     if (isTRUE(pkg_env$order_by_in_subquery)) {
       warning(
-        "Results may not be in sorted order! Move arrange() after all other verbs for results in sorted order."
+        "Results may not be in sorted order! Move arrange() after all other verbs for results in sorted order.",
+        call. = FALSE
       )
     }
     pkg_env$order_by_in_subquery <- FALSE
@@ -221,7 +222,10 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
       result <- methods::callNextMethod(conn, statement, ...)
     }
     if (isTRUE(pkg_env$order_by_in_query)) {
-      warning("Results may not be in sorted order! Impala cannot store data in sorted order.")
+      warning(
+        "Results may not be in sorted order! Impala cannot store data in sorted order.",
+        call. = FALSE
+      )
     }
     pkg_env$order_by_in_subquery <- FALSE
     pkg_env$order_by_in_query <- FALSE
