@@ -258,14 +258,14 @@ Using SQL
 
 In addition to using dplyr grammar, you can also issue SQL queries to Impala.
 
-To execute a statement that returns no result set, use the `dbExecute` function:
+To execute a statement that returns no result set, use the `dbExecute()` function:
 
 <!-- if you change this example, also change the corresponding test in test-readme.R -->
 ``` r
 dbExecute(impala, "REFRESH flights")
 ```
 
-To execute a query and return the result to R as a data frame, use the `dbGetQuery` function.
+To execute a query and return the result to R as a data frame, use the `dbGetQuery()` function.
 
 <!-- if you change this example, also change the corresponding test in test-readme.R -->
 ``` r
