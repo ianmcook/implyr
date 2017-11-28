@@ -25,8 +25,8 @@ An object with class \code{src_impala}, \code{src_sql}, \code{src}
 }
 \description{
 \code{src_impala} creates a SQL backend to dplyr for
-\href{https://impala.incubator.apache.org/}{Apache Impala (incubating)},
-the massively parallel processing query engine for Apache Hadoop.
+\href{https://impala.apache.org/}{Apache Impala}, the massively parallel
+processing query engine for Apache Hadoop.
 
 \code{src_impala} can work with any DBI-compatible interface that provides
 connectivity to Impala. Currently, two packages that can provide this
