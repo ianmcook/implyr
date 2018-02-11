@@ -129,11 +129,6 @@ compute.tbl_impala <-
     group_by(!!! syms(op_grps(x)))
 }
 
-#' Documentation here
-#'
-#' @name collect
-invisible(NULL)
-
 #' @name collect
 #' @rdname compute
 #' @param n the number of rows to return
