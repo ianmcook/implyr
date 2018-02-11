@@ -3,8 +3,6 @@
 implyr
 ======
 
-[![Build Status](https://travis-ci.org/ianmcook/implyr.svg?branch=master)](https://travis-ci.org/ianmcook/implyr) [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/implyr)](https://cran.r-project.org/package=implyr)
-
 **implyr** is a SQL backend to [dplyr](https://cran.r-project.org/package=dplyr) for [Apache Impala](https://impala.apache.org), the massively parallel processing query engine for Apache Hadoop. Impala enables low-latency SQL queries on large datasets stored in HDFS, Apache HBase, Apache Kudu, and Amazon S3.
 
 implyr is designed to work with any [DBI](https://cran.r-project.org/package=DBI)-compatible interface to Impala. implyr does not provide the underlying connectivity to Impala, nor does it require that you use one particular R package for connectivity to Impala. Currently, two packages that can provide this connectivity are [odbc](https://cran.r-project.org/package=odbc) and [RJDBC](https://cran.r-project.org/package=RJDBC). Future packages may provide other options for connectivity.

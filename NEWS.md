@@ -1,3 +1,8 @@
+# implyr 0.2.2
+
+* Moved DBI from Imports to Depends (#9)
+* Made minor bugfixes and improvements
+
 # implyr 0.2.1
 
 * Updated for compatibility with dbplyr 1.1.0
