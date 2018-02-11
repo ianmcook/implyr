@@ -17,3 +17,9 @@ check_impala <- function() {
     skip("This environment is not configured to run implyr tests")
   }
 }
+
+skip_on_travis <- function() {
+  if (identical(Sys.getenv("TRAVIS"), "true")) {
+    skip("Skipping test on Travis CI")
+  }
+}
