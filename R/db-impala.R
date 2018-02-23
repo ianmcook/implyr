@@ -54,6 +54,32 @@ db_desc.impala_connection <- function(x) {
 }
 
 #' @export
+#' @importFrom dplyr db_query_fields
+#' @importFrom dplyr sql_select
+#' @importFrom dplyr sql_subquery
+#' @importFrom dbplyr sql
+#' @importFrom DBI dbSendQuery
+#' @importFrom DBI dbClearResult
+#' @importFrom DBI dbFetch
+db_query_fields.impala_connection <- function(con, sql, ...) {
+  # if the argument "sql" is an identifier, it will not contain whitespace
+  # and if not, then it will contain whitespace
+  if (grepl("\\s", sql)) {
+    # get column names with SELECT ... WHERE FALSE
+    sql <- sql_select(con, sql("*"), sql_subquery(con, sql), where = sql("FALSE"))
+    qry <- dbSendQuery(con, sql)
+    on.exit(dbClearResult(qry))
+    res <- dbFetch(qry, 0)
+    names(res)
+  } else {
+    # get column names with DESCRIBE
+    sql <- paste("DESCRIBE", sql)
+    res <- dbGetQuery(con, sql)
+    res$name
+  }
+}
+
+#' @export
 #' @importFrom dplyr sql_escape_ident
 sql_escape_ident.impala_connection <- function(con, x) {
   sql_quote(x, "`")
