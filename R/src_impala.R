@@ -253,13 +253,15 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
 #' @export
 #' @importFrom dbplyr tbl_sql
 #' @importFrom dplyr tbl
-#' @importFrom rlang UQ
+#' @importFrom rlang !!
+#' @importFrom tidyselect vars_select
 tbl.src_impala <- function(src, from, ...) {
   res <- tbl_sql("impala", src = src, from = from, ...)
   # omit complex columns from returned results
   omit <- res$ops$vars[attr(res$ops$vars, "complex")]
   if (length(omit) > 0) {
-    res <- select(res, -UQ(omit))
+    cols <- vars_select(colnames(res),  - (!! omit))
+    res <- select(res, cols)
   }
   res
 }

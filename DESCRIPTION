@@ -24,6 +24,7 @@ Imports:
     dbplyr (>= 1.0.0),
     methods,
     rlang (>= 0.1.0),
+    tidyselect (>= 0.2.3),
     utils
 Suggests:
     Lahman (>= 3.0-1),
