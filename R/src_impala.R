@@ -253,8 +253,15 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
 #' @export
 #' @importFrom dbplyr tbl_sql
 #' @importFrom dplyr tbl
+#' @importFrom rlang UQ
 tbl.src_impala <- function(src, from, ...) {
-  tbl_sql("impala", src = src, from = from, ...)
+  res <- tbl_sql("impala", src = src, from = from, ...)
+  # omit complex columns from returned results
+  omit <- res$ops$vars[attr(res$ops$vars, "complex")]
+  if (length(omit) > 0) {
+    res <- select(res, -UQ(omit))
+  }
+  res
 }
 
 #' Copy a (very small) local data frame to Impala
