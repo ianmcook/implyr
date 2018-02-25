@@ -1,3 +1,9 @@
+# implyr 0.2.2.9000
+
+* Added experimental support for complex types (`ARRAY`, `MAP`, `STRUCT`)
+* Added tidyselect to Imports
+* Required newer versions of Depends and Imports
+
 # implyr 0.2.2
 
 * Moved DBI from Imports to Depends (#9)
