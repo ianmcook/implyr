@@ -93,7 +93,7 @@ sql_escape_ident.impala_connection <- function(con, x) {
 #' @export
 #' @importFrom dplyr sql_escape_string
 sql_escape_string.impala_connection <- function(con, x) {
-  impala_sql_quote(con, x, "'")
+  sql_quote(x, "'")
 }
 
 impala_ident_quote <- function(con, x, quote) {
