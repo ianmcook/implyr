@@ -258,7 +258,7 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
 tbl.src_impala <- function(src, from, ...) {
   res <- tbl_sql("impala", src = src, from = from, ...)
   # omit complex columns from returned results
-  omit <- res$ops$vars[attr(res$ops$vars, "complex")]
+  omit <- res$ops$vars[!is.na(attr(res$ops$vars, "complex_type"))]
   if (length(omit) > 0) {
     complex_cols <- vars_select(colnames(res),  - (!! omit))
     res <- select(res, complex_cols)

@@ -76,9 +76,13 @@ db_query_fields.impala_connection <- function(con, sql, ...) {
     sql <- paste("DESCRIBE", sql)
     res <- dbGetQuery(con, sql)
     # attribute "complex" represents whether each column has complex type
-    complex <- grepl("^\\s*(array|map|struct)<", res$type, ignore.case = TRUE)
-    if (any(complex)) {
-      attr(res$name, "complex") <- complex
+    is_complex <- grepl("^\\s*(array|map|struct)<", res$type, ignore.case = TRUE)
+    if (any(is_complex)) {
+      complex_type <- rep_len(as.character(NA), length(res$name))
+      complex_type[grepl("^\\s*array<", res$type, ignore.case = TRUE)] <- "array"
+      complex_type[grepl("^\\s*map<", res$type, ignore.case = TRUE)] <- "map"
+      complex_type[grepl("^\\s*struct<", res$type, ignore.case = TRUE)] <- "struct"
+      attr(res$name, "complex_type") <- complex_type
     }
     res$name
   }
