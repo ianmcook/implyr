@@ -87,13 +87,30 @@ db_query_fields.impala_connection <- function(con, sql, ...) {
 #' @export
 #' @importFrom dplyr sql_escape_ident
 sql_escape_ident.impala_connection <- function(con, x) {
-  sql_quote(x, "`")
+  impala_sql_quote(con, x, "`")
 }
 
 #' @export
 #' @importFrom dplyr sql_escape_string
 sql_escape_string.impala_connection <- function(con, x) {
-  sql_quote(x, "'")
+  impala_sql_quote(con, x, "'")
+}
+
+impala_sql_quote <- function(con, x, quote) {
+  if (length(x) == 0) {
+    return(x)
+  }
+
+  y <- strsplit(x, ".", fixed = TRUE)
+  y <- vapply(X = y, FUN = function(yi) {
+    yi <- gsub(quote, paste0(quote, quote), yi, fixed = TRUE)
+    yi <- paste0(quote, yi, quote)
+    paste(yi, collapse = ".")
+  }, FUN.VALUE = character(1))
+  y[is.na(x)] <- "NULL"
+  names(y) <- names(x)
+
+  y
 }
 
 #' @export
