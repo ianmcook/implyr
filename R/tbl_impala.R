@@ -152,3 +152,121 @@ collapse.tbl_impala <- function(x, vars = NULL, ...) {
   NextMethod("collapse")
 }
 
+#' Unnest a complex column in an Impala table
+#'
+#' @description \describe{\code{impala_unnest()}}{ unnests a
+#' column of type \code{ARRAY}, \code{MAP}, or \code{STRUCT}
+#' in a \code{tbl_impala}. These column types are referred to
+#' as complex or nested types.}
+#'
+#' @param data an object with class \code{tbl_impala}
+#' @param col the unquoted name of an \code{ARRAY},
+#' \code{MAP}, or \code{STRUCT} column
+#' @param ... ignored (included for compatibility)
+#' @return an object with class \code{tbl_impala} with the
+#' complex column unnested into two or more separate columns
+#' @details \code{impala_unnest()} currently can unnest only
+#' one column, can only be applied once to a \code{tbl_impala},
+#' and must be applied to a \code{tbl_impala} representing an
+#' Impala table or view before applying any other operations.
+#' @seealso \href{https://www.cloudera.com/documentation/enterprise/latest/topics/impala_complex_types.html}{
+#' Impala Complex Types}
+#' @export
+#' @importFrom dbplyr ident_q
+#' @importFrom rlang enexpr
+#' @importFrom rlang !!
+#' @importFrom rlang :=
+#' @importFrom tidyselect vars_select
+#' @importFrom tidyselect vars_rename
+impala_unnest <- function(data, col, ...) {
+  res <- data
+  if (!inherits(res, "tbl_impala")) {
+    stop("data argument must be a tbl_impala", call. = FALSE)
+  }
+  if (!identical(class(res$ops$dots), "quosures") ||
+      identical(as.character(res$ops$dots), "~rename_complex_cols")) {
+    stop("impala_unnest() can only be applied once to a tbl_impala",
+         call. = FALSE)
+  }
+  if (!identical(class(res$ops$dots), "quosures") ||
+      !identical(as.character(res$ops$dots), "~complex_cols")) {
+    stop("data argument must contain complex columns", call. = FALSE)
+  }
+  if (!"x" %in% names(res$ops$x) ||
+      !inherits(res$ops$x$x, "ident")) {
+    stop("impala_unnest() must be applied to a tbl_impala before any other operations",
+         call. = FALSE)
+  }
+  col <- enexpr(col)
+  colname <- as.character(col)
+  if (length(colname) != 1) {
+    stop("impala_unnest() can unnest only one column")
+  }
+  colindex <- which(res$ops$x$vars == colname)
+  if (length(colindex) != 1) {
+    stop("Column ", colname, " not found", call. = FALSE)
+  }
+  coltype <- attr(res$ops$x$vars, "complex_type")[colindex]
+  tablename <- as.character(res$ops$x$x)
+  if (identical(coltype, "array")) {
+    res$ops$x$x <- ident_q(
+      paste0("`", tablename, "`, `", tablename, "`.`", colname,"`")
+    )
+    res$ops$x$vars <- c(
+      setdiff(res$ops$x$vars, colname),
+      paste0(colname, ".item"),
+      paste0(colname, ".pos")
+    )
+    res$ops <- res$ops$x
+    item_name_before <- paste0(colname, ".item")
+    item_name_after <- paste0(colname, "_item")
+    pos_name_before <- paste0(colname, ".pos")
+    pos_name_after <- paste0(colname, "_pos")
+    rename_complex_cols <- vars_rename(
+      colnames(res),
+      !!item_name_after := !!item_name_before,
+      !!pos_name_after := !!pos_name_before
+    )
+    res <- select(res, rename_complex_cols)
+  } else if (identical(coltype, "map")) {
+    res$ops$x$x <- ident_q(
+      paste0("`", tablename, "`, `", tablename, "`.`", colname,"`")
+    )
+    res$ops$x$vars <- c(
+      setdiff(res$ops$x$vars, colname),
+      paste0(colname, ".key"),
+      paste0(colname, ".value")
+    )
+    res$ops <- res$ops$x
+    key_name_before <- paste0(colname, ".key")
+    key_name_after <- paste0(colname, "_key")
+    value_name_before <- paste0(colname, ".value")
+    value_name_after <- paste0(colname, "_value")
+    rename_complex_cols <- vars_rename(
+      colnames(res),
+      !!key_name_after := !!key_name_before,
+      !!value_name_after := !!value_name_before
+    )
+    res <- select(res, rename_complex_cols)
+  } else if (identical(coltype, "struct")) {
+    sql <- paste0("DESCRIBE ", tablename, ".", colname)
+    structcolnames <- dbGetQuery(res$src, sql)$name
+    othercolnames <- setdiff(res$ops$x$vars, colname)
+    col_names_before <- c(
+      othercolnames,
+      paste(colname, structcolnames, sep = ".")
+    )
+    col_names_after <- c(
+      othercolnames,
+      paste(colname, structcolnames, sep = "_")
+    )
+    res$ops$x$vars <- col_names_before
+    res$ops <- res$ops$x
+    rename_complex_cols <- col_names_before
+    names(col_names_before) <- col_names_after
+    res <- select(res, rename_complex_cols)
+  } else {
+    stop("Column ", colname, " must be of type ARRAY, MAP, or STRUCT", call. = FALSE)
+  }
+  res
+}
