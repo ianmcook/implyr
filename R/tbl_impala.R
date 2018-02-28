@@ -263,7 +263,7 @@ impala_unnest <- function(data, col, ...) {
     res$ops$x$vars <- col_names_before
     res$ops <- res$ops$x
     rename_complex_cols <- col_names_before
-    names(col_names_before) <- col_names_after
+    names(rename_complex_cols) <- col_names_after
     res <- select(res, rename_complex_cols)
   } else {
     stop("Column ", colname, " must be of type ARRAY, MAP, or STRUCT", call. = FALSE)
