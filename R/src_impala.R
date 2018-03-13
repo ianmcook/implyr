@@ -174,7 +174,8 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
       host = l$host,
       port = l$port,
       version = r$version,
-      dbname = r$dbname
+      dbname = r$dbname,
+      dbms.name = "Impala"
     )
   } else {
     info <- dbGetInfo(con)
