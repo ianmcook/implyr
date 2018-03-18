@@ -1,8 +1,10 @@
-# implyr 0.2.2.9000
+# implyr 0.2.3
 
-* Added experimental support for complex types (`ARRAY`, `MAP`, `STRUCT`)
+* Updated for compatibility with dplyr 0.7.4
 * Added tidyselect to Imports
-* Required newer versions of Depends and Imports
+* Required newer versions of Depends and Imports packages
+* Added experimental support for complex types (`ARRAY`, `MAP`, `STRUCT`)
+* Made bugfixes and improvements
 
 # implyr 0.2.2
 
