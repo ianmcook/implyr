@@ -94,3 +94,14 @@ test_that("error when using paste() without collapse for aggregating", {
     regexp = "collapse"
   )
 })
+
+test_that("str_collapse() works for aggregating", {
+  check_impala()
+  test_op <- function(x) {
+    x %>%
+      group_by(cyl) %>% summarise(gears = str_collapse(unique(as.character(gear)), collapse = " ")) %>%
+      collect()
+  }
+  test_op(tbl(impala, "mtcars"))
+  succeed()
+})
