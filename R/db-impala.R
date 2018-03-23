@@ -291,6 +291,15 @@ sql_translate_env.impala_connection <- function(con) {
         }
       }
     ),
+    str_collapse = function(x, collapse) {
+      sql(paste0(
+        "group_concat(",
+        x,
+        ",",
+        sql_escape_string(con, collapse),
+        ")"
+      ))
+    },
     sql_translator(
       .parent = base_win,
       median = win_absent("median"),
