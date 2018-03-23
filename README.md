@@ -137,7 +137,8 @@ Impala.
 
 For more information about which arguments you can pass to
 `src_impala()` when using ODBC connectivity, see
-`?"dbConnect,OdbcDriver-method"` and the Authentication section below.
+`?"dbConnect,OdbcDriver-method"` and the
+[Authentication](#authentication) section below.
 
 #### JDBC Connectivity
 
@@ -199,9 +200,9 @@ impala <- src_impala(drv, "jdbc:impala://host:21050;UID=username;PWD=password")
 The returned object `impala` provides a remote dplyr data source to
 Impala.
 
-See the Authentication section below for information about how to
-construct the JDBC connection string when using different authentication
-methods.
+See the [Authentication](#authentication) section below for information
+about how to construct the JDBC connection string when using different
+authentication methods.
 
 Do not attempt to connect to Impala using more than one method in one R
 session.
@@ -244,8 +245,9 @@ flights_tbl <- tbl(impala, in_schema("nycflights13", "flights"))
 ```
 
 The examples here assume that data has already been loaded into the
-Impala table named `flights`. See the Loading Local Data into Impala
-section below for information about ways to load data from R into
+Impala table named `flights`. See the [Loading Local Data into
+Impala](#loading-local-data-into-impala) section below for information
+about ways to load data from R into
 Impala.
 
 <!-- if you change this example, also change the corresponding test in test-readme.R -->
@@ -361,9 +363,11 @@ You can also use dplyr join functions to bring together values from
 Types](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_complex_types.html)
 for more details about `ARRAY` and `MAP` columns.
 
-Read the Warnings and Current Limitations section below to understand
-the ways that working with Impala as a remote dplyr data source is
-different from working with local data or other remote dplyr data
+Read the [Warnings and Current
+Limitations](#warnings-and-current-limitations) section below to
+understand the ways that working with Impala as a remote dplyr data
+source is different from working with local data or other remote dplyr
+data
 sources.
 
 <!-- if you add more examples here, also add corresponding tests in test-readme.R -->
