@@ -134,7 +134,6 @@ sql_translate_env.impala_connection <- function(con) {
   sql_variant(
     sql_translator(
       .parent = base_scalar,
-
       # type conversion functions
       as.character = function(x)
         build_sql("cast(", x, " as string)"),
