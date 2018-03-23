@@ -282,8 +282,8 @@ tbl.src_impala <- function(src, from, ...) {
 #' This package does not provide tools for loading larger amounts of local data
 #' into Impala tables. This is because Impala can query data stored in several
 #' different filesystems and storage systems (HDFS, Apache Kudu, Apache HBase,
-#' and Amazon S3) and Impala does not include built-in capability for loading
-#' local data into these systems.
+#' Amazon S3, Microsoft ADLS, and Dell EMC Isilon) and Impala does not include
+#' built-in capability for loading local data into these systems.
 #'
 #' @param dest an object with class with class \code{src_impala}
 #' @param df a (very small) local data frame

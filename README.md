@@ -11,8 +11,8 @@ Status](https://travis-ci.org/ianmcook/implyr.svg?branch=master)](https://travis
 [dplyr](https://cran.r-project.org/package=dplyr) for [Apache
 Impala](https://impala.apache.org), the massively parallel processing
 query engine for Apache Hadoop. Impala enables low-latency SQL queries
-on large datasets stored in HDFS, Apache HBase, Apache Kudu, and Amazon
-S3.
+on large datasets stored in HDFS, Apache HBase, Apache Kudu, Amazon S3,
+Microsoft ADLS, and Dell EMC Isilon.
 
 implyr is designed to work with any
 [DBI](https://cran.r-project.org/package=DBI)-compatible interface to
@@ -431,9 +431,9 @@ Impala.
 
 implyr does not provide tools for loading local data into Impala tables.
 This is because Impala can query data stored in several different
-filesystems and storage systems (HDFS, Apache HBase, Apache Kudu, and
-Amazon S3) and Impala does not include built-in capability for loading
-local data into these systems.
+filesystems and storage systems (HDFS, Apache HBase, Apache Kudu, Amazon
+S3, Microsoft ADLS, and Dell EMC Isilon) and Impala does not include
+built-in capability for loading local data into these systems.
 
 Some other dplyr backends implement the function `copy_to`, which copies
 a local data frame to a remote source. `implyr` implements `copy_to`,

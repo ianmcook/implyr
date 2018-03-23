@@ -10,9 +10,10 @@ Maintainer: Ian Cook <ian@cloudera.com>
 Description: 'SQL' back-end to 'dplyr' for Apache Impala, the massively
     parallel processing query engine for Apache 'Hadoop'. Impala enables
     low-latency 'SQL' queries on data stored in the 'Hadoop' Distributed
-    File System '(HDFS)', Apache 'HBase', Apache 'Kudu', and Amazon
-    Simple Storage Service '(S3)'. See <https://impala.apache.org> for
-    more information about Impala.
+    File System '(HDFS)', Apache 'HBase', Apache 'Kudu', Amazon Simple 
+    Storage Service '(S3)', Microsoft Azure Data Lake Store '(ADLS)', 
+    and Dell 'EMC' 'Isilon'. See <https://impala.apache.org> for more
+    information about Impala.
 URL: https://github.com/ianmcook/implyr
 BugReports: https://github.com/ianmcook/implyr/issues
 Depends:

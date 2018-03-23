@@ -58,8 +58,8 @@ technique, which is not suitable for loading large amounts of data.
 This package does not provide tools for loading larger amounts of local data
 into Impala tables. This is because Impala can query data stored in several
 different filesystems and storage systems (HDFS, Apache Kudu, Apache HBase,
-and Amazon S3) and Impala does not include built-in capability for loading
-local data into these systems.
+Amazon S3, Microsoft ADLS, and Dell EMC Isilon) and Impala does not include
+built-in capability for loading local data into these systems.
 }
 \note{
 Impala does not support temporary tables. When using \code{copy_to()}
