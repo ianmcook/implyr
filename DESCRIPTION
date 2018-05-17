@@ -31,6 +31,7 @@ Suggests:
     Lahman (>= 3.0-1),
     odbc,
     RJDBC,
+    rJava (>= 0.4-15),
     nycflights13,
     testthat
 SystemRequirements: Impala driver to support a 'DBI'-compatible R interface
