@@ -1,4 +1,4 @@
-# implyr 0.2.3.9000
+# implyr 0.2.4
 
 * Made minor bugfixes and improvements
 * Added rJava to Suggests (#26)
