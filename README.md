@@ -3,6 +3,10 @@
 
 # implyr
 
+[![Build
+Status](https://travis-ci.org/ianmcook/implyr.svg?branch=master)](https://travis-ci.org/ianmcook/implyr)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/implyr)](https://cran.r-project.org/package=implyr)
+
 **implyr** is a SQL backend to
 [dplyr](https://cran.r-project.org/package=dplyr) for [Apache
 Impala](https://impala.apache.org), the massively parallel processing
