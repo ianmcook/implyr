@@ -14,3 +14,4 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - unixodbc-dev
+      - libgit2-dev
