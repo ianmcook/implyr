@@ -13,3 +13,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - unixodbc-dev
+
+before_script:
+  - export INCLUDE_DIR=/usr/include
+  - export LIB_DIR=/usr/lib/x86_64-linux-gnu/
