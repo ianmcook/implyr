@@ -2,9 +2,8 @@ language: r
 cache: packages
 dist: trusty
 env:
-  global:
-    - MAKEFLAGS = -j2 ODBCSYSINI=${TRAVIS_BUILD_DIR}/travis/odbc INCLUDE_DIR=/usr/include LIB_DIR=/usr/lib/x86_64-linux-gnu/
-    - _R_CHECK_FORCE_SUGGESTS_=false
+  - MAKEFLAGS = -j2 ODBCSYSINI=${TRAVIS_BUILD_DIR}/travis/odbc INCLUDE_DIR=/usr/include LIB_DIR=/usr/lib/x86_64-linux-gnu/
+  - _R_CHECK_FORCE_SUGGESTS_=false
 
 warnings_are_errors: false
 
@@ -14,4 +13,3 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - unixodbc-dev
-      - libgit2-dev
