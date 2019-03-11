@@ -39,3 +39,25 @@ test_that("no warning when no arrange() before compute()", {
   }
   expect_warning(test_op(tbl(impala, "flights")), regexp = NA)
 })
+
+test_that("warning when using aggregate function without na.rm = TRUE", {
+  check_impala()
+  test_op <- function(x) {
+    x %>%
+      group_by(origin) %>%
+      summarise(mean_dep_delay = mean(dep_delay)) %>%
+      collect()
+  }
+  expect_warning(test_op(tbl(impala, "flights")))
+})
+
+test_that("warning when using aggregate function with na.rm = FALSE", {
+  check_impala()
+  test_op <- function(x) {
+    x %>%
+      group_by(origin) %>%
+      summarise(mean_dep_delay = mean(dep_delay, na.rm = FALSE)) %>%
+      collect()
+  }
+  expect_warning(test_op(tbl(impala, "flights")))
+})
