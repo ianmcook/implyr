@@ -123,10 +123,12 @@ impala_ident_quote <- function(con, x, quote) {
 #' @importFrom dbplyr base_win
 #' @importFrom dbplyr build_sql
 #' @importFrom dbplyr sql
+#' @importFrom dbplyr sql_aggregate
 #' @importFrom dbplyr sql_prefix
 #' @importFrom dbplyr sql_translator
 #' @importFrom dbplyr sql_variant
 #' @importFrom dbplyr win_absent
+#' @importFrom dbplyr win_aggregate
 #' @importFrom dbplyr win_current_group
 #' @importFrom dbplyr win_over
 #' @importFrom dplyr sql_translate_env
@@ -249,7 +251,9 @@ sql_translate_env.impala_connection <- function(con) {
     ),
     sql_translator(
       .parent = base_agg,
-      median = sql_prefix("appx_median"),
+      appx_median = sql_aggregate("appx_median"),
+      avg = sql_aggregate("avg"),
+      median = sql_aggregate_compat("appx_median", "median"),
       n = function(x) {
         if (missing(x)) {
           sql("count(*)")
@@ -257,11 +261,20 @@ sql_translate_env.impala_connection <- function(con) {
           build_sql(sql("count"), list(x))
         }
       },
-      sd =  sql_prefix("stddev"),
+      ndv = sql_aggregate("ndv"),
+      sd = sql_aggregate_compat("stddev", "sd"),
+      stddev = sql_aggregate("stddev"),
+      stddev_samp = sql_aggregate("stddev_samp"),
+      stddev_pop = sql_aggregate("stddev_pop"),
       unique = function(x) {
         sql(paste("distinct", x))
       },
-      var = sql_prefix("variance"),
+      var = sql_aggregate_compat("variance", "var"),
+      variance = sql_aggregate("variance"),
+      variance_samp = sql_aggregate("variance_samp"),
+      variance_pop = sql_aggregate("variance_pop"),
+      var_samp = sql_aggregate("var_samp"),
+      var_pop = sql_aggregate("var_pop"),
       paste = function(x, collapse = NULL) {
         if (is.null(collapse)) {
           stop("To use paste() as an aggregate function, set the collapse argument",
@@ -302,6 +315,8 @@ sql_translate_env.impala_connection <- function(con) {
     ),
     sql_translator(
       .parent = base_win,
+      appx_median = win_absent("appx_median"),
+      avg = win_aggregate("avg"),
       median = win_absent("median"),
       n = function(x) {
         if (missing(x)) {
@@ -341,12 +356,31 @@ sql_translate_env.impala_connection <- function(con) {
       },
       str_collapse = win_absent("str_collapse"),
       sd = win_absent("sd"),
+      stddev = win_absent("sd"),
+      stddev_samp = win_absent("stddev_samp"),
+      stddev_pop = win_absent("stddev_pop"),
       unique = function(x) {
         sql(paste("distinct", x))
       },
-      var = win_absent("var")
+      var = win_absent("var"),
+      variance = win_absent("variance"),
+      variance_samp = win_absent("variance_samp"),
+      variance_pop = win_absent("variance_pop"),
+      var_samp = win_absent("var_samp"),
+      var_pop = win_absent("var_pop")
     )
   )
+}
+
+#' @importFrom dbplyr sql_aggregate
+sql_aggregate_compat <- function(f, f_r = f) {
+  # This function allows the SQL translations to support dbplyr 1.3.0
+  # and earlier while using the optional f_r argument to sql_aggregate()
+  if(length(args(sql_aggregate)) >= 2) {
+    sql_aggregate(f, f_r)
+  } else {
+    sql_aggregate(f)
+  }
 }
 
 #' @export
