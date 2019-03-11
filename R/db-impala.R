@@ -373,13 +373,13 @@ sql_translate_env.impala_connection <- function(con) {
 }
 
 #' @importFrom dbplyr sql_aggregate
-sql_aggregate_compat <- function(f, f_r = f) {
+sql_aggregate_compat <- function(f, ...) {
   # This function allows the SQL translations to support dbplyr 1.3.0
   # and earlier while using the optional f_r argument to sql_aggregate()
-  if(length(args(sql_aggregate)) >= 2) {
-    sql_aggregate(f, f_r)
-  } else {
+  if(length(args(sql_aggregate)) < 2) {
     sql_aggregate(f)
+  } else {
+    sql_aggregate(f, ...)
   }
 }
 
