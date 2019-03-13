@@ -32,7 +32,7 @@ test_that("as.char() returns column of type char with specified length", {
   )
 })
 
-# do not test varchar; the returned length will not necessarily match the specified length
+# do not test as.varchar(); the returned length will not necessarily match the specified length
 
 test_that("as.boolean() returns column of type boolean", {
   check_impala()
