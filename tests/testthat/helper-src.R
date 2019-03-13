@@ -23,3 +23,15 @@ skip_on_travis <- function() {
     skip("Skipping test on Travis CI")
   }
 }
+
+column_type <- function(x) {
+  if(ncol(x) > 1) {
+    stop("Argument to function column_type() must have only one column")
+  }
+  x %>%
+    select(test_column = 1) %>%
+    transmute(datatype = typeof(test_column)) %>%
+    head(1) %>%
+    pull() %>%
+    tolower()
+}
