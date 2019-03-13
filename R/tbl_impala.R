@@ -209,7 +209,7 @@ impala_unnest <- function(data, col, ...) {
   coltype <- attr(res$ops$x$vars, "complex_type")[colindex]
   tablename <- as.character(res$ops$x$x)
   if (identical(coltype, "array")) {
-    quoted_tablename <- impala_ident_quote(res$src$con, tablename, "`")
+    quoted_tablename <- impala_escape_ident(res$src$con, tablename, "`")
     res$ops$x$x <- ident_q(
       paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
     )
@@ -230,7 +230,7 @@ impala_unnest <- function(data, col, ...) {
     )
     res <- select(res, rename_complex_cols)
   } else if (identical(coltype, "map")) {
-    quoted_tablename <- impala_ident_quote(res$src$con, tablename, "`")
+    quoted_tablename <- impala_escape_ident(res$src$con, tablename, "`")
     res$ops$x$x <- ident_q(
       paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
     )
