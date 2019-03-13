@@ -119,15 +119,7 @@ test_that("as.double() returns column of type double", {
   )
 })
 
-test_that("as.real() returns column of type float", {
-  check_impala()
-  expect_equal(
-    column_type(
-      tbl(impala, "flights") %>% transmute(real_year = as.real(year + 1))
-    ),
-    "float"
-  )
-})
+# do not test as.real(); might return float or double
 
 test_that("as.float() returns column of type float", {
   check_impala()
