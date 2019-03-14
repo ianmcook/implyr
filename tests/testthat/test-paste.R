@@ -10,6 +10,16 @@ test_that("result of scalar paste0() is consistent with result on tbl_df", {
   compare_tbls(list(tbl(impala, "flights"), nycflights13::flights), op = test_op, convert = TRUE)
 })
 
+test_that("result of scalar paste0() including a literal is consistent with result on tbl_df", {
+  check_impala()
+  test_op <- function(x) {
+    x %>%
+      mutate(flight_code = paste0(carrier, "-", as.character(flight))) %>%
+      arrange(carrier, flight) %>% head(5) %>% collect() %>% select(flight_code)
+  }
+  compare_tbls(list(tbl(impala, "flights"), nycflights13::flights), op = test_op, convert = TRUE)
+})
+
 test_that("error when using scalar paste0() with collapse", {
   check_impala()
   test_op <- function(x) {
@@ -29,6 +39,17 @@ test_that("result of scalar paste() is consistent with result on tbl_df", {
   test_op <- function(x) {
     x %>%
       mutate(flight_code = paste(carrier, as.character(flight))) %>%
+      arrange(carrier, flight) %>% head(5) %>% collect() %>% select(flight_code)
+  }
+  compare_tbls(list(tbl(impala, "flights"), nycflights13::flights), op = test_op, convert = TRUE)
+})
+
+
+test_that("result of scalar paste() including a literal is consistent with result on tbl_df", {
+  check_impala()
+  test_op <- function(x) {
+    x %>%
+      mutate(flight_code = paste(carrier, "-", as.character(flight))) %>%
       arrange(carrier, flight) %>% head(5) %>% collect() %>% select(flight_code)
   }
   compare_tbls(list(tbl(impala, "flights"), nycflights13::flights), op = test_op, convert = TRUE)
@@ -95,7 +116,7 @@ test_that("error when using paste() without collapse for aggregating", {
   )
 })
 
-test_that("str_collapse() works for aggregating", {
+test_that("str_flatten() works for aggregating", {
   check_impala()
   test_op <- function(x) {
     x %>%

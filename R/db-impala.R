@@ -127,6 +127,7 @@ impala_escape_ident <- function(con, x, quote) {
 #' @importFrom dbplyr base_win
 #' @importFrom dbplyr build_sql
 #' @importFrom dbplyr sql
+#' @importFrom dbplyr sql_expr
 #' @importFrom dbplyr sql_aggregate
 #' @importFrom dbplyr sql_prefix
 #' @importFrom dbplyr sql_translator
@@ -136,6 +137,8 @@ impala_escape_ident <- function(con, x, quote) {
 #' @importFrom dbplyr win_current_group
 #' @importFrom dbplyr win_over
 #' @importFrom dplyr sql_translate_env
+#' @importFrom rlang !!
+#' @importFrom rlang !!!
 sql_translate_env.impala_connection <- function(con) {
   sql_variant(
     sql_translator(
@@ -231,14 +234,7 @@ sql_translate_env.impala_connection <- function(con) {
                        sep = " ",
                        collapse = NULL) {
         if (is.null(collapse)) {
-          sql(paste0(
-            "concat_ws(",
-            sql_escape_string(con, sep),
-            ",",
-            paste(list(...), collapse = ","),
-            ")"
-          ))
-          # TBD: simplify this by passing con to build_sql?
+          sql_expr(concat_ws(!!sep, !!!list(...)))
         } else {
           stop("paste() with collapse argument set can only be used for aggregation",
                call. = FALSE)
@@ -246,7 +242,7 @@ sql_translate_env.impala_connection <- function(con) {
       },
       paste0 = function(..., collapse = NULL) {
         if (is.null(collapse)) {
-          build_sql("concat(", sql(paste(list(...), collapse = ",")), ")")
+          sql_expr(concat(!!!list(...)))
         } else {
           stop("paste0() with collapse argument set can only be used for aggregation",
                call. = FALSE)
@@ -298,23 +294,16 @@ sql_translate_env.impala_connection <- function(con) {
           stop("To use paste0() as an aggregate function, set the collapse argument",
                call. = FALSE)
         } else {
-          sql(paste0(
-            "group_concat(",
-            x,
-            ",",
-            sql_escape_string(con, collapse),
-            ")"
-          ))
+          sql_expr(group_concat(!!x, !!collapse))
         }
       },
       str_collapse = function(x, collapse) {
-        sql(paste0(
-          "group_concat(",
-          x,
-          ",",
-          sql_escape_string(con, collapse),
-          ")"
-        ))
+        # deprecate this in a future version
+        # issue warning to use str_flatten() instead
+        sql_expr(group_concat(!!x, !!collapse))
+      },
+      str_flatten = function(x, collapse) {
+        sql_expr(group_concat(!!x, !!collapse))
       }
     ),
     sql_translator(
@@ -337,13 +326,7 @@ sql_translate_env.impala_connection <- function(con) {
                        sep = " ",
                        collapse = NULL) {
         if (is.null(collapse)) {
-          sql(paste0(
-            "concat_ws(",
-            sql_escape_string(con, sep),
-            ",",
-            paste(list(...), collapse = ","),
-            ")"
-          ))
+          sql_expr(concat_ws(!!sep, !!!list(...)))
           # TBD: simplify this by passing con to build_sql?
         } else {
           stop("paste() with collapse argument is not supported in window functions",
@@ -352,13 +335,14 @@ sql_translate_env.impala_connection <- function(con) {
       },
       paste0 = function(...,  collapse = NULL) {
         if (is.null(collapse)) {
-          build_sql("concat(", sql(paste(list(...), collapse = ",")), ")")
+          sql_expr(concat(!!!list(...)))
         } else {
           stop("paste0() with collapse argument is not supported in window functions",
                call. = FALSE)
         }
       },
       str_collapse = win_absent("str_collapse"),
+      str_flatten = win_absent("str_flatten"),
       sd = win_absent("sd"),
       stddev = win_absent("sd"),
       stddev_samp = win_absent("stddev_samp"),
