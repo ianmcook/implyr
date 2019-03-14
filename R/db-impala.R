@@ -344,7 +344,7 @@ sql_translate_env.impala_connection <- function(con) {
       str_collapse = win_absent("str_collapse"),
       str_flatten = win_absent("str_flatten"),
       sd = win_absent("sd"),
-      stddev = win_absent("sd"),
+      stddev = win_absent("stddev"),
       stddev_samp = win_absent("stddev_samp"),
       stddev_pop = win_absent("stddev_pop"),
       unique = function(x) {
