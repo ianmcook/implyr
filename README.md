@@ -1,11 +1,16 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# implyr
+# implyr <img src="man/figures/logo.png" align="right" height="139" />
+
+<!-- badges: start -->
 
 [![Build
 Status](https://travis-ci.org/ianmcook/implyr.svg?branch=master)](https://travis-ci.org/ianmcook/implyr)
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/implyr)](https://cran.r-project.org/package=implyr)
+<!-- badges: end -->
+
+## Overview
 
 **implyr** is a SQL backend to
 [dplyr](https://cran.r-project.org/package=dplyr) for [Apache
