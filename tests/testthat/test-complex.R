@@ -16,7 +16,9 @@ test_that("impala_unnest() on array column returns expected result", {
     phones_pos = c(0, 1 , 2, 0, 0, 1),
     stringsAsFactors = FALSE
   )
-  compare(test_op(tbl(impala, "cust_phones_parquet")), ref)
+  expect_true(
+    compare(test_op(tbl(impala, "cust_phones_parquet")), ref)$equal
+  )
 })
 
 test_that("impala_unnest() on map column returns expected result", {
@@ -34,7 +36,9 @@ test_that("impala_unnest() on map column returns expected result", {
     phones_value = c("555-1111", "555-2222", "555-3333", "555-4444", "555-5555", "555-6666"),
     stringsAsFactors = FALSE
   )
-  compare(test_op(tbl(impala, "cust_phones_map_parquet")), ref)
+  expect_true(
+    compare(test_op(tbl(impala, "cust_phones_map_parquet")), ref)$equal
+  )
 })
 
 test_that("impala_unnest() on struct column returns expected result", {
@@ -54,5 +58,7 @@ test_that("impala_unnest() on struct column returns expected result", {
     address_zipcode = c("97477", "20500", NA),
     stringsAsFactors = FALSE
   )
-  compare(test_op(tbl(impala, "cust_addr_parquet")), ref)
+  expect_true(
+    compare(test_op(tbl(impala, "cust_addr_parquet")), ref)$equal
+  )
 })
