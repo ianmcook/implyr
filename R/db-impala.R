@@ -616,3 +616,5 @@ db_create_table.impala_connection <-
                    con = con)
   dbExecute(con, sql)
 }
+
+globalVariables(c("concat", "concat_ws", "group_concat"))
