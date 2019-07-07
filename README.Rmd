@@ -54,7 +54,7 @@ You must also install a package and driver to provide connectivity to Impala.
 
 3. Download and install the latest version of the [Impala ODBC driver from Cloudera](https://www.cloudera.com/downloads/connectors/impala/odbc.html).
 
-4. Complete the installation and configuration steps described in the [odbc package README](https://cran.r-project.org/package=odbc/README.html#installation) and the [Impala ODBC driver installation guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf).
+4. Complete the installation and configuration steps described in the [odbc package README](https://cran.r-project.org/package=odbc/readme/README.html#installation) and the [Impala ODBC driver installation guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf).
 
 #### JDBC Connectivity
 
