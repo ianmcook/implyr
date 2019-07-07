@@ -12,8 +12,8 @@
 \method{compute}{tbl_impala}(x, name, temporary = TRUE,
   unique_indexes = NULL, indexes = NULL, analyze = FALSE,
   external = FALSE, overwrite = FALSE, force = FALSE,
-  field_terminator = NULL, line_terminator = NULL, file_format = NULL,
-  ...)
+  field_terminator = NULL, line_terminator = NULL,
+  file_format = NULL, ...)
 
 \method{collect}{tbl_impala}(x, ..., n = Inf, warn_incomplete = TRUE)
 

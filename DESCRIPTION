@@ -37,4 +37,5 @@ Suggests:
 SystemRequirements: Impala driver to support a 'DBI'-compatible R interface
 NeedsCompilation: no
 License: Apache License 2.0 | file LICENSE
-RoxygenNote: 6.0.1
+Encoding: UTF-8
+RoxygenNote: 6.1.1
