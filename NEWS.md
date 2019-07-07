@@ -1,6 +1,7 @@
 # implyr 0.2.4.999
 
-* Fix errors when `na.rm = TRUE` is specified in some aggregate functions
+* Updated for compatibility with dplyr 0.8.3
+* Fixed errors when `na.rm = TRUE` is specified in some aggregate functions
 * Made minor bugfixes and improvements
 
 # implyr 0.2.4
