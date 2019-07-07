@@ -247,7 +247,20 @@ sql_translate_env.impala_connection <- function(con) {
           stop("paste0() with collapse argument set can only be used for aggregation",
                call. = FALSE)
         }
+      },
+
+      # regular expression functions
+      grepl = function(pattern, x, ignore.case = FALSE) {
+        if(identical(ignore.case, TRUE)) {
+          build_sql(x, sql(" IREGEXP "), pattern)
+        } else {
+          build_sql(x, sql(" REGEXP "), pattern)
+        }
+      },
+      gsub = function(pattern, replacement, x) {
+        build_sql(sql("regexp_replace"), list(x, pattern, replacement))
       }
+
     ),
     sql_translator(
       .parent = base_agg,
