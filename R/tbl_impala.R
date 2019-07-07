@@ -183,14 +183,13 @@ impala_unnest <- function(data, col, ...) {
   if (!inherits(res, "tbl_impala")) {
     stop("data argument must be a tbl_impala", call. = FALSE)
   }
-  if (!identical(class(res$ops$dots), "quosures") ||
-      identical(as.character(res$ops$dots), "~rename_complex_cols")) {
-    stop("impala_unnest() can only be applied once to a tbl_impala",
-         call. = FALSE)
-  }
-  if (!identical(class(res$ops$dots), "quosures") ||
-      !identical(as.character(res$ops$dots), "~complex_cols")) {
+  if (!"vars" %in% names(res$ops$x) ||
+      all(is.na(attr(res$ops$x$vars, "complex_type")))) {
     stop("data argument must contain complex columns", call. = FALSE)
+  }
+  if (is.null(attr(res$ops$x$vars, "complex_type"))) {
+    stop("impala_unnest() can only be applied once to a tbl_impala",
+          call. = FALSE)
   }
   if (!"x" %in% names(res$ops$x) ||
       !inherits(res$ops$x$x, "ident")) {
