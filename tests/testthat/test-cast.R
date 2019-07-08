@@ -211,3 +211,38 @@ test_that("as.POSIXct() returns column of type timestamp", {
   )
 })
 
+test_that("as.Date() returns date part of timestamp", {
+  check_impala()
+  # do not explicitly check type of returned column like in timestamp tests
+  # because:
+  # in older versions of Impala, to_date() returns column of type STRING
+  # in newer versions of Impala, to_date() returns column of type DATE
+  expect_equal(
+    tbl(impala, "flights") %>%
+      transmute(date_part = as.Date(time_hour)) %>%
+      arrange(date_part) %>%
+      head(5) %>%
+      collect() %>%
+      pull(1) %>%
+      as.character(),
+    rep("2013-01-01", 5)
+  )
+})
+
+test_that("as_date() returns date part of timestamp", {
+  check_impala()
+  # do not explicitly check type of returned column like in timestamp tests
+  # because:
+  # in older versions of Impala, to_date() returns column of type STRING
+  # in newer versions of Impala, to_date() returns column of type DATE
+  expect_equal(
+    tbl(impala, "flights") %>%
+      transmute(date_part = as_date(time_hour)) %>%
+      arrange(date_part) %>%
+      head(5) %>%
+      collect() %>%
+      pull(1) %>%
+      as.character(),
+    rep("2013-01-01", 5)
+  )
+})

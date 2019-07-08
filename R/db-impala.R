@@ -199,6 +199,10 @@ sql_translate_env.impala_connection <- function(con) {
         build_sql("cast(", x, " as timestamp)"),
       as_datetime = function(x)
         build_sql("cast(", x, " as timestamp)"),
+      as.Date = function(x)
+        build_sql("to_date(", x, ")"),
+      as_date = function(x)
+        build_sql("to_date(", x, ")"),
       as.POSIXct = function(x)
         build_sql("cast(", x, " as timestamp)"),
 
