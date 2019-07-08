@@ -216,7 +216,7 @@ sql_translate_env.impala_connection <- function(con) {
       pmax = sql_prefix("greatest"),
       pmin = sql_prefix("least"),
 
-      # date and time functions (work like lubridate)
+      # lubridate functions
       year = sql_prefix("year"),
       month = function(x, label = FALSE) {
         if (label) {
@@ -246,7 +246,6 @@ sql_translate_env.impala_connection <- function(con) {
       today = function()
         build_sql("to_date(now())"),
       now = sql_prefix("now"),
-
 
       # conditional functions
       na_if = sql_prefix("nullif", 2),

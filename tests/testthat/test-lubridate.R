@@ -1,4 +1,4 @@
-context("Impala date and time functions")
+context("lubridate function translations")
 
 library(lubridate)
 
