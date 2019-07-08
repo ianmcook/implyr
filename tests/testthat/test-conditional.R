@@ -6,7 +6,7 @@ test_that("Expression in square brackets in summarise() returns expected result"
     x %>%
       rename_all(recode, Sepal.Length = "sepal_length") %>%
       rename_all(recode, Species = "species") %>%
-      summarise(result = ceiling(sum(sepal_length[species == "versicolor"]))) %>%
+      summarise(result = ceiling(sum(sepal_length[species == "versicolor"], na.rm = TRUE))) %>%
       collect() %>%
       pull(1) %>%
       as.numeric()

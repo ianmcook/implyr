@@ -29,6 +29,7 @@ Imports:
     utils
 Suggests:
     Lahman (>= 3.0-1),
+    lubridate,
     odbc,
     RJDBC,
     rJava (>= 0.4-15),

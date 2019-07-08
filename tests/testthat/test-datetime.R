@@ -1,5 +1,7 @@
 context("Impala date and time functions")
 
+library(lubridate)
+
 test_that("year() returns expected result", {
   check_impala()
   test_op <- function(x) {
@@ -57,6 +59,7 @@ test_that("isoweek() returns expected result", {
 })
 
 test_that("yday() returns expected result", {
+  skip("Skipping because of JDBC driver problem")
   check_impala()
   test_op <- function(x) {
     x %>%
@@ -99,6 +102,7 @@ test_that("mday() returns expected result", {
 })
 
 test_that("wday() returns expected result", {
+  skip("Skipping because of JDBC driver problem")
   check_impala()
   test_op <- function(x) {
     x %>%
@@ -113,6 +117,7 @@ test_that("wday() returns expected result", {
 })
 
 test_that("wday() with label = TRUE returns expected result", {
+  skip("Skipping because of JDBC driver problem")
   check_impala()
   test_op <- function(x) {
     x %>%
@@ -127,6 +132,7 @@ test_that("wday() with label = TRUE returns expected result", {
 })
 
 test_that("wday() with label = TRUE and abbr = FALSE returns expected result", {
+  skip("Skipping because of JDBC driver problem")
   check_impala()
   test_op <- function(x) {
     x %>%
