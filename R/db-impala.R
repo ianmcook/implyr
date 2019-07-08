@@ -291,6 +291,53 @@ sql_translate_env.impala_connection <- function(con) {
         build_sql(sql("substr"), list(x, start, length))
       },
 
+      # stringr functions
+      str_c = function(..., sep = "", collapse = NULL) {
+        if (is.null(collapse)) {
+          sql_expr(concat_ws(!!sep, !!!list(...)))
+        } else {
+          stop("str_c() with collapse argument set can only be used for aggregation",
+               call. = FALSE)
+        }
+      },
+      str_length = sql_prefix("length", 1),
+      str_trim = function(string, side = c("both", "left", "right")) {
+        side <- match.arg(side)
+        switch(
+          side,
+          left = sql_expr(ltrim(!!string)),
+          right = sql_expr(rtrim(!!string)),
+          both = sql_expr(trim(!!string))
+        )
+      },
+      str_to_lower = sql_prefix("lower", 1),
+      str_to_upper = sql_prefix("upper", 1),
+      str_to_title = sql_prefix("initcap", 1),
+      str_sub = function(string, start = 1L, end = -1L) {
+        stopifnot(length(start) == 1L, length(end) == 1L)
+        start <- as.integer(start)
+        end <- as.integer(end)
+        if (end == -1L) {
+          build_sql(sql("substr"), list(string, start))
+        } else if (end < 0) {
+          if (start < 0) {
+            length <- pmax(-start + end + 1L, 0L)
+          } else {
+            length <- sql_expr(length(!!string) - !!start - !!(abs(end)) + 2L)
+          }
+          build_sql(sql("substr"), list(string, start, length))
+        } else if (end > 0) {
+          if (start < 0) {
+            length <- sql_expr(length(!!string) - !!(abs(start)) + !!end - 2L)
+          } else {
+            length <- pmax(end - start + 1L, 0L)
+          }
+          build_sql(sql("substr"), list(string, start, length))
+        } else if (end == 0) {
+          build_sql(sql("substr"), list(string, start, 0L))
+        }
+      },
+
       # regular expression functions
       grepl = function(pattern, x, ignore.case = FALSE) {
         if(identical(ignore.case, TRUE)) {
@@ -362,6 +409,18 @@ sql_translate_env.impala_connection <- function(con) {
           }
         }
       },
+      str_c = function(..., sep = "", collapse = NULL) {
+        if (is.null(collapse)) {
+          stop("To use str_c() as an aggregate function, set the collapse argument",
+               call. = FALSE)
+        } else {
+          if(length(list(...)) > 1) {
+            sql_expr(group_concat(concat_ws(!!sep, !!!list(...)), !!collapse))
+          } else {
+            sql_expr(group_concat(!!!list(...), !!collapse))
+          }
+        }
+      },
       str_collapse = function(x, collapse) {
         warning("str_collapse() is deprecated. Use str_flatten() instead.",
                 call. = FALSE)
@@ -400,6 +459,14 @@ sql_translate_env.impala_connection <- function(con) {
           sql_expr(concat(!!!list(...)))
         } else {
           stop("paste0() with collapse argument is not supported in window functions",
+               call. = FALSE)
+        }
+      },
+      str_c = function(..., sep = "", collapse = NULL) {
+        if (is.null(collapse)) {
+          sql_expr(concat_ws(!!sep, !!!list(...)))
+        } else {
+          stop("str_c() with collapse argument is not supported in window functions",
                call. = FALSE)
         }
       },
@@ -679,4 +746,4 @@ db_create_table.impala_connection <-
   dbExecute(con, sql)
 }
 
-globalVariables(c("concat", "concat_ws", "group_concat", "trim", "ltrim", "rtrim"))
+globalVariables(c("concat", "concat_ws", "group_concat", "trim", "ltrim", "rtrim", "length"))

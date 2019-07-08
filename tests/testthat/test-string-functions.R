@@ -167,22 +167,6 @@ test_that("error when using paste() without collapse for aggregating", {
   )
 })
 
-test_that("str_flatten() works for aggregating", {
-  check_impala()
-  test_op <- function(x) {
-    x %>%
-      group_by(cyl) %>% summarise(gears = str_flatten(unique(as.character(gear)), collapse = " ")) %>%
-      filter(cyl == 6) %>%
-      select(gears) %>%
-      collect() %>%
-      pull(gears) -> y
-    any(c("3 4 5", "3 5 4", "4 3 5", "4 5 3", "5 3 4", "5 4 3") %in% y)
-  }
-  expect_true(
-    test_op(tbl(impala, "mtcars"))
-  )
-})
-
 test_that("trim() returns expected result", {
   check_impala()
   expect_equal(

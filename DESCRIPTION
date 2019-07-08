@@ -34,6 +34,7 @@ Suggests:
     RJDBC,
     rJava (>= 0.4-15),
     nycflights13,
+    stringr,
     testthat
 SystemRequirements: Impala driver to support a 'DBI'-compatible R interface
 NeedsCompilation: no
