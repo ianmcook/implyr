@@ -39,3 +39,13 @@ test_that("no warning when no arrange() before compute()", {
   }
   expect_warning(test_op(tbl(impala, "flights")), regexp = NA)
 })
+
+test_that("deprecation warning when using str_collapse()", {
+  check_impala()
+  test_op <- function(x) {
+    x %>%
+      group_by(cyl) %>% summarise(gears = str_collapse(unique(as.character(gear)), collapse = " ")) %>%
+      collect()
+  }
+  expect_warning(test_op(tbl(impala, "mtcars")), regexp = "deprecated")
+})

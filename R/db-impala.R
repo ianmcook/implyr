@@ -351,8 +351,8 @@ sql_translate_env.impala_connection <- function(con) {
         }
       },
       str_collapse = function(x, collapse) {
-        # deprecate this in a future version
-        # issue warning to use str_flatten() instead
+        warning("str_collapse() is deprecated. Use str_flatten() instead.",
+                call. = FALSE)
         sql_expr(group_concat(!!x, !!collapse))
       },
       str_flatten = function(x, collapse) {
