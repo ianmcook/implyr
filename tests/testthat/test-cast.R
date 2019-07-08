@@ -165,3 +165,49 @@ test_that("as.timestamp() returns column of type timestamp", {
     "timestamp"
   )
 })
+
+test_that("as.datetime() returns column of type timestamp", {
+  check_impala()
+  expect_equal(
+    column_type(
+      tbl(impala, "flights") %>% transmute(
+        ymd_hms = as.datetime(paste0(
+          as.character(year), "-", lpad(as.character(month), 2L, "0"), "-", lpad(as.character(day), 2L, "0"), " ",
+          lpad(as.character(as.integer(dep_time / 100)), 2L, "0"), ":", lpad(as.character(dep_time %% 100), 2L, "0"), ":00"
+        )
+        ))
+    ),
+    "timestamp"
+  )
+})
+
+test_that("as_datetime() returns column of type timestamp", {
+  check_impala()
+  expect_equal(
+    column_type(
+      tbl(impala, "flights") %>% transmute(
+        ymd_hms = as_datetime(paste0(
+          as.character(year), "-", lpad(as.character(month), 2L, "0"), "-", lpad(as.character(day), 2L, "0"), " ",
+          lpad(as.character(as.integer(dep_time / 100)), 2L, "0"), ":", lpad(as.character(dep_time %% 100), 2L, "0"), ":00"
+        )
+        ))
+    ),
+    "timestamp"
+  )
+})
+
+test_that("as.POSIXct() returns column of type timestamp", {
+  check_impala()
+  expect_equal(
+    column_type(
+      tbl(impala, "flights") %>% transmute(
+        ymd_hms = as.POSIXct(paste0(
+          as.character(year), "-", lpad(as.character(month), 2L, "0"), "-", lpad(as.character(day), 2L, "0"), " ",
+          lpad(as.character(as.integer(dep_time / 100)), 2L, "0"), ":", lpad(as.character(dep_time %% 100), 2L, "0"), ":00"
+        )
+        ))
+    ),
+    "timestamp"
+  )
+})
+
