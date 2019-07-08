@@ -15,9 +15,9 @@ Status](https://travis-ci.org/ianmcook/implyr.svg?branch=master)](https://travis
 **implyr** is a SQL backend to
 [dplyr](https://cran.r-project.org/package=dplyr) for [Apache
 Impala](https://impala.apache.org), the massively parallel processing
-query engine for Apache Hadoop. Impala enables low-latency SQL queries
-on large datasets stored in HDFS, Apache HBase, Apache Kudu, Amazon S3,
-Microsoft ADLS, and Dell EMC Isilon.
+query engine. Impala enables low-latency SQL queries on large datasets
+stored in HDFS, Apache HBase, Apache Kudu, Amazon S3, Microsoft ADLS,
+and Dell EMC Isilon.
 
 implyr is designed to work with any
 [DBI](https://cran.r-project.org/package=DBI)-compatible interface to
@@ -54,7 +54,7 @@ performance and compatibility.
 1.  Ensure that the system where your R code will run supports ODBC.
     ODBC support is built into Windows but requires
     [unixODBC](http://www.unixodbc.org) or [iODBC](http://www.iodbc.org)
-    on Linux and Mac OS.
+    on Linux and macOS.
 
 2.  Install the odbc package from CRAN:
     

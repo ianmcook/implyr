@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-**implyr** is a SQL backend to [dplyr](https://cran.r-project.org/package=dplyr) for [Apache Impala](https://impala.apache.org), the massively parallel processing query engine for Apache Hadoop. Impala enables low-latency SQL queries on large datasets stored in HDFS, Apache HBase, Apache Kudu, Amazon S3, Microsoft ADLS, and Dell EMC Isilon.
+**implyr** is a SQL backend to [dplyr](https://cran.r-project.org/package=dplyr) for [Apache Impala](https://impala.apache.org), the massively parallel processing query engine. Impala enables low-latency SQL queries on large datasets stored in HDFS, Apache HBase, Apache Kudu, Amazon S3, Microsoft ADLS, and Dell EMC Isilon.
 
 implyr is designed to work with any [DBI](https://cran.r-project.org/package=DBI)-compatible interface to Impala. implyr does not provide the underlying connectivity to Impala, nor does it require that you use one particular R package for connectivity to Impala. Currently, two packages that can provide this connectivity are [odbc](https://cran.r-project.org/package=odbc) and [RJDBC](https://cran.r-project.org/package=RJDBC). Future packages may provide other options for connectivity.
 
@@ -45,7 +45,7 @@ You must also install a package and driver to provide connectivity to Impala.
 
 [odbc](https://cran.r-project.org/package=odbc) is currently the preferred R package for connecting to Impala. It provides superior performance and compatibility.
 
-1. Ensure that the system where your R code will run supports ODBC. ODBC support is built into Windows but requires [unixODBC](http://www.unixodbc.org) or [iODBC](http://www.iodbc.org) on Linux and Mac OS.
+1. Ensure that the system where your R code will run supports ODBC. ODBC support is built into Windows but requires [unixODBC](http://www.unixodbc.org) or [iODBC](http://www.iodbc.org) on Linux and macOS.
 
 2. Install the odbc package from CRAN:
     ```{r, eval=FALSE}
