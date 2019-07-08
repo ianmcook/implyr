@@ -19,3 +19,9 @@ addons:
 before_script:
   - export INCLUDE_DIR=/usr/include
   - export LIB_DIR=/usr/lib/x86_64-linux-gnu/
+
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
