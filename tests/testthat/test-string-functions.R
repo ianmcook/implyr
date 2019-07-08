@@ -1,4 +1,4 @@
-context("paste() translations")
+context("String function translations")
 
 test_that("result of scalar paste0() is consistent with result on tbl_df", {
   check_impala()
@@ -32,7 +32,6 @@ test_that("error when using scalar paste0() with collapse", {
     regexp = "not supported"
   )
 })
-
 
 test_that("result of scalar paste() is consistent with result on tbl_df", {
   check_impala()
@@ -125,4 +124,72 @@ test_that("str_flatten() works for aggregating", {
   }
   test_op(tbl(impala, "mtcars"))
   succeed()
+})
+
+test_that("trim() returns expected result", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "iris") %>% head(1) %>% transmute(trimmed = trim("  abc      ")) %>% collect() %>% as.character(),
+    "abc"
+  )
+})
+
+test_that("trimws() with side = \"both\" returns expected result", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "iris") %>% head(1) %>% transmute(trimmed = trimws("  abc      ", side = "both")) %>% collect() %>% as.character(),
+    "abc"
+  )
+})
+
+test_that("trimws() with side = \"left\" returns expected result", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "iris") %>% head(1) %>% transmute(trimmed = trimws("  abc      ", side = "left")) %>% collect() %>% as.character(),
+    "abc      "
+  )
+})
+
+test_that("trimws() with side = \"right\" returns expected result", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "iris") %>% head(1) %>% transmute(trimmed = trimws("  abc      ", side = "right")) %>% collect() %>% as.character(),
+    "  abc"
+  )
+})
+
+test_that("tolower() returns expected result", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "iris") %>% head(1) %>% transmute(lower = tolower("ABC")) %>% collect() %>% as.character(),
+    "abc"
+  )
+})
+
+test_that("toupper() returns expected result", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "iris") %>% head(1) %>% transmute(upper = toupper("abc")) %>% collect() %>% as.character(),
+    "ABC"
+  )
+})
+
+test_that("nchar() returns expected result", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "iris") %>% head(1) %>% transmute(len = nchar("abc")) %>% collect() %>% as.integer(),
+    3L
+  )
+})
+
+test_that("substr() returns expected result", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "iris") %>%
+      head(1) %>%
+      transmute(sub = substr("Never odd or even", 7, 9)) %>%
+      collect() %>%
+      as.character(),
+    "odd"
+  )
 })

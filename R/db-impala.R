@@ -270,6 +270,25 @@ sql_translate_env.impala_connection <- function(con) {
                call. = FALSE)
         }
       },
+      nchar = sql_prefix("length"),
+      trim = sql_prefix("trim"),
+      trimws = function(string, side = c("both", "left", "right")) {
+        side <- match.arg(side)
+        switch(
+          side,
+          left = sql_expr(ltrim(!!string)),
+          right = sql_expr(rtrim(!!string)),
+          both = sql_expr(trim(!!string))
+        )
+      },
+      toupper = sql_prefix("upper"),
+      tolower = sql_prefix("lower"),
+      rev = sql_prefix("reverse"),
+      substr = function(x, start, stop) {
+        start <- as.integer(start)
+        length <- pmax(as.integer(stop) - start + 1L, 0L)
+        build_sql(sql("substr"), list(x, start, length))
+      },
 
       # regular expression functions
       grepl = function(pattern, x, ignore.case = FALSE) {
@@ -652,4 +671,4 @@ db_create_table.impala_connection <-
   dbExecute(con, sql)
 }
 
-globalVariables(c("concat", "concat_ws", "group_concat"))
+globalVariables(c("concat", "concat_ws", "group_concat", "trim", "ltrim", "rtrim"))
