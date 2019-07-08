@@ -301,7 +301,15 @@ sql_translate_env.impala_connection <- function(con) {
       },
       gsub = function(pattern, replacement, x) {
         build_sql(sql("regexp_replace"), list(x, pattern, replacement))
-      }
+      },
+
+      # bitwise functions
+      bitwNot = sql_prefix("bitnot", 1),
+      bitwAnd = sql_prefix("bitand", 2),
+      bitwOr = sql_prefix("bitor", 2),
+      bitwXor = sql_prefix("bitxor", 2),
+      bitwShiftL = sql_prefix("shiftleft", 2),
+      bitwShiftR = sql_prefix("shiftright", 2)
 
     ),
     sql_translator(
