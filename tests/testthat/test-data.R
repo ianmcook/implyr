@@ -57,3 +57,16 @@ test_that("batting tbl_impala has same number of rows as Batting tbl_df", {
     compare(test_op(tbl(impala, in_schema("lahman", "batting"))), test_op(Lahman::Batting))$equal
   )
 })
+
+test_that("one_row table exists", {
+  check_impala()
+  expect_true("one_row" %in% src_tbls(impala))
+})
+
+test_that("one_row table has exactly one row", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "one_row") %>% tally() %>% pull(1) %>% as.integer(),
+    1L
+  )
+})
