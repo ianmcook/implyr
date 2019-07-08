@@ -207,9 +207,9 @@ sql_translate_env.impala_connection <- function(con) {
         build_sql("cast(", x, " as timestamp)"),
 
       # mathematical functions
-      is.nan = sql_prefix("is_nan"),
-      is.infinite = sql_prefix("is_inf"),
-      is.finite = sql_prefix("!is_inf"),
+      is.nan = sql_prefix("is_nan", 1),
+      is.infinite = sql_prefix("is_inf", 1),
+      is.finite = sql_prefix("!is_inf", 1),
       log = function(x, base = exp(1)) {
         if (base != exp(1)) {
           build_sql("log(", base, ", ", x, ")")
@@ -221,7 +221,7 @@ sql_translate_env.impala_connection <- function(con) {
       pmin = sql_prefix("least"),
 
       # lubridate functions
-      year = sql_prefix("year"),
+      year = sql_prefix("year", 1),
       month = function(x, label = FALSE) {
         if (label) {
           build_sql("from_unixtime(unix_timestamp(", x, "), 'MMM')")
@@ -229,10 +229,10 @@ sql_translate_env.impala_connection <- function(con) {
           build_sql("month(", x, ")")
         }
       },
-      isoweek = sql_prefix("weekofyear"),
-      yday = sql_prefix("dayofyear"),
-      day = sql_prefix("day"),
-      mday = sql_prefix("day"),
+      isoweek = sql_prefix("weekofyear", 1),
+      yday = sql_prefix("dayofyear", 1),
+      day = sql_prefix("day", 1),
+      mday = sql_prefix("day", 1),
       wday = function(x, label = FALSE, abbr = TRUE) {
         if (label) {
           if (abbr) {
@@ -244,12 +244,12 @@ sql_translate_env.impala_connection <- function(con) {
           build_sql("dayofweek(", x, ")")
         }
       },
-      hour = sql_prefix("hour"),
-      minute = sql_prefix("minute"),
-      second = sql_prefix("second"),
+      hour = sql_prefix("hour", 1),
+      minute = sql_prefix("minute", 1),
+      second = sql_prefix("second", 1),
       today = function()
         build_sql("to_date(now())"),
-      now = sql_prefix("now"),
+      now = sql_prefix("now", 0),
 
       # conditional functions
       na_if = sql_prefix("nullif", 2),
@@ -271,7 +271,7 @@ sql_translate_env.impala_connection <- function(con) {
                call. = FALSE)
         }
       },
-      nchar = sql_prefix("length"),
+      nchar = sql_prefix("length", 1),
       trim = sql_prefix("trim"),
       trimws = function(string, side = c("both", "left", "right")) {
         side <- match.arg(side)
@@ -282,9 +282,9 @@ sql_translate_env.impala_connection <- function(con) {
           both = sql_expr(trim(!!string))
         )
       },
-      toupper = sql_prefix("upper"),
-      tolower = sql_prefix("lower"),
-      rev = sql_prefix("reverse"),
+      toupper = sql_prefix("upper", 1),
+      tolower = sql_prefix("lower", 1),
+      rev = sql_prefix("reverse", 1),
       substr = function(x, start, stop) {
         start <- as.integer(start)
         length <- pmax(as.integer(stop) - start + 1L, 0L)
