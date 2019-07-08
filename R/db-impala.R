@@ -251,9 +251,7 @@ sql_translate_env.impala_connection <- function(con) {
       na_if = sql_prefix("nullif", 2),
 
       # string functions
-      paste = function(...,
-                       sep = " ",
-                       collapse = NULL) {
+      paste = function(..., sep = " ", collapse = NULL) {
         if (is.null(collapse)) {
           sql_expr(concat_ws(!!sep, !!!list(...)))
         } else {
@@ -328,26 +326,28 @@ sql_translate_env.impala_connection <- function(con) {
       variance_pop = sql_aggregate("variance_pop"),
       var_samp = sql_aggregate("var_samp"),
       var_pop = sql_aggregate("var_pop"),
-      paste = function(x, collapse = NULL) {
+      paste = function(..., sep = " ", collapse = NULL) {
         if (is.null(collapse)) {
           stop("To use paste() as an aggregate function, set the collapse argument",
                call. = FALSE)
         } else {
-          sql(paste0(
-            "group_concat(",
-            x,
-            ",",
-            sql_escape_string(con, collapse),
-            ")"
-          ))
+          if(length(list(...)) > 1) {
+            sql_expr(group_concat(concat_ws(!!sep, !!!list(...)), !!collapse))
+          } else {
+            sql_expr(group_concat(!!!list(...), !!collapse))
+          }
         }
       },
-      paste0 = function(x, collapse = NULL) {
+      paste0 = function(..., collapse = NULL) {
         if (is.null(collapse)) {
           stop("To use paste0() as an aggregate function, set the collapse argument",
                call. = FALSE)
         } else {
-          sql_expr(group_concat(!!x, !!collapse))
+          if(length(list(...)) > 1) {
+            sql_expr(group_concat(concat(!!!list(...)), !!collapse))
+          } else {
+            sql_expr(group_concat(!!!list(...), !!collapse))
+          }
         }
       },
       str_collapse = function(x, collapse) {
@@ -375,12 +375,9 @@ sql_translate_env.impala_connection <- function(con) {
       },
       n_distinct = win_absent("n_distinct"),
       ndv = win_absent("ndv"),
-      paste = function(...,
-                       sep = " ",
-                       collapse = NULL) {
+      paste = function(..., sep = " ", collapse = NULL) {
         if (is.null(collapse)) {
           sql_expr(concat_ws(!!sep, !!!list(...)))
-          # TBD: simplify this by passing con to build_sql?
         } else {
           stop("paste() with collapse argument is not supported in window functions",
                call. = FALSE)

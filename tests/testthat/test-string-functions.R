@@ -67,15 +67,41 @@ test_that("error when using scalar paste() with collapse", {
   )
 })
 
-test_that("paste0() with collapse works for aggregating", {
+test_that("paste0() with one argument and collapse works for aggregating", {
   check_impala()
   test_op <- function(x) {
     x %>%
       group_by(cyl) %>% summarise(gears = paste0(unique(as.character(gear)), collapse = " ")) %>%
-      collect()
+      filter(cyl == 6) %>%
+      select(gears) %>%
+      collect() %>%
+      pull(gears) -> y
+    any(c("3 4 5", "3 5 4", "4 3 5", "4 5 3", "5 3 4", "5 4 3") %in% y)
   }
-  test_op(tbl(impala, "mtcars"))
-  succeed()
+  expect_true(
+    test_op(tbl(impala, "mtcars"))
+  )
+})
+
+test_that("paste0() with multiple arguments and collapse works for aggregating", {
+  check_impala()
+  test_op <- function(x) {
+    any(
+      x %>%
+        summarise(paste0(carrier, name, collapse = ";")) %>%
+        collect() %>%
+        pull(1) %>%
+        grepl("9EEndeavor Air Inc.;", ., fixed = TRUE),
+      x %>%
+        summarise(paste0(carrier, name, collapse = ";")) %>%
+        collect() %>%
+        pull(1) %>%
+        grepl(";9EEndeavor Air Inc.", ., fixed = TRUE)
+    )
+  }
+  expect_true(
+    test_op(tbl(impala, "airlines"))
+  )
 })
 
 test_that("error when using paste0() without collapse for aggregating", {
@@ -91,15 +117,41 @@ test_that("error when using paste0() without collapse for aggregating", {
   )
 })
 
-test_that("paste() with collapse works for aggregating", {
+test_that("paste() with one arument and collapse works for aggregating", {
   check_impala()
   test_op <- function(x) {
     x %>%
       group_by(cyl) %>% summarise(gears = paste(unique(as.character(gear)), collapse = " ")) %>%
-      collect()
+      filter(cyl == 6) %>%
+      select(gears) %>%
+      collect() %>%
+      pull(gears) -> y
+    any(c("3 4 5", "3 5 4", "4 3 5", "4 5 3", "5 3 4", "5 4 3") %in% y)
   }
-  test_op(tbl(impala, "mtcars"))
-  succeed()
+  expect_true(
+    test_op(tbl(impala, "mtcars"))
+  )
+})
+
+test_that("paste() with multiple arguments and collapse works for aggregating", {
+  check_impala()
+  test_op <- function(x) {
+    any(
+      x %>%
+        summarise(paste(carrier, name, sep = ":", collapse = ";")) %>%
+        collect() %>%
+        pull(1) %>%
+        grepl("9E:Endeavor Air Inc.;", ., fixed = TRUE),
+      x %>%
+        summarise(paste(carrier, name, sep = ":", collapse = ";")) %>%
+        collect() %>%
+        pull(1) %>%
+        grepl(";9E:Endeavor Air Inc.", ., fixed = TRUE)
+    )
+  }
+  expect_true(
+    test_op(tbl(impala, "airlines"))
+  )
 })
 
 test_that("error when using paste() without collapse for aggregating", {
@@ -119,11 +171,16 @@ test_that("str_flatten() works for aggregating", {
   check_impala()
   test_op <- function(x) {
     x %>%
-      group_by(cyl) %>% summarise(gears = str_collapse(unique(as.character(gear)), collapse = " ")) %>%
-      collect()
+      group_by(cyl) %>% summarise(gears = str_flatten(unique(as.character(gear)), collapse = " ")) %>%
+      filter(cyl == 6) %>%
+      select(gears) %>%
+      collect() %>%
+      pull(gears) -> y
+    any(c("3 4 5", "3 5 4", "4 3 5", "4 5 3", "5 3 4", "5 4 3") %in% y)
   }
-  test_op(tbl(impala, "mtcars"))
-  succeed()
+  expect_true(
+    test_op(tbl(impala, "mtcars"))
+  )
 })
 
 test_that("trim() returns expected result", {
