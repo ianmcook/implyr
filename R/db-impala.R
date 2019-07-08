@@ -195,6 +195,12 @@ sql_translate_env.impala_connection <- function(con) {
       },
       as.timestamp = function(x)
         build_sql("cast(", x, " as timestamp)"),
+      as.datetime = function(x)
+        build_sql("cast(", x, " as timestamp)"),
+      as_datetime = function(x)
+        build_sql("cast(", x, " as timestamp)"),
+      as.POSIXct = function(x)
+        build_sql("cast(", x, " as timestamp)"),
 
       # mathematical functions
       is.nan = sql_prefix("is_nan"),
@@ -211,8 +217,17 @@ sql_translate_env.impala_connection <- function(con) {
       pmin = sql_prefix("least"),
 
       # date and time functions (work like lubridate)
-      week = sql_prefix("weekofyear"),
+      year = sql_prefix("year"),
+      month = function(x, label = FALSE) {
+        if (label) {
+          build_sql("from_unixtime(unix_timestamp(", x, "), 'MMM')")
+        } else {
+          build_sql("month(", x, ")")
+        }
+      },
+      isoweek = sql_prefix("weekofyear"),
       yday = sql_prefix("dayofyear"),
+      day = sql_prefix("day"),
       mday = sql_prefix("day"),
       wday = function(x, label = FALSE, abbr = TRUE) {
         if (label) {
@@ -225,6 +240,13 @@ sql_translate_env.impala_connection <- function(con) {
           build_sql("dayofweek(", x, ")")
         }
       },
+      hour = sql_prefix("hour"),
+      minute = sql_prefix("minute"),
+      second = sql_prefix("second"),
+      today = function()
+        build_sql("to_date(now())"),
+      now = sql_prefix("now"),
+
 
       # conditional functions
       na_if = sql_prefix("nullif", 2),
