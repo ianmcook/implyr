@@ -1,6 +1,7 @@
 context("copy_to()")
 
 test_that("copy_to() succeeds on a very small data frame", {
+  skip_for_codecov()
   check_impala()
   set.seed(seed = NULL)
   table_name <- paste0(sample(letters, 10, replace = TRUE), collapse = "")

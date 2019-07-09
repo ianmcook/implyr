@@ -17,6 +17,7 @@ test_that("no warning when no arrange() before other verbs", {
 })
 
 test_that("warning when arrange() before compute()", {
+  skip_for_codecov()
   check_impala()
   test_op <- function(x) {
     set.seed(seed = NULL)
@@ -34,6 +35,7 @@ test_that("warning when arrange() before compute()", {
 })
 
 test_that("no warning when no arrange() before compute()", {
+  skip_for_codecov()
   check_impala()
   test_op <- function(x) {
     set.seed(seed = NULL)

@@ -1,6 +1,7 @@
 context("compute()")
 
 test_that("compute(temporary = FALSE) succeeds", {
+  skip_for_codecov()
   check_impala()
   set.seed(seed = NULL)
   table_name <- paste0(sample(letters, 10, replace = TRUE), collapse = "")
