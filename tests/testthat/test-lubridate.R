@@ -166,12 +166,11 @@ test_that("minute() returns expected result", {
     x %>%
       transmute(date_time = as.POSIXct("2019-07-07 18:19:51")) %>%
       transmute(extracted_minute = minute(date_time)) %>%
-      distinct(extracted_minute) %>%
       collect() %>%
       as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, "iris")), 19L)$equal
+    compare(test_op(tbl(impala, "one_row")), 19L)$equal
   )
 })
 
@@ -181,11 +180,10 @@ test_that("second() returns expected result", {
     x %>%
       transmute(date_time = as.POSIXct("2019-07-07 18:19:51")) %>%
       transmute(extracted_second = second(date_time)) %>%
-      distinct(extracted_second) %>%
       collect() %>%
       as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, "iris")), 51L)$equal
+    compare(test_op(tbl(impala, "one_row")), 51L)$equal
   )
 })
