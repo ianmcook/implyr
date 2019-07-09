@@ -187,3 +187,48 @@ test_that("second() returns expected result", {
     compare(test_op(tbl(impala, "one_row")), 51L)$equal
   )
 })
+
+test_that("floor_date() with unit = \"second\" returns expected result", {
+  skip("Skip until test environment is upgraded to newer Impala version")
+  check_impala()
+  test_op <- function(x) {
+    x %>%
+      transmute(date_time = as.POSIXct("2019-07-07 18:19:51.42")) %>%
+      transmute(truncated_date_time = floor_date(date_time, "second")) %>%
+      collect() %>%
+      as.character()
+  }
+  expect_true(
+    compare(test_op(tbl(impala, "one_row")), "2019-07-07 18:19:51")$equal
+  )
+})
+
+test_that("floor_date() with unit = \"hour\" returns expected result", {
+  skip("Skip until test environment is upgraded to newer Impala version")
+  check_impala()
+  test_op <- function(x) {
+    x %>%
+      transmute(date_time = as.POSIXct("2019-07-07 18:19:51.42")) %>%
+      transmute(truncated_date_time = floor_date(date_time, "hour")) %>%
+      collect() %>%
+      as.character()
+  }
+  expect_true(
+    compare(test_op(tbl(impala, "one_row")), "2019-07-07 18:00:00")$equal
+  )
+})
+
+test_that("floor_date() with unit = \"day\" returns expected result", {
+  skip("Skip until test environment is upgraded to newer Impala version")
+  check_impala()
+  test_op <- function(x) {
+    x %>%
+      transmute(date_time = as.POSIXct("2019-07-07 18:19:51.42")) %>%
+      transmute(truncated_date_time = floor_date(date_time, "day")) %>%
+      collect() %>%
+      as.character()
+  }
+  expect_true(
+    compare(test_op(tbl(impala, "one_row")), "2019-07-07 00:00:00")$equal
+  )
+})

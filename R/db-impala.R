@@ -250,6 +250,8 @@ sql_translate_env.impala_connection <- function(con) {
       today = function()
         build_sql("to_date(now())"),
       now = sql_prefix("now", 0),
+      floor_date = function(x, unit = "second")
+        build_sql("date_trunc(", unit, ", ", x, ")"),
 
       # conditional functions
       na_if = sql_prefix("nullif", 2),
