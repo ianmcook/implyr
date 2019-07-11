@@ -1,6 +1,6 @@
 context("check test data")
 
-test_that("flights and airlines tables exist", {
+test_that("src_tbls() lists flights and airlines tables", {
   check_impala()
   expect_true(all(c("airlines", "flights") %in% src_tbls(impala)))
 })
@@ -64,7 +64,7 @@ test_that("batting tbl_impala has same number of rows as Batting tbl_df", {
   )
 })
 
-test_that("one_row table exists", {
+test_that("src_tbls() lists one_row table", {
   check_impala()
   expect_true("one_row" %in% src_tbls(impala))
 })
