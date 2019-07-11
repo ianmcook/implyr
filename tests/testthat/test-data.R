@@ -33,6 +33,12 @@ test_that("airlines tbl_impala matches airlines tbl_df", {
   compare_tbls(list(tbl(impala, "airlines"), nycflights13::airlines), op = test_op)
 })
 
+test_that("src_databases() lists _impala_builtins, default, and lahman databases", {
+  check_impala()
+  expect_true(all(c("_impala_builtins", "default", "lahman") %in% src_databases(impala)))
+})
+
+
 test_that("batting table exists in lahman database", {
   check_impala()
   expect_true("batting" %in% dbGetQuery(impala, "SHOW TABLES IN lahman")$name)

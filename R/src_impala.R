@@ -398,6 +398,30 @@ copy_to.src_impala <-
   invisible(tbl(dest, name))
 }
 
+#' List all available databases
+#'
+#' @description Returns a character vector containing the names of all the
+#'   available databases, in alphabetical order, including the
+#'   \code{_impala_builtins} database.
+#'
+#' @param src object with class class \code{src_impala}
+#' @param ... Optional arguments; currently unused.
+#'
+#' @export
+#' @importFrom DBI dbGetQuery
+src_databases <- function(src, ...) {
+  res <- dbGetQuery(con_acquire(src), "SHOW DATABASES")
+  databaseNames <- res$name
+  sort(databaseNames)
+}
+
+#' @rdname src_databases
+#' @details \code{src_schemas()} is an alias for \code{src_databases()}
+#' @export
+src_schemas <- function(src, ...) {
+  src_databases(src, ...)
+}
+
 con_acquire <- function (src) {
   con <- src$con
   if (is.null(con)) {
