@@ -369,7 +369,9 @@ copy_to.src_impala <-
   class(df) <- "data.frame"
   con <- con_acquire(dest)
   tryCatch({
-    types <- types %||% db_data_type(con, df)
+    if(is.null(types)) {
+      types <- db_data_type(con, df)
+    }
     names(types) <-
       names(df) # TBD: convert illegal names to legal names?
     tryCatch({
@@ -509,14 +511,6 @@ db_disconnector <- function(con, quiet = FALSE) {
     dbDisconnect(con)
   })
   environment()
-}
-
-`%||%` <- function(x, y) {
-  if (is.null(x)) {
-    y
-  } else {
-    x
-  }
 }
 
 #' @importFrom assertthat is.string
