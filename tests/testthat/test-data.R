@@ -76,3 +76,8 @@ test_that("one_row table has exactly one row", {
     1L
   )
 })
+
+test_that("src_tbls() lists unicode_test table", {
+  check_impala()
+  expect_true("unicode_test" %in% src_tbls(impala))
+})
