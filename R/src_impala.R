@@ -369,7 +369,7 @@ copy_to.src_impala <-
   class(df) <- "data.frame"
   con <- con_acquire(dest)
   tryCatch({
-    if(is.null(types)) {
+    if (is.null(types)) {
       types <- db_data_type(con, df)
     }
     names(types) <-

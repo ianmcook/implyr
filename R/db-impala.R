@@ -110,7 +110,7 @@ impala_escape_ident <- function(con, x, quote) {
     yi <- gsub(quote, paste0(quote, quote), yi, fixed = TRUE)
     yi <- paste0(quote, yi, quote)
     out <- paste(yi, collapse = ".")
-    if(any(grepl("(", as.character(out), fixed = TRUE))) {
+    if (any(grepl("(", as.character(out), fixed = TRUE))) {
       return(gsub(paste0(quote, ".", quote), ".", out))
     }
     out
@@ -342,7 +342,7 @@ sql_translate_env.impala_connection <- function(con) {
 
       # regular expression functions
       grepl = function(pattern, x, ignore.case = FALSE) {
-        if(identical(ignore.case, TRUE)) {
+        if (identical(ignore.case, TRUE)) {
           build_sql(x, sql(" IREGEXP "), pattern)
         } else {
           build_sql(x, sql(" REGEXP "), pattern)
@@ -392,7 +392,7 @@ sql_translate_env.impala_connection <- function(con) {
           stop("To use paste() as an aggregate function, set the collapse argument",
                call. = FALSE)
         } else {
-          if(length(list(...)) > 1) {
+          if (length(list(...)) > 1) {
             sql_expr(group_concat(concat_ws(!!sep, !!!list(...)), !!collapse))
           } else {
             sql_expr(group_concat(!!!list(...), !!collapse))
@@ -404,7 +404,7 @@ sql_translate_env.impala_connection <- function(con) {
           stop("To use paste0() as an aggregate function, set the collapse argument",
                call. = FALSE)
         } else {
-          if(length(list(...)) > 1) {
+          if (length(list(...)) > 1) {
             sql_expr(group_concat(concat(!!!list(...)), !!collapse))
           } else {
             sql_expr(group_concat(!!!list(...), !!collapse))
@@ -416,7 +416,7 @@ sql_translate_env.impala_connection <- function(con) {
           stop("To use str_c() as an aggregate function, set the collapse argument",
                call. = FALSE)
         } else {
-          if(length(list(...)) > 1) {
+          if (length(list(...)) > 1) {
             sql_expr(group_concat(concat_ws(!!sep, !!!list(...)), !!collapse))
           } else {
             sql_expr(group_concat(!!!list(...), !!collapse))
@@ -495,7 +495,7 @@ sql_translate_env.impala_connection <- function(con) {
 sql_aggregate_compat <- function(f, ...) {
   # This function allows the SQL translations to support dbplyr 1.3.0
   # and earlier while using the optional f_r argument to sql_aggregate()
-  if(length(args(sql_aggregate)) < 2) {
+  if (length(args(sql_aggregate)) < 2) {
     sql_aggregate(f)
   } else {
     sql_aggregate(f, ...)
