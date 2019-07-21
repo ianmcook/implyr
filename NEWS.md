@@ -1,4 +1,4 @@
-# implyr 0.2.4.9001
+# implyr 0.3.0
 
 * Added more SQL translations including stringr and lubridate functions
 * Updated for compatibility with dplyr 0.8.3
