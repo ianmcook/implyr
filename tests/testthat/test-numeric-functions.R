@@ -172,7 +172,7 @@ test_that("integer division (%/%) returns expected result", {
   expect_equal(
     tbl(impala, "one_row") %>% transmute(7L %/% 2L) %>%
       collect() %>% pull(1),
-    2L
+    3L
   )
 })
 
