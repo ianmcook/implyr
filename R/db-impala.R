@@ -129,6 +129,7 @@ impala_escape_ident <- function(con, x, quote) {
 #' @importFrom dbplyr sql
 #' @importFrom dbplyr sql_expr
 #' @importFrom dbplyr sql_aggregate
+#' @importFrom dbplyr sql_infix
 #' @importFrom dbplyr sql_prefix
 #' @importFrom dbplyr sql_translator
 #' @importFrom dbplyr sql_variant
@@ -143,6 +144,8 @@ sql_translate_env.impala_connection <- function(con) {
   sql_variant(
     sql_translator(
       .parent = base_scalar,
+      # operators
+      `%/%` = sql_infix("DIV"),
       # type conversion functions
       as.character = function(x)
         build_sql("cast(", x, " as string)"),

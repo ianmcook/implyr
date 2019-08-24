@@ -1,3 +1,7 @@
+# implyr (development version)
+
+* Added more SQL translations
+
 # implyr 0.3.0
 
 * Added more SQL translations including stringr and lubridate functions
