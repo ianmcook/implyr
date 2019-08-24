@@ -167,6 +167,15 @@ test_that("modulo operator (%%) returns expected result", {
   compare_tbls(list(tbl(impala, "iris"), datasets::iris), op = test_op)
 })
 
+test_that("integer division (%/%) returns expected result", {
+  check_impala()
+  expect_equal(
+    tbl(impala, "one_row") %>% transmute(7L %/% 2L) %>%
+      collect() %>% pull(1),
+    2L
+  )
+})
+
 test_that("pi returns expected result", {
   check_impala()
   expect_equal(
