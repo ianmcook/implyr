@@ -20,9 +20,6 @@ addons:
     packages:
       - unixodbc-dev
 
-before_install:
-  - sudo R CMD javareconf
-
 before_script:
   - export INCLUDE_DIR=/usr/include
   - export LIB_DIR=/usr/lib/x86_64-linux-gnu/
