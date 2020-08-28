@@ -1,6 +1,5 @@
 language: r
 cache: packages
-dist: trusty
 env:
   global:
     - MAKEFLAGS = -j2
