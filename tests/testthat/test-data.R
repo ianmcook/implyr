@@ -18,7 +18,7 @@ test_that("flights tbl_impala has same column names as flights tbl_df", {
 test_that("flights tbl_impala has same number of rows as flights tbl_df", {
   check_impala()
   test_op <- function(x) {
-    x %>% summarize(n()) %>% collect() %>% as.integer()
+    x %>% summarize(n()) %>% pull() %>% as.integer()
   }
   expect_true(
     compare(test_op(tbl(impala, "flights")), test_op(nycflights13::flights))$equal
@@ -57,7 +57,7 @@ test_that("batting tbl_impala has same column names as Batting tbl_df (ignoring 
 test_that("batting tbl_impala has same number of rows as Batting tbl_df", {
   check_impala()
   test_op <- function(x) {
-    x %>% summarize(n()) %>% collect() %>% as.integer()
+    x %>% summarize(n()) %>% pull() %>% as.integer()
   }
   expect_true(
     compare(test_op(tbl(impala, in_schema("lahman", "batting"))), test_op(Lahman::Batting))$equal
