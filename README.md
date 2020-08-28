@@ -257,7 +257,7 @@ about ways to load data from R into Impala.
 delay <- flights_tbl %>% 
   select(tailnum, distance, arr_delay) %>%
   group_by(tailnum) %>%
-  summarise(count = n(), dist = mean(distance), delay = mean(arr_delay)) %>%
+  summarise(count = n(), dist = mean(distance, na.rm = TRUE), delay = mean(arr_delay, na.rm = TRUE)) %>%
   filter(count > 20L, dist < 2000L, !is.na(delay)) %>%
   arrange(delay, dist, count) %>%
   collect()

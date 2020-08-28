@@ -7,7 +7,7 @@ test_that("result from first dplyr example in README (with some tweaks) is consi
       select(tailnum, distance, arr_delay) %>%
       filter(!is.na(arr_delay)) %>%
       group_by(tailnum) %>%
-      summarise(count = n(), dist = mean(distance), delay = mean(arr_delay)) %>%
+      summarise(count = n(), dist = mean(distance, na.rm = TRUE), delay = mean(arr_delay, na.rm = TRUE)) %>%
       filter(count > 20L, dist < 2000L) %>%
       arrange(delay, dist, count, tailnum) %>%
       collect() %>%
