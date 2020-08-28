@@ -1,13 +1,14 @@
 language: r
 cache: packages
 sudo: required
+jdk:
+  - openjdk8
 env:
   global:
+    - PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin/:$PATH
     - MAKEFLAGS = -j2
     - ODBCSYSINI=${TRAVIS_BUILD_DIR}/travis/odbc
     - _R_CHECK_FORCE_SUGGESTS_=false
-jdk:
-  - openjdk8
 
 warnings_are_errors: false
 
