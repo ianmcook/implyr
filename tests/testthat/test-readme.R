@@ -11,7 +11,8 @@ test_that("result from first dplyr example in README (with some tweaks) is consi
       filter(count > 20L, dist < 2000L) %>%
       arrange(delay, dist, count, tailnum) %>%
       collect() %>%
-      mutate_if(is.double, round, 2)
+      mutate_if(is.double, round, 3) %>%
+      mutate(count = as.integer(count))
   }
   compare_tbls(list(tbl(impala, "flights"), nycflights13::flights), op = test_op, convert = TRUE)
 })
