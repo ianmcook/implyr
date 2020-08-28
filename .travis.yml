@@ -1,5 +1,6 @@
 language: r
 cache: packages
+sudo: required
 env:
   global:
     - MAKEFLAGS = -j2
