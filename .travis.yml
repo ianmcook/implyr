@@ -6,6 +6,7 @@ jdk:
 env:
   global:
     - PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin/:$PATH
+    - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
     - MAKEFLAGS = -j2
     - ODBCSYSINI=${TRAVIS_BUILD_DIR}/travis/odbc
     - _R_CHECK_FORCE_SUGGESTS_=false
@@ -19,6 +20,9 @@ addons:
     packages:
       - r-cran-rjava
       - unixodbc-dev
+
+before_install:
+  - sudo R CMD javareconf
 
 before_script:
   - export INCLUDE_DIR=/usr/include
