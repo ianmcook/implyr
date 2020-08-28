@@ -1,6 +1,5 @@
 language: r
 cache: packages
-sudo: required
 jdk:
   - openjdk8
 env:
