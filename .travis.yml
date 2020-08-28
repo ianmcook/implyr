@@ -5,6 +5,8 @@ env:
     - MAKEFLAGS = -j2
     - ODBCSYSINI=${TRAVIS_BUILD_DIR}/travis/odbc
     - _R_CHECK_FORCE_SUGGESTS_=false
+jdk:
+  - openjdk8
 
 warnings_are_errors: false
 
