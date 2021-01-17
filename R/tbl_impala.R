@@ -169,7 +169,7 @@ collapse.tbl_impala <- function(x, vars = NULL, ...) {
 #' one column, can only be applied once to a \code{tbl_impala},
 #' and must be applied to a \code{tbl_impala} representing an
 #' Impala table or view before applying any other operations.
-#' @seealso \href{https://www.cloudera.com/documentation/enterprise/latest/topics/impala_complex_types.html}{
+#' @seealso \href{https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_complex_types.html}{
 #' Impala Complex Types}
 #' @export
 #' @importFrom dbplyr ident_q

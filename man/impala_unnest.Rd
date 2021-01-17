@@ -31,6 +31,6 @@ and must be applied to a \code{tbl_impala} representing an
 Impala table or view before applying any other operations.
 }
 \seealso{
-\href{https://www.cloudera.com/documentation/enterprise/latest/topics/impala_complex_types.html}{
+\href{https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_complex_types.html}{
 Impala Complex Types}
 }

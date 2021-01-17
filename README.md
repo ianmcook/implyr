@@ -357,7 +357,7 @@ southwest_flights <- semi_join(flights_tbl, southwest_airlines, by = "carrier")
 You can also use dplyr join functions to bring together values from
 `ARRAY` and `MAP` columns with scalar values from the same rows. See
 [Impala Complex
-Types](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_complex_types.html)
+Types](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_complex_types.html)
 for more details about `ARRAY` and `MAP` columns.
 
 Read the [Warnings and Current
