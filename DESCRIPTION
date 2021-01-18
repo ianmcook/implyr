@@ -3,10 +3,10 @@ Type: Package
 Title: R Interface for Apache Impala
 Version: 0.3.0.9001
 Authors@R: c(
-    person("Ian", "Cook", email = "ian@cloudera.com", role = c("aut", "cre")),
+    person("Ian", "Cook", email = "ianmcook@gmail.com", role = c("aut", "cre")),
     person(family = "Cloudera", role = c("cph"))
     )
-Maintainer: Ian Cook <ian@cloudera.com>
+Maintainer: Ian Cook <ianmcook@gmail.com>
 Description: 'SQL' back-end to 'dplyr' for Apache Impala, the massively
     parallel processing query engine for Apache 'Hadoop'. Impala enables
     low-latency 'SQL' queries on data stored in the 'Hadoop' Distributed
