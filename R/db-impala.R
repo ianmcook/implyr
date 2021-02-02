@@ -753,10 +753,10 @@ db_create_table.impala_connection <-
                    if (!is.null(line_terminator)) {
                      sql(paste0("LINES TERMINATED BY \"", line_terminator, "\" "))
                    },
+                   fields,
                    if (!is.null(file_format)) {
                      sql(paste0("STORED AS ", file_format, " "))
                    },
-                   fields,
                    con = con)
   dbExecute(con, sql)
 }
