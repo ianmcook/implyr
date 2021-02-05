@@ -607,7 +607,7 @@ db_commit.impala_connection <- function(con, ...) {
 #' @export
 #' @importFrom dplyr db_analyze
 db_analyze.impala_connection <- function(con, table, ...) {
-  sql <- build_sql("COMPUTE STATS", ident(table), con = con)
+  sql <- build_sql("COMPUTE STATS ", ident(table), con = con)
   dbExecute(con, sql)
 }
 
