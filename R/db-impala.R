@@ -94,6 +94,16 @@ sql_escape_ident.impala_connection <- function(con, x) {
   impala_escape_ident(con, x, "`")
 }
 
+#' @importFrom DBI dbQuoteIdentifier
+#' @importFrom methods setMethod
+setMethod("dbQuoteIdentifier", c("impala_connection", "character"), function(conn, x, ...) {
+  impala_escape_ident(conn, x, "`")
+})
+
+setMethod("dbQuoteIdentifier", c("impala_connection", "ident"), function(conn, x, ...) {
+  impala_escape_ident(conn, x, "`")
+})
+
 #' @export
 #' @importFrom dplyr sql_escape_string
 sql_escape_string.impala_connection <- function(con, x) {
@@ -597,7 +607,7 @@ db_commit.impala_connection <- function(con, ...) {
 #' @export
 #' @importFrom dplyr db_analyze
 db_analyze.impala_connection <- function(con, table, ...) {
-  sql <- build_sql("COMPUTE STATS", ident(table), con = con)
+  sql <- build_sql("COMPUTE STATS ", ident(table), con = con)
   dbExecute(con, sql)
 }
 
@@ -709,6 +719,12 @@ db_create_table.impala_connection <-
     is_nchar_one_string_or_null(field_terminator),
     is_nchar_one_string_or_null(line_terminator)
   )
+  if (isTRUE(grepl("^[[:cntrl:]]{1}$", field_terminator))) {
+    field_terminator <- gsub("\"", "", deparse(field_terminator), fixed = TRUE)
+  }
+  if (isTRUE(grepl("^[[:cntrl:]]{1}$", line_terminator))) {
+    line_terminator <- gsub("\"", "", deparse(line_terminator), fixed = TRUE)
+  }
   if (temporary) {
     stop(
       "Impala does not support temporary tables. Set temporary = FALSE in db_create_table().",
@@ -733,6 +749,8 @@ db_create_table.impala_connection <-
                    },
                    ident(table),
                    " ",
+                   fields,
+                   " ",
                    if (!is.null(field_terminator) ||
                        !is.null(line_terminator)) {
                      sql("ROW FORMAT DELIMITED ")
@@ -746,7 +764,6 @@ db_create_table.impala_connection <-
                    if (!is.null(file_format)) {
                      sql(paste0("STORED AS ", file_format, " "))
                    },
-                   fields,
                    con = con)
   dbExecute(con, sql)
 }

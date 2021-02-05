@@ -25,6 +25,7 @@ test_that("as.string() returns column of type string", {
 })
 
 test_that("as.char() returns column of type char with specified length", {
+  skip("Skipping because some versions of JDBC driver transform to string")
   check_impala()
   expect_equal(
     column_type(tbl(impala, "flights") %>% transmute(year = as.char(year, 4))),
@@ -122,6 +123,7 @@ test_that("as.double() returns column of type double", {
 # do not test as.real(); might return float or double
 
 test_that("as.float() returns column of type float", {
+  skip("Skipping because some versions of JDBC driver transform to double")
   check_impala()
   expect_equal(
     column_type(
@@ -132,6 +134,7 @@ test_that("as.float() returns column of type float", {
 })
 
 test_that("as.single() returns column of type float", {
+  skip("Skipping because some versions of JDBC driver transform to double")
   check_impala()
   expect_equal(
     column_type(

@@ -332,7 +332,7 @@ copy_to.src_impala <-
            temporary = TRUE,
            unique_indexes = NULL,
            indexes = NULL,
-           analyze = TRUE,
+           analyze = FALSE,
            external = FALSE,
            force = FALSE,
            field_terminator = NULL,
@@ -385,7 +385,7 @@ copy_to.src_impala <-
         external = external,
         force = force,
         field_terminator = field_terminator,
-        line_terminator = field_terminator,
+        line_terminator = line_terminator,
         file_format = file_format,
         ...
       )
