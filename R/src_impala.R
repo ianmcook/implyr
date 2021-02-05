@@ -337,9 +337,7 @@ copy_to.src_impala <-
            file_format = NULL,
            ...) {
   # don't try to insert large data frames with INSERT ... VALUES()
-  if (prod(dim(df)) > 1e3L) {
-    # TBD: consider whether to make this limit configurable, possibly using
-    #  options with the pkgconfig package
+  if (prod(dim(df)) > getOption("implyr.copy_to_size_limit", 1e3L)) {
     stop(
       "Data frame ",
       name,
