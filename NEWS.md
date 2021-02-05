@@ -1,5 +1,6 @@
 # implyr (development version)
 
+* Allow user to set `copy_to()` size limit with option `implyr.copy_to_size_limit` (#49, @karoliskascenas)
 * Added more SQL translations
 
 # implyr 0.3.0
