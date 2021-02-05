@@ -1,5 +1,6 @@
 # implyr (development version)
 
+* Fixed bugs in table creation (#47, @karoliskascenas)
 * Added more SQL translations
 
 # implyr 0.3.0
