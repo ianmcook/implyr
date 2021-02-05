@@ -94,6 +94,16 @@ sql_escape_ident.impala_connection <- function(con, x) {
   impala_escape_ident(con, x, "`")
 }
 
+#' @importFrom DBI dbQuoteIdentifier
+#' @importFrom methods setMethod
+setMethod("dbQuoteIdentifier", c("impala_connection", "character"), function(conn, x, ...) {
+  impala_escape_ident(conn, x, "`")
+})
+
+setMethod("dbQuoteIdentifier", c("impala_connection", "ident"), function(conn, x, ...) {
+  impala_escape_ident(conn, x, "`")
+})
+
 #' @export
 #' @importFrom dplyr sql_escape_string
 sql_escape_string.impala_connection <- function(con, x) {
