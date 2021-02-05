@@ -719,6 +719,12 @@ db_create_table.impala_connection <-
     is_nchar_one_string_or_null(field_terminator),
     is_nchar_one_string_or_null(line_terminator)
   )
+  if (isTRUE(grepl("^[[:cntrl:]]{1}$", field_terminator))) {
+    field_terminator <- gsub("\"", "", deparse(field_terminator), fixed = TRUE)
+  }
+  if (isTRUE(grepl("^[[:cntrl:]]{1}$", line_terminator))) {
+    line_terminator <- gsub("\"", "", deparse(line_terminator), fixed = TRUE)
+  }
   if (temporary) {
     stop(
       "Impala does not support temporary tables. Set temporary = FALSE in db_create_table().",
@@ -743,6 +749,8 @@ db_create_table.impala_connection <-
                    },
                    ident(table),
                    " ",
+                   fields,
+                   " ",
                    if (!is.null(field_terminator) ||
                        !is.null(line_terminator)) {
                      sql("ROW FORMAT DELIMITED ")
@@ -756,7 +764,6 @@ db_create_table.impala_connection <-
                    if (!is.null(file_format)) {
                      sql(paste0("STORED AS ", file_format, " "))
                    },
-                   fields,
                    con = con)
   dbExecute(con, sql)
 }

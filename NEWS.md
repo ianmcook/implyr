@@ -1,5 +1,6 @@
 # implyr (development version)
 
+* Fixed bugs in table creation (#47, @karoliskascenas)
 * Added more SQL translations
 * Fixed a DBI identifier quoting problem causing errors with dbplyr 2.0.0 (#48)
 
