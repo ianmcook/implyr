@@ -275,9 +275,12 @@ tbl.src_impala <- function(src, from, ...) {
 #' @name copy_to
 #' @description
 #' \code{copy_to} inserts the contents of a local data frame into a new Impala
-#' table. \code{copy_to} currently only supports very small data frames (1000 or
-#' fewer row/column positions). It uses the SQL \code{INSERT ... VALUES()}
-#' technique, which is not suitable for loading large amounts of data.
+#' table. \code{copy_to} is intended to be used only with very small data
+#' frames. It uses the SQL \code{INSERT ... VALUES()} technique, which is not
+#' suitable for loading large amounts of data. By default, this function will
+#' throw an error if you attempt to copy a data frame with more than 1000
+#' row/column positions. You can increase this limit at your own risk by setting
+#' the \link{option} \code{implyr.copy_to_size_limit} to a higher number.
 #'
 #' This package does not provide tools for loading larger amounts of local data
 #' into Impala tables. This is because Impala can query data stored in several
@@ -337,13 +340,12 @@ copy_to.src_impala <-
            file_format = NULL,
            ...) {
   # don't try to insert large data frames with INSERT ... VALUES()
-  if (prod(dim(df)) > 1e3L) {
-    # TBD: consider whether to make this limit configurable, possibly using
-    #  options with the pkgconfig package
+  if (prod(dim(df)) > getOption("implyr.copy_to_size_limit", 1e3L)) {
     stop(
       "Data frame ",
       name,
-      " is too large. copy_to currently only supports very small data frames.",
+      " is too large. ",
+      "implyr::copy_to() is only for use with very small data frames.",
       call. = FALSE
     )
   }

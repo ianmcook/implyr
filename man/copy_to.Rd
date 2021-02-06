@@ -5,11 +5,23 @@
 \alias{copy_to.src_impala}
 \title{Copy a (very small) local data frame to Impala}
 \usage{
-\method{copy_to}{src_impala}(dest, df, name = deparse(substitute(df)),
-  overwrite = FALSE, types = NULL, temporary = TRUE,
-  unique_indexes = NULL, indexes = NULL, analyze = TRUE,
-  external = FALSE, force = FALSE, field_terminator = NULL,
-  line_terminator = NULL, file_format = NULL, ...)
+\method{copy_to}{src_impala}(
+  dest,
+  df,
+  name = deparse(substitute(df)),
+  overwrite = FALSE,
+  types = NULL,
+  temporary = TRUE,
+  unique_indexes = NULL,
+  indexes = NULL,
+  analyze = TRUE,
+  external = FALSE,
+  force = FALSE,
+  field_terminator = NULL,
+  line_terminator = NULL,
+  file_format = NULL,
+  ...
+)
 }
 \arguments{
 \item{dest}{an object with class with class \code{src_impala}}
@@ -51,9 +63,12 @@ An object with class \code{tbl_impala}, \code{tbl_sql},
 }
 \description{
 \code{copy_to} inserts the contents of a local data frame into a new Impala
-table. \code{copy_to} currently only supports very small data frames (1000 or
-fewer row/column positions). It uses the SQL \code{INSERT ... VALUES()}
-technique, which is not suitable for loading large amounts of data.
+table. \code{copy_to} is intended to be used only with very small data
+frames. It uses the SQL \code{INSERT ... VALUES()} technique, which is not
+suitable for loading large amounts of data. By default, this function will
+throw an error if you attempt to copy a data frame with more than 1000
+row/column positions. You can increase this limit at your own risk by setting
+the \link{option} \code{implyr.copy_to_size_limit} to a higher number.
 
 This package does not provide tools for loading larger amounts of local data
 into Impala tables. This is because Impala can query data stored in several
