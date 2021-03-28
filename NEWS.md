@@ -1,9 +1,10 @@
-# implyr (development version)
+# implyr 0.4.0
 
 * Fixed bugs in table creation (#47, @karoliskascenas)
 * Allow user to set `copy_to()` size limit with option `implyr.copy_to_size_limit` (#49, @karoliskascenas)
 * Added more SQL translations
 * Fixed a DBI identifier quoting problem causing errors with dbplyr 2.0.0 (#48)
+* Removed deprecated functions from tests (#42)
 
 # implyr 0.3.0
 
