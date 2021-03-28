@@ -10,7 +10,7 @@ test_that("median() returns result with expected dimension", {
       dim()
   }
   expect_true(
-    compare(test_op(tbl(impala, "flights")), c(3, 2))$equal
+    compare(test_op(tbl(impala, "flights")), c(3, 2))
   )
 })
 
@@ -72,7 +72,7 @@ test_that("ndv() returns result with expected dimension", {
       dim()
   }
   expect_true(
-    compare(test_op(tbl(impala, "flights")), c(3, 2))$equal
+    compare(test_op(tbl(impala, "flights")), c(3, 2))
   )
 })
 

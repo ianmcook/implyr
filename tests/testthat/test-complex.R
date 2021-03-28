@@ -17,7 +17,7 @@ test_that("impala_unnest() on array column returns expected result", {
     stringsAsFactors = FALSE
   )
   expect_true(
-    compare(test_op(tbl(impala, "cust_phones_parquet")), ref)$equal
+    compare(test_op(tbl(impala, "cust_phones_parquet")), ref)
   )
 })
 
@@ -37,7 +37,7 @@ test_that("impala_unnest() on map column returns expected result", {
     stringsAsFactors = FALSE
   )
   expect_true(
-    compare(test_op(tbl(impala, "cust_phones_map_parquet")), ref)$equal
+    compare(test_op(tbl(impala, "cust_phones_map_parquet")), ref)
   )
 })
 
@@ -59,6 +59,6 @@ test_that("impala_unnest() on struct column returns expected result", {
     stringsAsFactors = FALSE
   )
   expect_true(
-    compare(test_op(tbl(impala, "cust_addr_parquet")), ref)$equal
+    compare(test_op(tbl(impala, "cust_addr_parquet")), ref)
   )
 })

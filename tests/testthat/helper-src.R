@@ -41,3 +41,55 @@ column_type <- function(x) {
     pull() %>%
     tolower()
 }
+
+eval_tbls <- function (tbls, op)
+{
+  # adapted from dplyr::eval_tbls
+  lapply(tbls, function(x) as.data.frame(op(x)))
+}
+
+eval_tbls2 <- function(tbls_x, tbls_y, op)
+{
+  # adapted from dplyr::eval_tbls2
+  Map(function(x, y) as.data.frame(op(x, y)), tbls_x, tbls_y)
+}
+
+expect_equal_tbls <- function (results, ref = NULL, ...)
+{
+  # adapted from dplyr::expect_equal_tbls
+  if (length(results) < 2 && is.null(ref)) {
+    skip("Need at least two srcs to compare")
+  }
+  if (is.null(ref)) {
+    ref <- results[[1]]
+    ref_name <- names(results)[1]
+    rest <- results[-1]
+  }
+  else {
+    rest <- results
+    ref_name <- "supplied comparison"
+  }
+  for (i in seq_along(rest)) {
+    ok <- all.equal(ref, rest[[i]], ...)
+    msg <- paste0(names(rest)[[i]], " not equal to ", ref_name,
+                  "\n", ok)
+    expect_true(ok, info = msg)
+  }
+  invisible(TRUE)
+}
+
+compare <- all.equal
+
+compare_tbls <- function (tbls, op, ref = NULL, ...)
+{
+  # adapted from dplyr::compare_tbls
+  results <- eval_tbls(tbls, op)
+  expect_equal_tbls(results, ...)
+}
+
+compare_tbls2 <- function (tbls_x, tbls_y, op, ref = NULL, compare = compare, ...)
+{
+  # adapted from dplyr::compare_tbls2
+  results <- eval_tbls2(tbls_x, tbls_y, op)
+  expect_equal_tbls(results, ...)
+}

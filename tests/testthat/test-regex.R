@@ -10,7 +10,7 @@ test_that("grepl() returns expected result", {
       as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, "iris")), 100L)$equal
+    compare(test_op(tbl(impala, "iris")), 100L)
   )
 })
 
@@ -25,7 +25,7 @@ test_that("grepl() ignores case by default and returns expected result", {
       as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, "iris")), 0L)$equal
+    compare(test_op(tbl(impala, "iris")), 0L)
   )
 })
 
@@ -40,7 +40,7 @@ test_that("grepl() returns expected result with ignore.case = TRUE", {
       as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, "iris")), 100L)$equal
+    compare(test_op(tbl(impala, "iris")), 100L)
   )
 })
 
@@ -55,6 +55,6 @@ test_that("gsub() returns expected result", {
       pull(1)
   }
   expect_true(
-    compare(test_op(tbl(impala, "iris")), c("setosa", "birginica", "bersicolor"))$equal
+    compare(test_op(tbl(impala, "iris")), c("setosa", "birginica", "bersicolor"))
   )
 })

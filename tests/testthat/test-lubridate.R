@@ -34,7 +34,7 @@ test_that("month() with label = TRUE returns expected result", {
   check_impala()
   test_op <- function(x) {
     x %>%
-      transmute(extracted_month = month(time_hour, label = TRUE)) %>%
+      transmute(extracted_month = as.character(month(time_hour, label = TRUE))) %>%
       group_by(extracted_month) %>%
       summarise(num_flights = n()) %>%
       arrange(extracted_month) %>%
@@ -170,7 +170,7 @@ test_that("minute() returns expected result", {
       as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, "one_row")), 19L)$equal
+    compare(test_op(tbl(impala, "one_row")), 19L)
   )
 })
 
@@ -184,7 +184,7 @@ test_that("second() returns expected result", {
       as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, "one_row")), 51L)$equal
+    compare(test_op(tbl(impala, "one_row")), 51L)
   )
 })
 
@@ -199,7 +199,7 @@ test_that("floor_date() with unit = \"second\" returns expected result", {
       as.character()
   }
   expect_true(
-    compare(test_op(tbl(impala, "one_row")), "2019-07-07 18:19:51")$equal
+    compare(test_op(tbl(impala, "one_row")), "2019-07-07 18:19:51")
   )
 })
 
@@ -214,7 +214,7 @@ test_that("floor_date() with unit = \"hour\" returns expected result", {
       as.character()
   }
   expect_true(
-    compare(test_op(tbl(impala, "one_row")), "2019-07-07 18:00:00")$equal
+    compare(test_op(tbl(impala, "one_row")), "2019-07-07 18:00:00")
   )
 })
 
@@ -229,6 +229,6 @@ test_that("floor_date() with unit = \"day\" returns expected result", {
       as.character()
   }
   expect_true(
-    compare(test_op(tbl(impala, "one_row")), "2019-07-07 00:00:00")$equal
+    compare(test_op(tbl(impala, "one_row")), "2019-07-07 00:00:00")
   )
 })

@@ -11,7 +11,7 @@ test_that("flights tbl_impala has same column names as flights tbl_df", {
     x %>% colnames()
   }
   expect_true(
-    compare(test_op(tbl(impala, "flights")), test_op(nycflights13::flights))$equal
+    compare(test_op(tbl(impala, "flights")), test_op(nycflights13::flights))
   )
 })
 
@@ -21,7 +21,7 @@ test_that("flights tbl_impala has same number of rows as flights tbl_df", {
     x %>% summarize(n()) %>% pull() %>% as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, "flights")), test_op(nycflights13::flights))$equal
+    compare(test_op(tbl(impala, "flights")), test_op(nycflights13::flights))
   )
 })
 
@@ -50,7 +50,7 @@ test_that("batting tbl_impala has same column names as Batting tbl_df (ignoring 
     x %>% colnames() %>% tolower()
   }
   expect_true(
-    compare(test_op(tbl(impala, in_schema("lahman", "batting"))), test_op(Lahman::Batting))$equal
+    compare(test_op(tbl(impala, in_schema("lahman", "batting"))), test_op(Lahman::Batting))
   )
 })
 
@@ -60,7 +60,7 @@ test_that("batting tbl_impala has same number of rows as Batting tbl_df", {
     x %>% summarize(n()) %>% pull() %>% as.integer()
   }
   expect_true(
-    compare(test_op(tbl(impala, in_schema("lahman", "batting"))), test_op(Lahman::Batting))$equal
+    compare(test_op(tbl(impala, in_schema("lahman", "batting"))), test_op(Lahman::Batting))
   )
 })
 
