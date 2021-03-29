@@ -14,6 +14,11 @@ knitr::opts_chunk$set(
 
 # implyr <img src="man/figures/logo.png" align="right" height="139" />
 
+<!-- badges: start -->
+[![Build Status](https://travis-ci.org/ianmcook/implyr.svg?branch=master)](https://travis-ci.org/ianmcook/implyr)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/implyr)](https://cran.r-project.org/package=implyr)
+<!-- badges: end -->
+
 ## Overview
 
 **implyr** is a SQL backend to [dplyr](https://cran.r-project.org/package=dplyr) for [Apache Impala](https://impala.apache.org), the massively parallel processing query engine. Impala enables low-latency SQL queries on large datasets stored in HDFS, Apache HBase, Apache Kudu, Amazon S3, Microsoft ADLS, and Dell EMC Isilon.
