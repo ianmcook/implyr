@@ -70,7 +70,7 @@ performance and compatibility.
     [odbc package
     README](https://cran.r-project.org/package=odbc/readme/README.html#installation)
     and the [Impala ODBC driver installation
-    guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf).
+    guide](https://docs.cloudera.com/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf).
 
 #### JDBC Connectivity
 
@@ -92,7 +92,7 @@ access to Impala through JDBC.
 
 4.  Complete the installation and configuration steps described in the
     [Impala JDBC driver installation
-    guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf).
+    guide](https://docs.cloudera.com/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf).
 
 ## Connecting to Impala
 
@@ -216,9 +216,9 @@ methods, including no authentication, username, username and password,
 and Kerberos. To use Kerberos, specify properties including `AuthMech`,
 `KrbRealm`, `KrbHostFQDN`, and `KrbServiceName`. Consult your system
 administrator and the [Impala ODBC driver installation
-guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf)
+guide](https://docs.cloudera.com/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf)
 or [Impala JDBC driver installation
-guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf).
+guide](https://docs.cloudera.com/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf).
 
 ## Using dplyr
 
@@ -276,7 +276,7 @@ automatically convert numbers to strings when they are used in a string
 context. Impala requires that you explicitly cast columns to the
 required types. implyr provides familiar R-style type conversion
 functions to enable casting to all the scalar [Impala data
-types](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_datatypes.html).
+types](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_datatypes.html).
 For example, `as.character()` casts a column or column expression to the
 Impala `STRING` type.
 
@@ -547,7 +547,7 @@ several important implications for the use of implyr:
     `arrange()` before `compute()`.
 
 See the [Impala ORDER BY
-documentation](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_order_by.html)
+documentation](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_order_by.html)
 for more information.
 
 #### Temporary Tables
@@ -570,7 +570,7 @@ Currently, implyr does not convert table names and column names to
 lowercase; you must specify them using all lowercase characters. For
 information about other limitations on table names and column names, see
 [Overview of Impala
-Identifiers](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_identifiers.html).
+Identifiers](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_identifiers.html).
 
 #### dplyr Support
 
@@ -589,9 +589,9 @@ session.
 
 The `median()` function returns a value that is approximately (not
 necessarily exactly) the median. See [APPX\_MEDIAN
-Function](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_appx_median.html).
+Function](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_appx_median.html).
 
 implyr supports some Impala functions that are not specified by R or by
 dplyr. See [Impala Built-In
-Functions](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_functions.html)
+Functions](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_functions.html)
 for more information.

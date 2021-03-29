@@ -54,7 +54,7 @@ You must also install a package and driver to provide connectivity to Impala.
 
 3. Download and install the latest version of the [Impala ODBC driver from Cloudera](https://www.cloudera.com/downloads/connectors/impala/odbc.html).
 
-4. Complete the installation and configuration steps described in the [odbc package README](https://cran.r-project.org/package=odbc/readme/README.html#installation) and the [Impala ODBC driver installation guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf).
+4. Complete the installation and configuration steps described in the [odbc package README](https://cran.r-project.org/package=odbc/readme/README.html#installation) and the [Impala ODBC driver installation guide](https://docs.cloudera.com/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf).
 
 #### JDBC Connectivity
 
@@ -70,7 +70,7 @@ Package [RJDBC](https://cran.r-project.org/package=RJDBC) can provide access to 
 
 3. Download and install the latest version of the [Impala JDBC driver from Cloudera](https://www.cloudera.com/downloads/connectors/impala/jdbc.html).
 
-4. Complete the installation and configuration steps described in the [Impala JDBC driver installation guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf).
+4. Complete the installation and configuration steps described in the [Impala JDBC driver installation guide](https://docs.cloudera.com/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf).
 
 ## Connecting to Impala
 
@@ -167,7 +167,7 @@ Do not attempt to connect to Impala using more than one method in one R session.
 
 #### Authentication
 
-The Impala ODBC and JDBC drivers support multiple authentication methods, including no authentication, username, username and password, and Kerberos. To use Kerberos, specify properties including `AuthMech`, `KrbRealm`, `KrbHostFQDN`, and `KrbServiceName`. Consult your system administrator and the [Impala ODBC driver installation guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf) or [Impala JDBC driver installation guide](https://www.cloudera.com/content/www/en-us/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf).
+The Impala ODBC and JDBC drivers support multiple authentication methods, including no authentication, username, username and password, and Kerberos. To use Kerberos, specify properties including `AuthMech`, `KrbRealm`, `KrbHostFQDN`, and `KrbServiceName`. Consult your system administrator and the [Impala ODBC driver installation guide](https://docs.cloudera.com/documentation/other/connectors/impala-odbc/latest/Cloudera-ODBC-Driver-for-Impala-Install-Guide.pdf) or [Impala JDBC driver installation guide](https://docs.cloudera.com/documentation/other/connectors/impala-jdbc/latest/Cloudera-JDBC-Driver-for-Impala-Install-Guide.pdf).
 
 ## Using dplyr
 
@@ -208,7 +208,7 @@ implyr supports the dplyr verbs `filter()`, `arrange()`, `select()`, `rename()`,
 
 When using implyr, you must specify table names and column names using lowercase characters. To ensure that results are in sorted order, you must apply `arrange()` last, after all other dplyr verbs.
 
-Impala does not perform implicit casting; for example, it does not automatically convert numbers to strings when they are used in a string context. Impala requires that you explicitly cast columns to the required types. implyr provides familiar R-style type conversion functions to enable casting to all the scalar [Impala data types](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_datatypes.html). For example, `as.character()` casts a column or column expression to the Impala `STRING` type.
+Impala does not perform implicit casting; for example, it does not automatically convert numbers to strings when they are used in a string context. Impala requires that you explicitly cast columns to the required types. implyr provides familiar R-style type conversion functions to enable casting to all the scalar [Impala data types](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_datatypes.html). For example, `as.character()` casts a column or column expression to the Impala `STRING` type.
 
 <!-- if you change this example, also change the corresponding test in test-readme.R -->
 ```{r, eval=FALSE}
@@ -397,7 +397,7 @@ Impala's data storage and processing does not preserve row order. Impala uses pa
 * If row ordering is applied in an intermediate phase of query processing, Impala may not return the final result in sorted order. To ensure that results are in sorted order, apply `arrange()` last, after all other dplyr verbs. implyr will issue a warning if you apply `arrange()` in an earlier step.
 * When using `compute()` to store results in an Impala table, Impala may not preserve row order. implyr will issue a warning if you use `arrange()` before `compute()`.
 
-See the [Impala ORDER BY documentation](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_order_by.html) for more information.
+See the [Impala ORDER BY documentation](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_order_by.html) for more information.
 
 #### Temporary Tables
 
@@ -409,7 +409,7 @@ SQL engines including Impala treat missing values differently than R does. To av
 
 #### Table and Column Names
 
-Impala requires table names and column names to be all lowercase. Currently, implyr does not convert table names and column names to lowercase; you must specify them using all lowercase characters. For information about other limitations on table names and column names, see [Overview of Impala Identifiers](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_identifiers.html).
+Impala requires table names and column names to be all lowercase. Currently, implyr does not convert table names and column names to lowercase; you must specify them using all lowercase characters. For information about other limitations on table names and column names, see [Overview of Impala Identifiers](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_identifiers.html).
 
 #### dplyr Support
 
@@ -417,6 +417,6 @@ implyr does not support all dplyr verbs and functions. Some verbs including `sli
 
 If you apply an R function to a lazy `tbl` and the function is not implemented as a remote method, then implyr will compute the result of the prior steps and return that result to R as a `tbl` or data frame. It will then compute the function and any later steps locally in R. An example of this is the function `lm`. Only use this technique when the intermediate result will be small enough to fit in memory in your R session.
 
-The `median()` function returns a value that is approximately (not necessarily exactly) the median. See [APPX_MEDIAN Function](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_appx_median.html).
+The `median()` function returns a value that is approximately (not necessarily exactly) the median. See [APPX_MEDIAN Function](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_appx_median.html).
 
-implyr supports some Impala functions that are not specified by R or by dplyr. See [Impala Built-In Functions](https://www.cloudera.com/documentation/enterprise/latest/topics/impala_functions.html) for more information.
+implyr supports some Impala functions that are not specified by R or by dplyr. See [Impala Built-In Functions](https://docs.cloudera.com/documentation/enterprise/latest/topics/impala_functions.html) for more information.
