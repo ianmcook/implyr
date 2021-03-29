@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# register virtual class
+#' @importFrom methods setOldClass
+setOldClass("impala_connection")
+
 #' Describe the Impala data source
 #'
 #' @name db_desc
