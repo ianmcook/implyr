@@ -1,3 +1,7 @@
+# implyr (development version)
+
+* Suppressed an object not found warning (#51)
+
 # implyr 0.4.0
 
 * Fixed bugs in table creation (#47, @karoliskascenas)

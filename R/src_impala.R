@@ -191,7 +191,7 @@ src_impala <- function(drv, ..., auto_disconnect = TRUE) {
   }
 
   if (isClass("impala_connection", where = .GlobalEnv)) {
-    removeClass("impala_connection", where = .GlobalEnv)
+    suppressWarnings(removeClass("impala_connection", where = .GlobalEnv))
   }
   setClass("impala_connection",
            contains = class(con),
