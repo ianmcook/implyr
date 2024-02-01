@@ -23,6 +23,7 @@ Depends:
 Imports:
     assertthat,
     dbplyr (>= 1.2.1),
+    dbplyr (<= 2.3.4),
     methods,
     rlang (>= 0.1.6),
     tidyselect (>= 0.2.3),
