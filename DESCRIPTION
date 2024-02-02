@@ -1,7 +1,7 @@
 Package: implyr
 Type: Package
 Title: R Interface for Apache Impala
-Version: 0.4.0.9001
+Version: 0.5.0
 Authors@R: c(
     person("Ian", "Cook", email = "ianmcook@gmail.com", role = c("aut", "cre")),
     person(family = "Cloudera", role = c("cph"))
@@ -22,12 +22,12 @@ Depends:
     dplyr (>= 0.7.4)
 Imports:
     assertthat,
-    dbplyr (>= 1.2.1),
-    dbplyr (<= 2.3.4),
+    dbplyr (>= 2.4.0),
     methods,
     rlang (>= 0.1.6),
     tidyselect (>= 0.2.3),
-    utils
+    utils,
+    vctrs
 Suggests:
     Lahman (>= 3.0-1),
     lubridate,
