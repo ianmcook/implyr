@@ -105,7 +105,7 @@ setMethod("dbQuoteIdentifier", c("impala_connection", "character"), function(con
   impala_escape_ident(conn, x, "`")
 })
 
-setMethod("dbQuoteIdentifier", c("impala_connection", "ident"), function(conn, x, ...) {
+setMethod("dbQuoteIdentifier", c("impala_connection", "dbplyr_table_ident"), function(conn, x, ...) {
   impala_escape_ident(conn, x, "`")
 })
 

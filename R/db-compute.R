@@ -28,7 +28,7 @@ db_sql_render.impala_connection <- function(con, sql, ...) {
 }
 
 has_order_by_in_subquery <- function(x) {
-  if (inherits(x, "ident")) {
+  if (inherits(x, "dbplyr_table_ident")) {
     return(FALSE)
   }
   if (!inherits(x$from, "select_query")) {
