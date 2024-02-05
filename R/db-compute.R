@@ -24,7 +24,10 @@ db_sql_render.impala_connection <- function(con, sql, ...) {
   if (has_order_by(qry)) {
     pkg_env$order_by_in_query <- TRUE
   }
-  sql_render(qry, con = con, ...)
+  sql_out <- sql_render(qry, con = con, ...)
+  # hack to remove table name alias from complex (nested) column queries
+  sql_out <- gsub("(`.+?`\\, `.+?`\\.`.+?`) `q[0-9]+`", "\\1", sql_out)
+  sql_out
 }
 
 has_order_by_in_subquery <- function(x) {
