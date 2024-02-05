@@ -65,12 +65,10 @@ db_desc.impala_connection <- function(x) {
 #' @importFrom DBI dbSendQuery
 #' @importFrom DBI dbClearResult
 #' @importFrom DBI dbFetch
-#' @importFrom vctrs field
 db_query_fields.impala_connection <- function(con, sql, ...) {
   # if the argument "sql" is an identifier, it will not contain whitespace
   # and if not, then it will contain whitespace
-  sql <- field(sql, "table")
-  if (grepl("\\s", sql)) {
+  if (inherits(sql, "character") && grepl("\\s", sql)) {
     # get column names with SELECT ... WHERE FALSE
     sql <- sql_select(con, sql("*"), sql_subquery(con, sql), where = sql("FALSE"))
     qry <- dbSendQuery(con, sql)
@@ -78,6 +76,7 @@ db_query_fields.impala_connection <- function(con, sql, ...) {
     res <- dbFetch(qry, 0)
     names(res)
   } else {
+    sql <- format(sql)
     # get column names with DESCRIBE
     sql <- paste("DESCRIBE", sql)
     res <- dbGetQuery(con, sql)
