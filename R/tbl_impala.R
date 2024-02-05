@@ -107,7 +107,7 @@ compute.tbl_impala <-
   assert_that(all(unlist(unique_indexes) %in% vars))
 
   x_aliased <- select(x, !!! syms(vars))
-  sql <- db_sql_render(x$src$con, x_aliased$ops)
+  sql <- db_sql_render(x$src$con, x_aliased$lazy_query)
 
   # TBD: implement db_compute.impala_connection and call it here instead of db_save_query
   name <- db_save_query(
@@ -183,16 +183,16 @@ impala_unnest <- function(data, col, ...) {
   if (!inherits(res, "tbl_impala")) {
     stop("data argument must be a tbl_impala", call. = FALSE)
   }
-  if (!"vars" %in% names(res$ops$x) ||
-      all(is.na(attr(res$ops$x$vars, "complex_type")))) {
+  if (!"vars" %in% names(res$lazy_query$x) ||
+      all(is.na(attr(res$lazy_query$x$vars, "complex_type")))) {
     stop("data argument must contain complex columns", call. = FALSE)
   }
-  if (is.null(attr(res$ops$x$vars, "complex_type"))) {
+  if (is.null(attr(res$lazy_query$x$vars, "complex_type"))) {
     stop("impala_unnest() can only be applied once to a tbl_impala",
           call. = FALSE)
   }
-  if (!"x" %in% names(res$ops$x) ||
-      !inherits(res$ops$x$x, "ident")) {
+  if (!"x" %in% names(res$lazy_query$x) ||
+      !inherits(res$lazy_query$x$x, "dbplyr_table_ident")) {
     stop("impala_unnest() must be applied to a tbl_impala before any other operations",
          call. = FALSE)
   }
@@ -201,23 +201,23 @@ impala_unnest <- function(data, col, ...) {
   if (length(colname) != 1) {
     stop("impala_unnest() can unnest only one column")
   }
-  colindex <- which(res$ops$x$vars == colname)
+  colindex <- which(res$lazy_query$x$vars == colname)
   if (length(colindex) != 1) {
     stop("Column ", colname, " not found", call. = FALSE)
   }
-  coltype <- attr(res$ops$x$vars, "complex_type")[colindex]
-  tablename <- as.character(res$ops$x$x)
+  coltype <- attr(res$lazy_query$x$vars, "complex_type")[colindex]
+  tablename <- format(res$lazy_query$x$x)
   if (identical(coltype, "array")) {
     quoted_tablename <- impala_escape_ident(res$src$con, tablename, "`")
-    res$ops$x$x <- ident_q(
+    res$lazy_query$x$x <- ident_q(
       paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
     )
-    res$ops$x$vars <- c(
-      setdiff(res$ops$x$vars, colname),
+    res$lazy_query$x$vars <- c(
+      setdiff(res$lazy_query$x$vars, colname),
       paste0(colname, ".item"),
       paste0(colname, ".pos")
     )
-    res$ops <- res$ops$x
+    res$lazy_query <- res$lazy_query$x
     item_name_before <- paste0(colname, ".item")
     item_name_after <- paste0(colname, "_item")
     pos_name_before <- paste0(colname, ".pos")
@@ -230,15 +230,15 @@ impala_unnest <- function(data, col, ...) {
     res <- select(res, rename_complex_cols)
   } else if (identical(coltype, "map")) {
     quoted_tablename <- impala_escape_ident(res$src$con, tablename, "`")
-    res$ops$x$x <- ident_q(
+    res$lazy_query$x$x <- ident_q(
       paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
     )
-    res$ops$x$vars <- c(
-      setdiff(res$ops$x$vars, colname),
+    res$lazy_query$x$vars <- c(
+      setdiff(res$lazy_query$x$vars, colname),
       paste0(colname, ".key"),
       paste0(colname, ".value")
     )
-    res$ops <- res$ops$x
+    res$lazy_query <- res$lazy_query$x
     key_name_before <- paste0(colname, ".key")
     key_name_after <- paste0(colname, "_key")
     value_name_before <- paste0(colname, ".value")
@@ -252,7 +252,7 @@ impala_unnest <- function(data, col, ...) {
   } else if (identical(coltype, "struct")) {
     sql <- paste0("DESCRIBE ", tablename, ".", colname)
     structcolnames <- dbGetQuery(res$src, sql)$name
-    othercolnames <- setdiff(res$ops$x$vars, colname)
+    othercolnames <- setdiff(res$lazy_query$x$vars, colname)
     col_names_before <- c(
       othercolnames,
       paste(colname, structcolnames, sep = ".")
@@ -261,8 +261,8 @@ impala_unnest <- function(data, col, ...) {
       othercolnames,
       paste(colname, structcolnames, sep = "_")
     )
-    res$ops$x$vars <- col_names_before
-    res$ops <- res$ops$x
+    res$lazy_query$x$vars <- col_names_before
+    res$lazy_query <- res$lazy_query$x
     rename_complex_cols <- col_names_before
     names(rename_complex_cols) <- col_names_after
     res <- select(res, !!rename_complex_cols)
