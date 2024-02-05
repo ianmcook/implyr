@@ -154,7 +154,7 @@ collapse.tbl_impala <- function(x, vars = NULL, ...) {
 
 #' Unnest a complex column in an Impala table
 #'
-#' @description \describe{\code{impala_unnest()}}{ unnests a
+#' @description \describe{\code{impala_unnest()}}{unnests a
 #' column of type \code{ARRAY}, \code{MAP}, or \code{STRUCT}
 #' in a \code{tbl_impala}. These column types are referred to
 #' as complex or nested types.}
