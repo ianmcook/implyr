@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# register virtual class
+# register virtual classes
 #' @importFrom methods setOldClass
 setOldClass("impala_connection")
+setOldClass("dbplyr_table_ident")
 
 #' Describe the Impala data source
 #'

@@ -208,9 +208,11 @@ impala_unnest <- function(data, col, ...) {
   coltype <- attr(res$lazy_query$x$vars, "complex_type")[colindex]
   tablename <- format(res$lazy_query$x$x)
   if (identical(coltype, "array")) {
-    quoted_tablename <- impala_escape_ident(res$src$con, tablename, "`")
-    res$lazy_query$x$x <- ident_q(
-      paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
+    quoted_tablename <- tablename # impala_escape_ident(res$src$con, tablename, "`")
+    res$lazy_query$x$x <- utils::getFromNamespace("as_table_ident", "dbplyr")(
+      ident_q(
+        paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
+      )
     )
     res$lazy_query$x$vars <- c(
       setdiff(res$lazy_query$x$vars, colname),
@@ -229,9 +231,11 @@ impala_unnest <- function(data, col, ...) {
     )
     res <- select(res, rename_complex_cols)
   } else if (identical(coltype, "map")) {
-    quoted_tablename <- impala_escape_ident(res$src$con, tablename, "`")
-    res$lazy_query$x$x <- ident_q(
-      paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
+    quoted_tablename <- tablename # impala_escape_ident(res$src$con, tablename, "`")
+    res$lazy_query$x$x <- utils::getFromNamespace("as_table_ident", "dbplyr")(
+      ident_q(
+        paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
+      )
     )
     res$lazy_query$x$vars <- c(
       setdiff(res$lazy_query$x$vars, colname),
