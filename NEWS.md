@@ -1,6 +1,7 @@
 # implyr (development version)
 
 * Suppressed an object not found warning (#51)
+* Updated for compatibility with dbplyr 0.4.0 (#59, @liudvikasakelis)
 
 # implyr 0.4.0
 

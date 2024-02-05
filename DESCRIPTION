@@ -1,7 +1,7 @@
 Package: implyr
 Type: Package
 Title: R Interface for Apache Impala
-Version: 0.5.0
+Version: 0.4.0.9002
 Authors@R: c(
     person("Ian", "Cook", email = "ianmcook@gmail.com", role = c("aut", "cre")),
     person(family = "Cloudera", role = c("cph"))
@@ -41,4 +41,4 @@ SystemRequirements: Impala driver to support a 'DBI'-compatible R interface
 NeedsCompilation: no
 License: Apache License 2.0 | file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.1
