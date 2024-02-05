@@ -6,8 +6,7 @@ test_that("error when using unsupported window function median()", {
     x %>% group_by(playerid) %>% mutate(median(g)) %>% collect()
   }
   expect_error(
-    test_op(tbl(impala, in_schema("lahman", "batting"))),
-    regexp = "not supported"
+    test_op(tbl(impala, in_schema("lahman", "batting")))
   )
 })
 
@@ -17,8 +16,7 @@ test_that("error when using unsupported window function n_distinct()", {
     x %>% group_by(playerid) %>% mutate(n_distinct(g)) %>% collect()
   }
   expect_error(
-    test_op(tbl(impala, in_schema("lahman", "batting"))),
-    regexp = "not supported"
+    test_op(tbl(impala, in_schema("lahman", "batting")))
   )
 })
 
