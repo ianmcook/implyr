@@ -3,6 +3,13 @@
 
 # implyr <img src="man/figures/logo.png" align="right" height="139" />
 
+<!-- badges: start -->
+
+[![Build
+Status](https://travis-ci.org/ianmcook/implyr.svg?branch=master)](https://travis-ci.org/ianmcook/implyr)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/implyr)](https://cran.r-project.org/package=implyr)
+<!-- badges: end -->
+
 ## Overview
 
 **implyr** is a SQL backend to
