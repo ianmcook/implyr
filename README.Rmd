@@ -40,7 +40,7 @@ You must also install a package and driver to provide connectivity to Impala.
 
 [odbc](https://cran.r-project.org/package=odbc) is currently the preferred R package for connecting to Impala. It provides superior performance and compatibility.
 
-1. Ensure that the system where your R code will run supports ODBC. ODBC support is built into Windows but requires [unixODBC](http://www.unixodbc.org) or [iODBC](http://www.iodbc.org) on Linux and macOS.
+1. Ensure that the system where your R code will run supports ODBC. ODBC support is built into Windows but requires [unixODBC](https://www.unixodbc.org) or [iODBC](https://www.iodbc.org) on Linux and macOS.
 
 2. Install the odbc package from CRAN:
     ```{r, eval=FALSE}

@@ -26,8 +26,7 @@ Imports:
     methods,
     rlang (>= 1.1.1),
     tidyselect (>= 1.2.0),
-    utils,
-    vctrs
+    utils
 Suggests:
     Lahman (>= 3.0-1),
     lubridate,

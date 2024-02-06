@@ -19,10 +19,10 @@ an object with class \code{tbl_impala} with the
 complex column unnested into two or more separate columns
 }
 \description{
-\describe{\code{impala_unnest()}}{unnests a
+\describe{\code{impala_unnest()}{ unnests a
 column of type \code{ARRAY}, \code{MAP}, or \code{STRUCT}
 in a \code{tbl_impala}. These column types are referred to
-as complex or nested types.}
+as complex or nested types.}}
 }
 \details{
 \code{impala_unnest()} currently can unnest only

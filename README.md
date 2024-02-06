@@ -46,8 +46,8 @@ performance and compatibility.
 
 1.  Ensure that the system where your R code will run supports ODBC.
     ODBC support is built into Windows but requires
-    [unixODBC](http://www.unixodbc.org) or [iODBC](http://www.iodbc.org)
-    on Linux and macOS.
+    [unixODBC](https://www.unixodbc.org) or
+    [iODBC](https://www.iodbc.org) on Linux and macOS.
 
 2.  Install the odbc package from CRAN:
 
