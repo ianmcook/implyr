@@ -14,43 +14,46 @@ library(implyr)
 
 options(implyr.copy_to_size_limit = 10000000)
 
-copy_to(
-  impala,
-  airlines,
-  types=c("STRING", "STRING"),
-  temporary = FALSE
-)
 
-copy_to(
-  impala,
-  mtcars,
-  temporary = FALSE
-)
+upload_datasets <- function(impala) {
+  copy_to(
+    impala,
+    airlines,
+    types=c("STRING", "STRING"),
+    temporary = FALSE
+  )
 
-copy_to(
-  impala,
-  data.frame(col1=c(1), col2=c("a")),
-  "one_row",
-  temporary = FALSE
-)
+  copy_to(
+    impala,
+    mtcars,
+    temporary = FALSE
+  )
 
-copy_to(
-  impala,
-  iris %>% select(
-    species=Species,
-    sepal_length=Sepal.Length
-  ),
-  "iris",
-  temporary = FALSE
-)
+  copy_to(
+    impala,
+    data.frame(col1=c(1), col2=c("a")),
+    "one_row",
+    temporary = FALSE
+  )
 
-copy_to(
-  impala,
-  data.frame(
-    language="Spanish",
-    test="El pingüino Wenceslao hizo kilómetros bajo exhaustiva lluvia y frío, añoraba a su querido cachorro"
-  ),
-  "unicode_test",
-  temporary = FALSE,
-  types=c("STRING", "STRING")
-)
+  copy_to(
+    impala,
+    iris %>% select(
+      species=Species,
+      sepal_length=Sepal.Length
+    ),
+    "iris",
+    temporary = FALSE
+  )
+
+  copy_to(
+    impala,
+    data.frame(
+      language="Spanish",
+      test="El pingüino Wenceslao hizo kilómetros bajo exhaustiva lluvia y frío, añoraba a su querido cachorro"
+    ),
+    "unicode_test",
+    temporary = FALSE,
+    types=c("STRING", "STRING")
+  )
+}
