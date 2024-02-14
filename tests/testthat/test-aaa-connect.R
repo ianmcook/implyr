@@ -17,7 +17,7 @@ test_that("can connect to Impala using RJDBC", {
     unzip(jdbc_zip, exdir = jdbc_jars)
     impala_classpath <- list.files(path = jdbc_jars, pattern = "\\.jar$", full.names = TRUE)
     rJava::.jinit(classpath = impala_classpath)
-    drv <- RJDBC::JDBC("com.cloudera.impala.jdbc41.Driver", impala_classpath, "`")
+    drv <- RJDBC::JDBC("com.cloudera.impala.jdbc.Driver", impala_classpath, "`")
     jdbc_conn_str <- paste0("jdbc:impala://", jdbc_host, ":", jdbc_port)
     impala <<- implyr::src_impala(drv, jdbc_conn_str, jdbc_user, jdbc_pass)
     TRUE
