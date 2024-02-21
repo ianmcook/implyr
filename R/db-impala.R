@@ -16,6 +16,7 @@
 #' @importFrom methods setOldClass
 setOldClass("impala_connection")
 setOldClass("dbplyr_table_ident")
+setOldClass("dbplyr_table_path")
 
 #' Describe the Impala data source
 #'
@@ -107,6 +108,10 @@ setMethod("dbQuoteIdentifier", c("impala_connection", "character"), function(con
 })
 
 setMethod("dbQuoteIdentifier", c("impala_connection", "dbplyr_table_ident"), function(conn, x, ...) {
+  impala_escape_ident(conn, x, "`")
+})
+
+setMethod("dbQuoteIdentifier", c("impala_connection", "dbplyr_table_path"), function(conn, x, ...) {
   impala_escape_ident(conn, x, "`")
 })
 
