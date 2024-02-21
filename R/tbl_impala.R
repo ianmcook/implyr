@@ -192,7 +192,7 @@ impala_unnest <- function(data, col, ...) {
           call. = FALSE)
   }
   if (!"x" %in% names(res$lazy_query$x) ||
-      !inherits(res$lazy_query$x$x, "dbplyr_table_ident")) {
+      !is_dbplyr_table_identifier(res$lazy_query$x$x)) {
     stop("impala_unnest() must be applied to a tbl_impala before any other operations",
          call. = FALSE)
   }
@@ -209,10 +209,8 @@ impala_unnest <- function(data, col, ...) {
   tablename <- format(res$lazy_query$x$x)
   if (identical(coltype, "array")) {
     quoted_tablename <- tablename # impala_escape_ident(res$src$con, tablename, "`")
-    res$lazy_query$x$x <- utils::getFromNamespace("as_table_ident", "dbplyr")(
-      ident_q(
-        paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
-      )
+    res$lazy_query$x$x <- as_dbplyr_table_identifier(
+      paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
     )
     res$lazy_query$x$vars <- c(
       setdiff(res$lazy_query$x$vars, colname),
@@ -232,10 +230,8 @@ impala_unnest <- function(data, col, ...) {
     res <- select(res, rename_complex_cols)
   } else if (identical(coltype, "map")) {
     quoted_tablename <- tablename # impala_escape_ident(res$src$con, tablename, "`")
-    res$lazy_query$x$x <- utils::getFromNamespace("as_table_ident", "dbplyr")(
-      ident_q(
-        paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
-      )
+    res$lazy_query$x$x <- as_dbplyr_table_identifier(
+      paste0(quoted_tablename, ", ", quoted_tablename, ".`", colname,"`")
     )
     res$lazy_query$x$vars <- c(
       setdiff(res$lazy_query$x$vars, colname),
